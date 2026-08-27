@@ -429,16 +429,19 @@
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
   }
-  .flip-back .card-glyph-small{
-    font-size: 46px;
-    color: var(--gold-bright);
-    margin-bottom: 22px;
-    text-shadow: 0 0 18px rgba(234,200,120,0.5);
-    animation: glyph-glow 3s ease-in-out infinite;
+  .flip-back .card-logo{
+    display: block;
+    width: 100px;
+    max-width: 42%;
+    height: auto;
+    margin: 0 auto 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(234,200,120,0.45));
+    animation: logo-glow 3s ease-in-out infinite;
   }
-  @keyframes glyph-glow{
-    0%, 100%{ text-shadow: 0 0 16px rgba(234,200,120,0.4); }
-    50%{ text-shadow: 0 0 34px rgba(234,200,120,0.85); }
+  @keyframes logo-glow{
+    0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.35)); }
+    50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.8)); }
   }
   #affirmationText{
     font-family: var(--serif);
@@ -701,7 +704,7 @@
           <span class="card-hint">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
-          <span class="card-glyph-small" aria-hidden="true">&#10022;</span>
+          <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
           <p id="affirmationText">Your message will appear here.</p>
         </div>
       </div>
