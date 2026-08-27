@@ -186,14 +186,13 @@
 
   .brand-logo{
     display: block;
-    width: 150px;
-    max-width: 40vw;
+    width: 100%;
+    max-width: 320px;
     height: auto;
-    margin: 0 auto 18px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
-    box-shadow: 0 0 30px rgba(201,162,78,0.25);
+    margin: 0 auto 20px;
+    margin-inline: auto;
+    object-fit: contain;
+    box-shadow: 0 0 40px rgba(201,162,78,0.25);
   }
 
   .hero h1{
@@ -421,11 +420,25 @@
   }
   .flip-back{
     transform: rotateY(180deg);
+    background:
+      radial-gradient(circle at 50% 28%, rgba(201,162,78,0.16), transparent 62%),
+      linear-gradient(165deg, #1B1330 0%, #0B0912 100%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
+  }
+  .flip-back::before{
+    border-color: rgba(201,162,78,0.35);
   }
   .flip-back .card-glyph-small{
-    font-size: 20px;
-    color: var(--gold);
-    margin-bottom: 16px;
+    font-size: 46px;
+    color: var(--gold-bright);
+    margin-bottom: 22px;
+    text-shadow: 0 0 18px rgba(234,200,120,0.5);
+    animation: glyph-glow 3s ease-in-out infinite;
+  }
+  @keyframes glyph-glow{
+    0%, 100%{ text-shadow: 0 0 16px rgba(234,200,120,0.4); }
+    50%{ text-shadow: 0 0 34px rgba(234,200,120,0.85); }
   }
   #affirmationText{
     font-family: var(--serif);
@@ -580,7 +593,7 @@
     .hero{ padding-top: 96px; }
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
-    .brand-logo{ width: 120px; }
+    .brand-logo{ max-width: 200px; }
 
     .compass-wheel{
       border: none;
@@ -622,7 +635,7 @@
      HERO
      ============================================================ -->
 <header class="hero">
-  <img class="brand-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="150" height="150">
+  <img class="brand-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="320" height="320">
   <div class="hero-mark">
     <div class="compass-ring" aria-hidden="true"></div>
     <span class="needle" aria-hidden="true">&#10022;</span>
