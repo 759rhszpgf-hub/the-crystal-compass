@@ -407,10 +407,15 @@
     border-radius: calc(var(--radius-lg) - 6px);
     pointer-events:none;
   }
-  .flip-front .card-glyph{
-    font-size: 36px;
-    color: var(--gold);
-    margin-bottom: 18px;
+  .flip-front{
+    background:
+      radial-gradient(circle at 50% 28%, rgba(201,162,78,0.16), transparent 62%),
+      linear-gradient(165deg, #1B1330 0%, #0B0912 100%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
+  }
+  .flip-front::before{
+    border-color: rgba(201,162,78,0.35);
   }
   .flip-front .card-hint{
     font-size: 12px;
@@ -429,7 +434,7 @@
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
   }
-  .flip-back .card-logo{
+  .card-logo{
     display: block;
     width: 100px;
     max-width: 42%;
@@ -700,7 +705,7 @@
     <div class="flip-container" id="flipContainer">
       <div class="flip-card" id="flipCard" role="button" tabindex="0" aria-label="Tap to reveal your daily guidance card">
         <div class="flip-face flip-front">
-          <span class="card-glyph" aria-hidden="true">&#10022;</span>
+          <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
           <span class="card-hint">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
