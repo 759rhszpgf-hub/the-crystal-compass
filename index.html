@@ -93,6 +93,64 @@
       radial-gradient(420px circle at 30% 95%, rgba(232,168,184,0.07), transparent 60%);
   }
 
+  /* ============================================================
+     CRYSTAL CANOPY — decorative glowing gem clusters that frame
+     the page. Pure CSS shapes (no images), fixed + pointer-events
+     none + low z-index, so they always sit behind interactive
+     content and never block clicks or taps.
+     ============================================================ */
+  .crystal-canopy{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .canopy-gem{
+    position: absolute;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    animation: canopy-sway 7s ease-in-out infinite;
+  }
+  @keyframes canopy-sway{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(7px); }
+  }
+
+  /* -- top canopy: hangs from the very top edge -- */
+  .canopy-top{
+    position: absolute;
+    top: -34px;
+    left: 0;
+    right: 0;
+    height: 190px;
+  }
+  .canopy-top .canopy-gem{ opacity: 0.3; }
+  .canopy-top .canopy-gem:nth-child(1){ left:1%;  width:46px; height:64px;  background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 16px rgba(155,127,212,.45)); animation-delay:0s; }
+  .canopy-top .canopy-gem:nth-child(2){ left:15%; width:60px; height:88px;  background:linear-gradient(160deg,#f8dd9c,#a8681f); filter:drop-shadow(0 0 18px rgba(224,164,88,.45));  animation-delay:.6s; }
+  .canopy-top .canopy-gem:nth-child(3){ left:30%; width:38px; height:56px;  background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 15px rgba(232,168,184,.4));  animation-delay:1.2s; }
+  .canopy-top .canopy-gem:nth-child(4){ left:48%; width:78px; height:118px; background:linear-gradient(160deg,#eac878,#8a6a2a); filter:drop-shadow(0 0 22px rgba(201,162,78,.5));   animation-delay:.3s; }
+  .canopy-top .canopy-gem:nth-child(5){ left:66%; width:44px; height:62px;  background:linear-gradient(160deg,#eef6f8,#8ea8b8); filter:drop-shadow(0 0 15px rgba(201,214,227,.4));  animation-delay:1.6s; }
+  .canopy-top .canopy-gem:nth-child(6){ left:81%; width:58px; height:84px;  background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 18px rgba(155,127,212,.45)); animation-delay:.9s; }
+  .canopy-top .canopy-gem:nth-child(7){ left:95%; width:40px; height:58px;  background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 15px rgba(232,168,184,.4));  animation-delay:1.9s; }
+
+  /* -- side cascades: trail down the left / right edges -- */
+  .canopy-side{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+  }
+  .canopy-left{ left: -26px; }
+  .canopy-right{ right: -26px; }
+  .canopy-side .canopy-gem{ opacity: 0.2; }
+  .canopy-side .canopy-gem:nth-child(1){ top:6%;  width:34px; height:50px; background:linear-gradient(160deg,#eac878,#8a6a2a); filter:drop-shadow(0 0 14px rgba(201,162,78,.4));   animation-delay:.4s; }
+  .canopy-side .canopy-gem:nth-child(2){ top:24%; width:46px; height:66px; background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 15px rgba(155,127,212,.4)); animation-delay:1.1s; }
+  .canopy-side .canopy-gem:nth-child(3){ top:44%; width:30px; height:44px; background:linear-gradient(160deg,#eef6f8,#8ea8b8); filter:drop-shadow(0 0 13px rgba(201,214,227,.35)); animation-delay:.2s; }
+  .canopy-side .canopy-gem:nth-child(4){ top:64%; width:42px; height:60px; background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 14px rgba(232,168,184,.35)); animation-delay:1.5s; }
+  .canopy-side .canopy-gem:nth-child(5){ top:84%; width:34px; height:48px; background:linear-gradient(160deg,#f8dd9c,#a8681f); filter:drop-shadow(0 0 14px rgba(224,164,88,.4));  animation-delay:.8s; }
+  .canopy-right .canopy-gem{ transform: scaleX(-1); }
+  .canopy-right .canopy-gem:nth-child(odd){ animation-name: canopy-sway; }
+
   main, header, footer{ position: relative; z-index: 1; }
 
   /* ============================================================
@@ -182,17 +240,6 @@
     font-size: 34px;
     color: var(--gold-bright);
     text-shadow: 0 0 24px rgba(234,200,120,0.55);
-  }
-
-  .brand-logo{
-    display: block;
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-    margin: 0 auto 20px;
-    margin-inline: auto;
-    object-fit: contain;
-    box-shadow: 0 0 40px rgba(201,162,78,0.25);
   }
 
   .hero h1{
@@ -434,19 +481,36 @@
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
   }
-  .card-logo{
-    display: block;
-    width: 100px;
-    max-width: 42%;
-    height: auto;
+  .logo-frame{
+    width: 112px;
+    max-width: 46%;
+    aspect-ratio: 1 / 1;
     margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .logo-frame::before{
+    content:'';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(201,162,78,0.28);
+    box-shadow: 0 0 26px rgba(201,162,78,0.22), inset 0 0 20px rgba(201,162,78,0.08);
+    pointer-events: none;
+  }
+  .card-logo{
+    width: 80%;
+    height: 80%;
     object-fit: contain;
-    filter: drop-shadow(0 0 10px rgba(234,200,120,0.45));
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 10px rgba(234,200,120,0.4)) brightness(1.12) contrast(1.05);
     animation: logo-glow 3s ease-in-out infinite;
   }
   @keyframes logo-glow{
-    0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.35)); }
-    50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.8)); }
+    0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.3)) brightness(1.12) contrast(1.05); }
+    50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.75)) brightness(1.12) contrast(1.05); }
   }
   #affirmationText{
     font-family: var(--serif);
@@ -601,7 +665,13 @@
     .hero{ padding-top: 96px; }
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
-    .brand-logo{ max-width: 200px; }
+
+    .canopy-top{ height: 120px; top: -22px; transform: scale(0.62); transform-origin: top center; opacity: 0.8; }
+    .canopy-side{ width: 60px; transform: scale(0.55); }
+    .canopy-left{ left: -30px; transform-origin: left center; }
+    .canopy-right{ right: -30px; transform-origin: right center; }
+    .canopy-side .canopy-gem:nth-child(3),
+    .canopy-side .canopy-gem:nth-child(5){ display: none; }
 
     .compass-wheel{
       border: none;
@@ -639,11 +709,36 @@
 
 <div class="ambient-glow" aria-hidden="true"></div>
 
+<div class="crystal-canopy" aria-hidden="true">
+  <div class="canopy-top">
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+  </div>
+  <div class="canopy-side canopy-left">
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+  </div>
+  <div class="canopy-side canopy-right">
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+    <span class="canopy-gem"></span>
+  </div>
+</div>
+
 <!-- ============================================================
      HERO
      ============================================================ -->
 <header class="hero">
-  <img class="brand-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="320" height="320">
   <div class="hero-mark">
     <div class="compass-ring" aria-hidden="true"></div>
     <span class="needle" aria-hidden="true">&#10022;</span>
@@ -705,11 +800,15 @@
     <div class="flip-container" id="flipContainer">
       <div class="flip-card" id="flipCard" role="button" tabindex="0" aria-label="Tap to reveal your daily guidance card">
         <div class="flip-face flip-front">
-          <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
+          <div class="logo-frame">
+            <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
+          </div>
           <span class="card-hint">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
-          <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
+          <div class="logo-frame">
+            <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
+          </div>
           <p id="affirmationText">Your message will appear here.</p>
         </div>
       </div>
