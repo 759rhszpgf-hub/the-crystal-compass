@@ -15,14 +15,16 @@
     --bg-deep:       #0B0912;
     --surface:       #1C1628;
     --surface-2:     #241C33;
-    --border:        rgba(201,162,78,0.28);
-    --border-soft:   rgba(201,162,78,0.14);
+    --panel:         #17161A;
+    --panel-2:       #1E1D22;
+    --border:        rgba(201,162,78,0.45);
+    --border-soft:   rgba(201,162,78,0.22);
     --gold:          #C9A24E;
     --gold-bright:   #EAC878;
     --ink:           #F2EBDF;
     --ink-muted:     #A79BB8;
     --ink-faint:     #746A88;
-    --shadow:        rgba(0,0,0,0.55);
+    --shadow:        rgba(0,0,0,0.65);
 
     --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -61,95 +63,20 @@
     outline-offset: 3px;
   }
 
-  /* ambient starfield, pure CSS, no images */
-  body::before{
-    content:'';
-    position: fixed;
-    inset: 0;
-    pointer-events:none;
-    background-image:
-      radial-gradient(1px 1px at 12% 22%, rgba(242,235,223,0.55), transparent),
-      radial-gradient(1px 1px at 76% 14%, rgba(242,235,223,0.4), transparent),
-      radial-gradient(1px 1px at 34% 66%, rgba(242,235,223,0.35), transparent),
-      radial-gradient(1px 1px at 88% 58%, rgba(242,235,223,0.4), transparent),
-      radial-gradient(1px 1px at 55% 82%, rgba(242,235,223,0.3), transparent),
-      radial-gradient(1px 1px at 6% 78%, rgba(242,235,223,0.3), transparent),
-      radial-gradient(1px 1px at 95% 90%, rgba(242,235,223,0.3), transparent);
-    background-repeat: repeat;
-    background-size: 560px 560px;
-    opacity: 0.7;
-    z-index: 0;
-  }
-
-  /* soft jewel-toned glow blobs sitting behind content */
-  .ambient-glow{
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-      radial-gradient(480px circle at 15% 8%, rgba(155,127,212,0.10), transparent 60%),
-      radial-gradient(520px circle at 88% 30%, rgba(201,162,78,0.08), transparent 60%),
-      radial-gradient(420px circle at 30% 95%, rgba(232,168,184,0.07), transparent 60%);
-  }
-
   /* ============================================================
-     CRYSTAL CANOPY — decorative glowing gem clusters that frame
-     the page. Pure CSS shapes (no images), fixed + pointer-events
-     none + low z-index, so they always sit behind interactive
-     content and never block clicks or taps.
+     BACKGROUND FRAME — fixed, full-screen crystal border image.
+     Sits at z-index -1 so it can never sit above or block any
+     interactive content, which all lives at z-index 1+.
      ============================================================ */
-  .crystal-canopy{
+  .bg-frame{
     position: fixed;
     inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
+    z-index: -1;
+    background-image: url('https://i.postimg.cc/KYT1xmLP/ffc2701b-3c69-47bc-9368-01888fa03d06.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
   }
-  .canopy-gem{
-    position: absolute;
-    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
-    animation: canopy-sway 7s ease-in-out infinite;
-  }
-  @keyframes canopy-sway{
-    0%, 100%{ transform: translateY(0); }
-    50%{ transform: translateY(7px); }
-  }
-
-  /* -- top canopy: hangs from the very top edge -- */
-  .canopy-top{
-    position: absolute;
-    top: -34px;
-    left: 0;
-    right: 0;
-    height: 190px;
-  }
-  .canopy-top .canopy-gem{ opacity: 0.3; }
-  .canopy-top .canopy-gem:nth-child(1){ left:1%;  width:46px; height:64px;  background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 16px rgba(155,127,212,.45)); animation-delay:0s; }
-  .canopy-top .canopy-gem:nth-child(2){ left:15%; width:60px; height:88px;  background:linear-gradient(160deg,#f8dd9c,#a8681f); filter:drop-shadow(0 0 18px rgba(224,164,88,.45));  animation-delay:.6s; }
-  .canopy-top .canopy-gem:nth-child(3){ left:30%; width:38px; height:56px;  background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 15px rgba(232,168,184,.4));  animation-delay:1.2s; }
-  .canopy-top .canopy-gem:nth-child(4){ left:48%; width:78px; height:118px; background:linear-gradient(160deg,#eac878,#8a6a2a); filter:drop-shadow(0 0 22px rgba(201,162,78,.5));   animation-delay:.3s; }
-  .canopy-top .canopy-gem:nth-child(5){ left:66%; width:44px; height:62px;  background:linear-gradient(160deg,#eef6f8,#8ea8b8); filter:drop-shadow(0 0 15px rgba(201,214,227,.4));  animation-delay:1.6s; }
-  .canopy-top .canopy-gem:nth-child(6){ left:81%; width:58px; height:84px;  background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 18px rgba(155,127,212,.45)); animation-delay:.9s; }
-  .canopy-top .canopy-gem:nth-child(7){ left:95%; width:40px; height:58px;  background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 15px rgba(232,168,184,.4));  animation-delay:1.9s; }
-
-  /* -- side cascades: trail down the left / right edges -- */
-  .canopy-side{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100px;
-  }
-  .canopy-left{ left: -26px; }
-  .canopy-right{ right: -26px; }
-  .canopy-side .canopy-gem{ opacity: 0.2; }
-  .canopy-side .canopy-gem:nth-child(1){ top:6%;  width:34px; height:50px; background:linear-gradient(160deg,#eac878,#8a6a2a); filter:drop-shadow(0 0 14px rgba(201,162,78,.4));   animation-delay:.4s; }
-  .canopy-side .canopy-gem:nth-child(2){ top:24%; width:46px; height:66px; background:linear-gradient(160deg,#c9aef0,#553a86); filter:drop-shadow(0 0 15px rgba(155,127,212,.4)); animation-delay:1.1s; }
-  .canopy-side .canopy-gem:nth-child(3){ top:44%; width:30px; height:44px; background:linear-gradient(160deg,#eef6f8,#8ea8b8); filter:drop-shadow(0 0 13px rgba(201,214,227,.35)); animation-delay:.2s; }
-  .canopy-side .canopy-gem:nth-child(4){ top:64%; width:42px; height:60px; background:linear-gradient(160deg,#f6cbd8,#b8637f); filter:drop-shadow(0 0 14px rgba(232,168,184,.35)); animation-delay:1.5s; }
-  .canopy-side .canopy-gem:nth-child(5){ top:84%; width:34px; height:48px; background:linear-gradient(160deg,#f8dd9c,#a8681f); filter:drop-shadow(0 0 14px rgba(224,164,88,.4));  animation-delay:.8s; }
-  .canopy-right .canopy-gem{ transform: scaleX(-1); }
-  .canopy-right .canopy-gem:nth-child(odd){ animation-name: canopy-sway; }
 
   main, header, footer{ position: relative; z-index: 1; }
 
@@ -157,9 +84,9 @@
      LAYOUT SHELL
      ============================================================ */
   .section{
-    max-width: 760px;
+    max-width: 390px;
     margin: 0 auto;
-    padding: 96px 24px;
+    padding: 72px 20px;
   }
   .section + .section{
     border-top: 1px solid var(--border-soft);
@@ -270,7 +197,7 @@
      ============================================================ */
   .compass-wheel{
     position: relative;
-    width: min(380px, 82vw);
+    width: min(300px, 90%);
     aspect-ratio: 1 / 1;
     margin: 0 auto;
     border-radius: 50%;
@@ -302,7 +229,7 @@
     display:flex; align-items:center; justify-content:center;
     color: var(--gold);
     font-size:16px;
-    background: var(--bg);
+    background: var(--panel);
   }
 
   .mood-point{
@@ -311,8 +238,8 @@
     width: 118px;
     padding: 14px 10px;
     text-align:center;
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
+    background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     color: var(--ink-muted);
     font-size: 13.5px;
@@ -326,14 +253,14 @@
     color: var(--gold);
   }
   .mood-point:hover{
-    border-color: var(--border);
+    border-color: var(--gold);
     color: var(--ink);
   }
   .mood-point.active{
     color: var(--ink);
     border-color: var(--gold);
-    background: var(--surface-2);
-    box-shadow: 0 0 28px rgba(201,162,78,0.22);
+    background: var(--panel-2);
+    box-shadow: 0 0 28px rgba(201,162,78,0.28);
     transform: translate(-50%,-50%) scale(1.05);
   }
 
@@ -344,11 +271,11 @@
 
   /* Crystal reveal panel */
   .crystal-reveal{
-    max-width: 420px;
+    max-width: 350px;
     margin: 56px auto 0;
     text-align:center;
-    padding: 40px 32px;
-    background: var(--surface);
+    padding: 36px 26px;
+    background: var(--panel);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: 0 30px 60px -20px var(--shadow);
@@ -442,8 +369,8 @@
     align-items:center;
     justify-content:center;
     text-align:center;
-    padding: 28px;
-    background: linear-gradient(165deg, var(--surface-2), var(--surface));
+    padding: 24px;
+    background: var(--panel);
     box-shadow: 0 30px 60px -20px var(--shadow);
   }
   .flip-face::before{
@@ -456,8 +383,8 @@
   }
   .flip-front{
     background:
-      radial-gradient(circle at 50% 28%, rgba(201,162,78,0.16), transparent 62%),
-      linear-gradient(165deg, #1B1330 0%, #0B0912 100%);
+      radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
+      var(--panel);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
   }
@@ -473,8 +400,8 @@
   .flip-back{
     transform: rotateY(180deg);
     background:
-      radial-gradient(circle at 50% 28%, rgba(201,162,78,0.16), transparent 62%),
-      linear-gradient(165deg, #1B1330 0%, #0B0912 100%);
+      radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
+      var(--panel);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
   }
@@ -482,10 +409,10 @@
     border-color: rgba(201,162,78,0.35);
   }
   .logo-frame{
-    width: 112px;
-    max-width: 46%;
+    width: 190px;
+    max-width: 66%;
     aspect-ratio: 1 / 1;
-    margin: 0 auto 20px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -501,8 +428,8 @@
     pointer-events: none;
   }
   .card-logo{
-    width: 80%;
-    height: 80%;
+    width: 86%;
+    height: 86%;
     object-fit: contain;
     mix-blend-mode: screen;
     filter: drop-shadow(0 0 10px rgba(234,200,120,0.4)) brightness(1.12) contrast(1.05);
@@ -543,16 +470,15 @@
      ============================================================ */
   .premium-block{
     text-align:center;
-    max-width: 640px;
   }
   .premium-panel{
     position: relative;
-    padding: 56px 40px;
-    border: 1px solid var(--border);
+    padding: 44px 28px;
+    border: 1px solid var(--gold);
     border-radius: var(--radius-lg);
     background:
-      radial-gradient(420px circle at 50% -10%, rgba(201,162,78,0.14), transparent 60%),
-      var(--surface);
+      radial-gradient(360px circle at 50% -10%, rgba(201,162,78,0.12), transparent 60%),
+      var(--panel);
     box-shadow: 0 40px 80px -30px var(--shadow);
   }
   .seal{
@@ -666,13 +592,6 @@
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
 
-    .canopy-top{ height: 120px; top: -22px; transform: scale(0.62); transform-origin: top center; opacity: 0.8; }
-    .canopy-side{ width: 60px; transform: scale(0.55); }
-    .canopy-left{ left: -30px; transform-origin: left center; }
-    .canopy-right{ right: -30px; transform-origin: right center; }
-    .canopy-side .canopy-gem:nth-child(3),
-    .canopy-side .canopy-gem:nth-child(5){ display: none; }
-
     .compass-wheel{
       border: none;
       background: none;
@@ -707,33 +626,7 @@
 </head>
 <body>
 
-<div class="ambient-glow" aria-hidden="true"></div>
-
-<div class="crystal-canopy" aria-hidden="true">
-  <div class="canopy-top">
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-  </div>
-  <div class="canopy-side canopy-left">
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-  </div>
-  <div class="canopy-side canopy-right">
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-    <span class="canopy-gem"></span>
-  </div>
-</div>
+<div class="bg-frame" aria-hidden="true"></div>
 
 <!-- ============================================================
      HERO
