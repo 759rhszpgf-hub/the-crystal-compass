@@ -193,18 +193,44 @@
   }
 
   /* ============================================================
-     MOOD COMPASS — check-in
+     MOOD CHECK-IN — premium glass container + button grid
      ============================================================ */
-  .mood-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    width: 100%;
+
+  /* -- outer "crystal container" card: dark glass, purple glow -- */
+  .mood-panel{
+    background: rgba(15,13,20,0.6);           /* dark, semi-transparent — like bg-slate-900/60 */
+    -webkit-backdrop-filter: blur(14px);       /* frosted-glass blur behind the card */
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(168,85,247,0.3);    /* soft glowing purple border */
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 30px rgba(168,85,247,0.2); /* outer purple aura */
+    padding: 28px;
   }
 
+  /* -- grid: 2 columns on phones, 4 columns / 2 rows from tablet-landscape up -- */
+  .mood-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);     /* mobile default: wraps into 4 neat rows */
+    gap: 14px;
+  }
+  @media (min-width: 768px){
+    /* iPad landscape, laptop, and desktop: wide 4-across, 2-row layout */
+    .mood-grid{ grid-template-columns: repeat(4, 1fr); }
+    /* let just the check-in section breathe wider here, so the 4-column
+       grid isn't squeezed into the narrow 390px runway used elsewhere */
+    #checkin{ max-width: 760px; }
+    .mood-panel{ padding: 36px; }
+  }
+
+  /* -- individual buttons: uniform size regardless of column width -- */
   .mood-point{
     position: relative;
-    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 92px;                          /* keeps height balanced across 2-col and 4-col rows */
+    padding: 18px 10px;
     text-align:center;
     background: var(--panel);
     border: 1px solid var(--border);
@@ -212,7 +238,7 @@
     color: var(--ink-muted);
     font-size: 13.5px;
     letter-spacing: 0.04em;
-    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
   .mood-point .point-glyph{
     display:block;
@@ -220,10 +246,17 @@
     margin-bottom: 6px;
     color: var(--gold);
   }
+  /* hover / tap: elegant purple light-up, distinct from the gold "selected" state below */
   .mood-point:hover{
-    border-color: var(--gold);
+    transform: scale(1.03);
+    border-color: rgba(168,85,247,0.6);
+    box-shadow: 0 0 15px rgba(168,85,247,0.4);
     color: var(--ink);
   }
+  .mood-point:active{
+    transform: scale(0.98);
+  }
+  /* selected state stays gold, so "chosen" always reads differently from "hovered" */
   .mood-point.active{
     color: var(--ink);
     border-color: var(--gold);
@@ -555,8 +588,9 @@
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
 
+    .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
-    .mood-point{ padding: 16px 8px; font-size: 12.5px; }
+    .mood-point{ min-height: 80px; padding: 14px 8px; font-size: 12.5px; }
   }
 
   /* ============================================================
