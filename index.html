@@ -195,48 +195,16 @@
   /* ============================================================
      MOOD COMPASS — check-in
      ============================================================ */
-  .compass-wheel{
-    position: relative;
-    width: min(300px, 90%);
-    aspect-ratio: 1 / 1;
-    margin: 0 auto;
-    border-radius: 50%;
-    border: 1px solid var(--border-soft);
-    background: radial-gradient(circle, rgba(201,162,78,0.05), transparent 70%);
-  }
-  .compass-wheel::before,
-  .compass-wheel::after{
-    content:'';
-    position:absolute;
-    background: linear-gradient(90deg, transparent, rgba(201,162,78,0.18), transparent);
-  }
-  .compass-wheel::before{ /* horizontal */
-    top:50%; left:8%; right:8%; height:1px; transform: translateY(-50%);
-  }
-  .compass-wheel::after{ /* vertical */
-    left:50%; top:8%; bottom:8%; width:1px;
-    background: linear-gradient(180deg, transparent, rgba(201,162,78,0.18), transparent);
-    transform: translateX(-50%);
-  }
-
-  .compass-center{
-    position:absolute;
-    top:50%; left:50%;
-    transform: translate(-50%,-50%);
-    width: 46px; height:46px;
-    border-radius:50%;
-    border: 1px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    color: var(--gold);
-    font-size:16px;
-    background: var(--panel);
+  .mood-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
   }
 
   .mood-point{
-    position:absolute;
-    transform: translate(-50%,-50%);
-    width: 118px;
-    padding: 14px 10px;
+    position: relative;
+    padding: 20px 12px;
     text-align:center;
     background: var(--panel);
     border: 1px solid var(--border);
@@ -244,7 +212,7 @@
     color: var(--ink-muted);
     font-size: 13.5px;
     letter-spacing: 0.04em;
-    transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
   }
   .mood-point .point-glyph{
     display:block;
@@ -261,13 +229,8 @@
     border-color: var(--gold);
     background: var(--panel-2);
     box-shadow: 0 0 28px rgba(201,162,78,0.28);
-    transform: translate(-50%,-50%) scale(1.05);
+    transform: scale(1.04);
   }
-
-  .point-n{ top: 0;    left: 50%; }
-  .point-e{ top: 50%;  left: 100%; }
-  .point-s{ top: 100%; left: 50%; }
-  .point-w{ top: 50%;  left: 0; }
 
   /* Crystal reveal panel */
   .crystal-reveal{
@@ -592,23 +555,8 @@
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
 
-    .compass-wheel{
-      border: none;
-      background: none;
-      width: 100%;
-      aspect-ratio: auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .compass-wheel::before,
-    .compass-wheel::after,
-    .compass-center{ display:none; }
-    .mood-point{
-      position: static;
-      transform: none !important;
-      width: auto;
-    }
+    .mood-grid{ gap: 12px; }
+    .mood-point{ padding: 16px 8px; font-size: 12.5px; }
   }
 
   /* ============================================================
@@ -654,20 +602,31 @@
       <p class="section-sub">Choose the feeling closest to where you are today. Your crystal match will appear below.</p>
     </div>
 
-    <div class="compass-wheel" role="group" aria-label="Choose your current mood">
-      <button class="mood-point point-n" data-mood="anxious">
+    <div class="mood-grid" role="group" aria-label="Choose your current mood">
+      <button class="mood-point" data-mood="anxious">
         <span class="point-glyph" aria-hidden="true">&#9670;</span>Anxious
       </button>
-      <button class="mood-point point-e" data-mood="tired">
+      <button class="mood-point" data-mood="tired">
         <span class="point-glyph" aria-hidden="true">&#9670;</span>Tired
       </button>
-      <button class="mood-point point-s" data-mood="unfocused">
+      <button class="mood-point" data-mood="unfocused">
         <span class="point-glyph" aria-hidden="true">&#9670;</span>Unfocused
       </button>
-      <button class="mood-point point-w" data-mood="heartbroken">
+      <button class="mood-point" data-mood="heartbroken">
         <span class="point-glyph" aria-hidden="true">&#9670;</span>Heartbroken
       </button>
-      <div class="compass-center" aria-hidden="true">&#10022;</div>
+      <button class="mood-point" data-mood="inspired">
+        <span class="point-glyph" aria-hidden="true">&#9670;</span>Inspired
+      </button>
+      <button class="mood-point" data-mood="grateful">
+        <span class="point-glyph" aria-hidden="true">&#9670;</span>Grateful
+      </button>
+      <button class="mood-point" data-mood="motivated">
+        <span class="point-glyph" aria-hidden="true">&#9670;</span>Motivated
+      </button>
+      <button class="mood-point" data-mood="peaceful">
+        <span class="point-glyph" aria-hidden="true">&#9670;</span>Peaceful
+      </button>
     </div>
 
     <div class="crystal-reveal" id="crystalReveal" hidden>
@@ -793,6 +752,42 @@
       dark: "#b8637f",
       glow: "rgba(232,168,184,0.55)",
       query: "rose quartz crystal"
+    },
+    inspired: {
+      name: "Carnelian",
+      desc: "A vibrant, fiery stone that fuels creativity, courage, and a fresh spark of inspiration.",
+      price: "\u00A310.50",
+      light: "#ffb08a",
+      dark: "#b34a1f",
+      glow: "rgba(255,140,90,0.55)",
+      query: "carnelian crystal"
+    },
+    grateful: {
+      name: "Green Aventurine",
+      desc: "Known as the stone of opportunity, it deepens gratitude and invites gentle, steady abundance.",
+      price: "\u00A39.50",
+      light: "#b9e8c9",
+      dark: "#3f8f5e",
+      glow: "rgba(140,214,168,0.55)",
+      query: "green aventurine crystal"
+    },
+    motivated: {
+      name: "Tiger's Eye",
+      desc: "A grounding stone of confidence and willpower, perfect for turning motivation into action.",
+      price: "\u00A310.00",
+      light: "#e6c07a",
+      dark: "#7a5220",
+      glow: "rgba(214,168,88,0.55)",
+      query: "tigers eye crystal"
+    },
+    peaceful: {
+      name: "Blue Lace Agate",
+      desc: "A gentle, soothing stone that supports calm communication and lasting inner peace.",
+      price: "\u00A39.50",
+      light: "#cfe8f5",
+      dark: "#6f9db3",
+      glow: "rgba(180,214,232,0.55)",
+      query: "blue lace agate crystal"
     }
   };
 
