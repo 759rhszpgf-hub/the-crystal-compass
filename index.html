@@ -384,6 +384,8 @@
     pointer-events:none;
   }
   .flip-front{
+    padding: 0;
+    overflow: hidden;
     background:
       radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
       var(--panel);
@@ -391,13 +393,33 @@
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
   }
   .flip-front::before{
-    border-color: rgba(201,162,78,0.35);
+    z-index: 2;
+    border-color: rgba(201,162,78,0.4);
+  }
+  /* full-bleed tarot-deck-style back art — same asset as the landing
+     page centerpiece, stretched edge-to-edge, clipped to the card's
+     rounded corners by .flip-front's overflow:hidden above */
+  .tarot-back-img{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .flip-front .card-hint{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 20px 14px 16px;
+    background: linear-gradient(to top, rgba(11,9,18,0.75), transparent);
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--gold-bright);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   }
   .flip-back{
     transform: rotateY(180deg);
@@ -695,9 +717,7 @@
     <div class="flip-container" id="flipContainer">
       <div class="flip-card" id="flipCard" role="button" tabindex="0" aria-label="Tap to reveal your daily guidance card">
         <div class="flip-face flip-front">
-          <div class="logo-frame">
-            <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
-          </div>
+          <img class="tarot-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass — tap to reveal your card">
           <span class="card-hint">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
