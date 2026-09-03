@@ -129,10 +129,10 @@
   }
   .compass-ring{
     position:absolute;
-    top: 38px;
+    top: 46px;
     left: 50%;
-    width: 300px;
-    height: 300px;
+    width: 360px;
+    height: 360px;
     transform: translateX(-50%);
     border-radius: 50%;
     background: repeating-conic-gradient(
@@ -148,7 +148,7 @@
   .compass-ring::after{
     content:'';
     position:absolute;
-    inset: 34px;
+    inset: 41px;
     border-radius:50%;
     border: 1px solid rgba(201,162,78,0.22);
   }
@@ -156,8 +156,8 @@
 
   .hero-mark{
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 360px;
+    height: 360px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -168,7 +168,7 @@
   .cosmic-cat-logo{
     position: relative;
     z-index: 1;
-    height: 176px;              /* md:h-44 equivalent */
+    height: 211px;              /* ~20% larger than before */
     max-width: 78%;             /* safety margin so it can't crowd the ring */
     width: auto;
     object-fit: contain;        /* scales cleanly, never squeezed or stretched */
@@ -591,9 +591,9 @@
   @media (max-width: 560px){
     .section{ padding: 72px 20px; }
     .hero{ padding-top: 96px; }
-    .compass-ring{ width: 220px; height:220px; top: 18px; }
-    .hero-mark{ width: 220px; height:220px; }
-    .cosmic-cat-logo{ height: 144px; }  /* h-36 equivalent on mobile */
+    .compass-ring{ width: 264px; height:264px; top: 22px; }
+    .hero-mark{ width: 264px; height:264px; }
+    .cosmic-cat-logo{ height: 173px; }  /* ~20% larger, mobile */
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
@@ -623,7 +623,7 @@
 <header class="hero">
   <div class="hero-mark">
     <div class="compass-ring" aria-hidden="true"></div>
-    <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="176" height="176">
+    <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
   </div>
   <p class="eyebrow">A daily ritual for clarity &amp; calm</p>
   <h1>The Crystal Compass</h1>
