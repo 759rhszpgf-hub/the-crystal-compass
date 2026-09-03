@@ -163,10 +163,16 @@
     justify-content:center;
     margin-bottom: 8px;
   }
-  .hero-mark .needle{
-    font-size: 34px;
-    color: var(--gold-bright);
-    text-shadow: 0 0 24px rgba(234,200,120,0.55);
+  /* cosmic cat logo — a sibling of .compass-ring, so it never inherits
+     the ring's spin animation and always stays still and crisp */
+  .cosmic-cat-logo{
+    position: relative;
+    z-index: 1;
+    height: 176px;              /* md:h-44 equivalent */
+    max-width: 78%;             /* safety margin so it can't crowd the ring */
+    width: auto;
+    object-fit: contain;        /* scales cleanly, never squeezed or stretched */
+    filter: drop-shadow(0 0 22px rgba(234,200,120,0.35));
   }
 
   .hero h1{
@@ -587,6 +593,7 @@
     .hero{ padding-top: 96px; }
     .compass-ring{ width: 220px; height:220px; top: 18px; }
     .hero-mark{ width: 220px; height:220px; }
+    .cosmic-cat-logo{ height: 144px; }  /* h-36 equivalent on mobile */
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
@@ -616,7 +623,7 @@
 <header class="hero">
   <div class="hero-mark">
     <div class="compass-ring" aria-hidden="true"></div>
-    <span class="needle" aria-hidden="true">&#10022;</span>
+    <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="176" height="176">
   </div>
   <p class="eyebrow">A daily ritual for clarity &amp; calm</p>
   <h1>The Crystal Compass</h1>
