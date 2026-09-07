@@ -595,6 +595,28 @@
     transform: translateY(-2px);
     box-shadow: 0 24px 46px -14px rgba(201,162,78,0.6);
   }
+  .btn-premium:disabled{
+    cursor: default;
+    opacity: 0.9;
+    transform: none;
+  }
+  .btn-premium:disabled:hover{
+    transform: none;
+  }
+  /* small spinning ring shown inside the button while "processing" */
+  .btn-spinner{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    vertical-align: -2px;
+    border: 2px solid rgba(11,9,18,0.25);
+    border-top-color: var(--bg-deep);
+    border-radius: 50%;
+    animation: btn-spin 0.7s linear infinite;
+  }
+  @keyframes btn-spin{ to{ transform: rotate(360deg); } }
+
   .fine-print{
     margin-top: 16px;
     font-size: 12.5px;
@@ -605,6 +627,176 @@
     font-size: 13px;
     color: var(--gold-bright);
     min-height: 18px;
+  }
+
+  /* ============================================================
+     PREMIUM FEATURES (revealed after mock unlock, for live preview)
+     ============================================================ */
+  .premium-features{
+    margin-top: 40px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border-soft);
+    text-align: left;
+    animation: reveal-in 0.6s ease;
+  }
+  .premium-features[hidden]{ display:none; }
+  .premium-features h3{
+    text-align:center;
+    font-size: 21px;
+    color: var(--gold-bright);
+    margin-bottom: 4px;
+  }
+  .premium-features .feature-sub{
+    text-align:center;
+    color: var(--ink-muted);
+    font-size: 13.5px;
+    margin-bottom: 20px;
+  }
+  .premium-feature-block + .premium-feature-block{
+    margin-top: 44px;
+  }
+  .premium-feature-block h3{
+    font-size: 17px;
+    margin-bottom: 2px;
+  }
+  .premium-feature-block .feature-sub{
+    margin-bottom: 16px;
+  }
+
+  /* -- 3-card spread -- */
+  .spread-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .mini-flip-container{
+    perspective: 1200px;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+  }
+  .mini-flip-card{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(.22,.85,.28,1);
+    cursor: pointer;
+  }
+  .mini-flip-card.flipped{ transform: rotateY(180deg); }
+  .mini-flip-face{
+    position:absolute;
+    inset:0;
+    backface-visibility: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gold);
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    text-align:center;
+    background: var(--panel);
+    box-shadow: 0 16px 30px -14px var(--shadow);
+  }
+  .mini-flip-face .mini-back-img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+    z-index:0;
+  }
+  .mini-flip-face .mini-label{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 8px 4px;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    background: linear-gradient(to top, rgba(11,9,18,0.8), transparent);
+  }
+  .mini-flip-back{
+    transform: rotateY(180deg);
+    justify-content: center;
+    padding: 14px 10px;
+    background:
+      radial-gradient(circle at 50% 20%, rgba(201,162,78,0.14), transparent 60%),
+      var(--panel);
+  }
+  .mini-flip-back .mini-position{
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .mini-flip-back p{
+    font-family: var(--serif);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  /* -- ritual calendar -- */
+  .ritual-cal-header{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .ritual-cal-header span{
+    text-align:center;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .ritual-cal-grid{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .ritual-day-cell{
+    aspect-ratio: 1 / 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  button.ritual-day-cell{
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  button.ritual-day-cell.is-ritual-day{
+    border-color: var(--gold);
+    color: var(--gold-bright);
+    box-shadow: 0 0 12px rgba(201,162,78,0.3);
+  }
+  button.ritual-day-cell.is-ritual-day:hover,
+  button.ritual-day-cell.is-ritual-day.active{
+    background: var(--panel-2);
+    box-shadow: 0 0 20px rgba(201,162,78,0.5);
+  }
+  .ritual-detail{
+    margin-top: 16px;
+    padding: 16px 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: var(--ink-muted);
+    min-height: 20px;
+  }
+  .ritual-detail strong{
+    display:block;
+    color: var(--gold-bright);
+    font-family: var(--serif);
+    font-size: 15px;
+    margin-bottom: 4px;
   }
 
   /* ============================================================
@@ -773,10 +965,66 @@
         </li>
       </ul>
 
-      <p class="price-line">&pound;3.99 <span>/ month</span></p>
+      <p class="price-line">&pound;3.33 <span>/ month</span></p>
       <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
       <p class="fine-print">Cancel anytime. No commitment.</p>
       <p class="premium-note" id="premiumNote" aria-live="polite"></p>
+
+      <div class="premium-features" id="premiumFeatures" hidden>
+        <h3>Welcome to The Full Reading</h3>
+        <p class="feature-sub">Your premium features are unlocked below.</p>
+
+        <div class="premium-feature-block">
+          <h3>3-Card Spread</h3>
+          <p class="feature-sub">Tap each card — Past, Present, Path Ahead.</p>
+          <div class="spread-grid">
+            <div class="mini-flip-container">
+              <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Past card">
+                <div class="mini-flip-face mini-flip-front">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <span class="mini-label">Past</span>
+                </div>
+                <div class="mini-flip-face mini-flip-back">
+                  <span class="mini-position">Past</span>
+                  <p class="mini-affirmation">&mdash;</p>
+                </div>
+              </div>
+            </div>
+            <div class="mini-flip-container">
+              <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Present card">
+                <div class="mini-flip-face mini-flip-front">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <span class="mini-label">Present</span>
+                </div>
+                <div class="mini-flip-face mini-flip-back">
+                  <span class="mini-position">Present</span>
+                  <p class="mini-affirmation">&mdash;</p>
+                </div>
+              </div>
+            </div>
+            <div class="mini-flip-container">
+              <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Path Ahead card">
+                <div class="mini-flip-face mini-flip-front">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <span class="mini-label">Path Ahead</span>
+                </div>
+                <div class="mini-flip-face mini-flip-back">
+                  <span class="mini-position">Path Ahead</span>
+                  <p class="mini-affirmation">&mdash;</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="premium-feature-block">
+          <h3>Ritual Calendar</h3>
+          <p class="feature-sub">This month's suggested moments to pause. Tap a glowing day.</p>
+          <div class="ritual-cal-header" id="ritualCalHeader"></div>
+          <div class="ritual-cal-grid" id="ritualCalGrid"></div>
+          <div class="ritual-detail" id="ritualDetail">Tap a glowing day above to see its suggested ritual.</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -971,14 +1219,170 @@
   });
 
   /* ----------------------------------------------------------
-     3. PREMIUM UPSELL (placeholder — wire up to Stripe / Gumroad later)
+     3. PREMIUM UPSELL — mock payment flow for live UI testing.
+     No real charge happens here; this only simulates success so
+     the premium features can be previewed. Swap in a real Stripe
+     Payment Link / Checkout call when ready to go live.
      ---------------------------------------------------------- */
+  var premium = false; // app state flag
   var premiumBtn = document.getElementById("premiumBtn");
   var premiumNote = document.getElementById("premiumNote");
+  var premiumFeatures = document.getElementById("premiumFeatures");
 
   premiumBtn.addEventListener("click", function(){
-    premiumNote.textContent = "Secure checkout is launching soon \u2014 thank you for your interest!";
+    if(premium) return; // already unlocked, nothing to do
+
+    // 1. mystical "processing" state
+    premiumBtn.disabled = true;
+    premiumBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Reading the stars\u2026';
+    premiumNote.textContent = "";
+
+    setTimeout(function(){
+      // 2. mock payment success — flip the app state
+      premium = true;
+
+      // 3. update the button and reveal the premium features
+      premiumBtn.textContent = "\u2713 Full Reading Unlocked";
+      premiumNote.textContent = "Preview mode \u2014 no payment was taken.";
+
+      premiumFeatures.hidden = false;
+      premiumFeatures.style.animation = "none";
+      void premiumFeatures.offsetWidth; // restart the reveal-in animation
+      premiumFeatures.style.animation = "";
+
+      setTimeout(function(){
+        premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    }, 1500);
   });
+
+  /* -- 3-card spread: three independent mini flip cards -- */
+  var spreadAffirmations = [
+    "This chapter already taught you what you needed to know.",
+    "Right now, you have everything required to take the next step.",
+    "What's ahead is shaped by the calm choices you make today.",
+    "You carried more than you realise, and it made you steadier.",
+    "This moment is enough. You don't need to rush it.",
+    "The path ahead rewards patience over speed.",
+    "You are allowed to close a door gently and still move forward.",
+    "Today's clarity is tomorrow's confidence.",
+    "Something you're building now will matter more than it feels like it does."
+  ];
+
+  function pickThreeUnique(pool){
+    var copy = pool.slice();
+    var picks = [];
+    for(var n = 0; n < 3 && copy.length > 0; n++){
+      var i = Math.floor(Math.random() * copy.length);
+      picks.push(copy.splice(i, 1)[0]);
+    }
+    return picks;
+  }
+
+  document.querySelectorAll(".mini-flip-card").forEach(function(card){
+    function revealMini(){
+      if(card.classList.contains("flipped")) return;
+      card.classList.add("flipped");
+    }
+    card.addEventListener("click", revealMini);
+    card.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        revealMini();
+      }
+    });
+  });
+
+  // assign three unique spread messages once, when the section first reveals
+  var spreadFilled = false;
+  function fillSpreadOnce(){
+    if(spreadFilled) return;
+    spreadFilled = true;
+    var picks = pickThreeUnique(spreadAffirmations);
+    var texts = document.querySelectorAll("#premiumFeatures .mini-affirmation");
+    texts.forEach(function(el, i){
+      el.textContent = picks[i] || spreadAffirmations[0];
+    });
+  }
+
+  /* -- ritual calendar: current month, a few illustrative ritual days -- */
+  var RITUALS = [
+    { name: "New Moon Intention Setting", desc: "Write down one thing you're ready to welcome in." },
+    { name: "Candle Cleansing Ritual", desc: "Light a candle and let it burn while you sit in quiet for five minutes." },
+    { name: "Gratitude Journaling", desc: "List three small things that went right this week." },
+    { name: "Full Moon Release", desc: "Write down what you're ready to let go of, then put the page away." }
+  ];
+
+  function buildRitualCalendar(){
+    var headerEl = document.getElementById("ritualCalHeader");
+    var gridEl = document.getElementById("ritualCalGrid");
+    var detailEl = document.getElementById("ritualDetail");
+    if(!headerEl || !gridEl) return;
+
+    var dayLabels = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+    dayLabels.forEach(function(label){
+      var span = document.createElement("span");
+      span.textContent = label;
+      headerEl.appendChild(span);
+    });
+
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth();
+    var firstWeekday = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // spread 4 illustrative "ritual day" suggestions evenly across the month
+    var ritualDays = [
+      Math.max(1, Math.round(daysInMonth * 0.12)),
+      Math.max(1, Math.round(daysInMonth * 0.37)),
+      Math.max(1, Math.round(daysInMonth * 0.62)),
+      Math.max(1, Math.round(daysInMonth * 0.87))
+    ];
+
+    for(var i = 0; i < firstWeekday; i++){
+      var blank = document.createElement("span");
+      blank.className = "ritual-day-cell";
+      gridEl.appendChild(blank);
+    }
+
+    for(var d = 1; d <= daysInMonth; d++){
+      var idx = ritualDays.indexOf(d);
+      if(idx === -1){
+        var plain = document.createElement("span");
+        plain.className = "ritual-day-cell";
+        plain.textContent = d;
+        gridEl.appendChild(plain);
+      } else {
+        var ritual = RITUALS[idx % RITUALS.length];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ritual-day-cell is-ritual-day";
+        btn.textContent = d;
+        btn.setAttribute("aria-label", d + " \u2014 " + ritual.name);
+        btn.addEventListener("click", function(ritualForDay){
+          return function(){
+            document.querySelectorAll("#ritualCalGrid .ritual-day-cell").forEach(function(c){
+              c.classList.remove("active");
+            });
+            this.classList.add("active");
+            detailEl.innerHTML = "<strong>" + ritualForDay.name + "</strong>" + ritualForDay.desc;
+          };
+        }(ritual).bind(btn));
+        gridEl.appendChild(btn);
+      }
+    }
+  }
+
+  buildRitualCalendar();
+
+  // fill the spread the first time the premium section is actually shown
+  var premiumFeaturesObserver = new MutationObserver(function(){
+    if(!premiumFeatures.hidden){
+      fillSpreadOnce();
+    }
+  });
+  premiumFeaturesObserver.observe(premiumFeatures, { attributes: true, attributeFilter: ["hidden"] });
 
 })();
 </script>
