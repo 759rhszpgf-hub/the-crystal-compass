@@ -413,6 +413,16 @@
       var(--panel);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
+    /* failsafe hiding, independent of backface-visibility support:
+       swaps instantly at the halfway point of the 0.9s flip, when the
+       card is edge-on and invisible either way */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0s linear 0.45s, visibility 0s linear 0.45s;
+  }
+  .flip-card.flipped .flip-front{
+    opacity: 0;
+    visibility: hidden;
   }
   .flip-front::before{
     z-index: 2;
@@ -451,6 +461,13 @@
       var(--panel);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0s linear 0.45s, visibility 0s linear 0.45s;
+  }
+  .flip-card.flipped .flip-back{
+    opacity: 1;
+    visibility: visible;
   }
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
@@ -708,6 +725,19 @@
     text-align:center;
     background: var(--panel);
     box-shadow: 0 16px 30px -14px var(--shadow);
+    /* failsafe hiding, independent of backface-visibility support:
+       swaps instantly at the halfway point of the 0.8s flip */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0s linear 0.4s, visibility 0s linear 0.4s;
+  }
+  .mini-flip-card.flipped .mini-flip-front{
+    opacity: 0;
+    visibility: hidden;
+  }
+  .mini-flip-card.flipped .mini-flip-back{
+    opacity: 1;
+    visibility: visible;
   }
   .mini-flip-face .mini-back-img{
     position:absolute; inset:0;
@@ -731,6 +761,8 @@
     transform: rotateY(180deg);
     justify-content: flex-start;   /* anchor to the top, not centered — prevents clipping */
     padding: 22px 10px 16px;       /* generous top padding so the label always has room */
+    opacity: 0;
+    visibility: hidden;
     background:
       radial-gradient(circle at 50% 20%, rgba(201,162,78,0.14), transparent 60%),
       var(--panel);
