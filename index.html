@@ -227,6 +227,10 @@
     #checkin{ max-width: 760px; }
     .mood-panel{ padding: 36px; }
 
+    /* same wide runway + 4-column treatment for the encyclopedia grid */
+    #encyclopedia{ max-width: 760px; }
+    .enc-grid{ grid-template-columns: repeat(4, 1fr); }
+
     /* the ring + cosmic cat emblem grows into a larger, prouder focal
        point on iPad/laptop screens — same proportions, just bigger */
     .compass-ring{ width: 460px; height: 460px; top: 59px; }
@@ -801,6 +805,67 @@
   }
 
   /* ============================================================
+     CRYSTAL ENCYCLOPEDIA
+     ============================================================ */
+  .enc-search{
+    display:block;
+    width:100%;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  .enc-search::placeholder{ color: var(--ink-faint); }
+  .enc-search:focus{
+    outline:none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,162,78,0.15);
+  }
+  .enc-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .enc-card{
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 16px 10px;
+    text-align:center;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .enc-card:hover{ border-color: var(--gold); box-shadow: 0 0 18px rgba(201,162,78,0.25); }
+  .enc-gem{
+    display:block;
+    width: 30px; height:38px;
+    margin: 0 auto 10px;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    background: linear-gradient(160deg, var(--gem-light), var(--gem-dark));
+  }
+  .enc-card h4{
+    font-family: var(--serif);
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .enc-card p{
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.3;
+  }
+  .enc-empty{
+    grid-column: 1 / -1;
+    text-align:center;
+    color: var(--ink-faint);
+    font-size: 13.5px;
+    padding: 24px 0;
+  }
+
+  /* ============================================================
      FOOTER
      ============================================================ */
   footer{
@@ -1027,6 +1092,16 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="section" id="encyclopedia">
+    <div class="section-head">
+      <p class="eyebrow">Explore</p>
+      <h2>Crystal Encyclopedia</h2>
+      <p class="section-sub">Search our library of crystals and their core properties.</p>
+    </div>
+    <input type="text" id="encyclopediaSearch" class="enc-search" placeholder="Search crystals or properties&hellip;" aria-label="Search crystals">
+    <div class="enc-grid" id="encyclopediaGrid"></div>
   </section>
 
 </main>
@@ -1384,6 +1459,54 @@
     }
   });
   premiumFeaturesObserver.observe(premiumFeatures, { attributes: true, attributeFilter: ["hidden"] });
+
+  /* ----------------------------------------------------------
+     4. CRYSTAL ENCYCLOPEDIA — compact data-driven grid + search
+     ---------------------------------------------------------- */
+  var ENCYCLOPEDIA = [
+    { name: "Amethyst",         tag: "Intuition & Peace",           light: "#c9aef0", dark: "#553a86" },
+    { name: "Citrine",          tag: "Abundance & Joy",             light: "#f8dd9c", dark: "#a8681f" },
+    { name: "Clear Quartz",     tag: "Amplification & Clarity",     light: "#eef6f8", dark: "#8ea8b8" },
+    { name: "Rose Quartz",      tag: "Universal Love & Healing",    light: "#f6cbd8", dark: "#b8637f" },
+    { name: "Black Tourmaline", tag: "Protection & Grounding",      light: "#6b6b74", dark: "#0d0d10" },
+    { name: "Selenite",         tag: "Cleansing & Charging",        light: "#f5f3ea", dark: "#b8b3a0" },
+    { name: "Tiger's Eye",      tag: "Courage & Focus",             light: "#e6c07a", dark: "#7a5220" },
+    { name: "Lapis Lazuli",     tag: "Wisdom & Truth",              light: "#5470c4", dark: "#1c2b5e" },
+    { name: "Carnelian",        tag: "Creativity & Vitality",       light: "#ffb08a", dark: "#b34a1f" },
+    { name: "Labradorite",      tag: "Transformation & Magic",      light: "#9fd1c9", dark: "#3d5a6b" },
+    { name: "Malachite",        tag: "Transformation & Protection", light: "#7fc99b", dark: "#1f5c3a" },
+    { name: "Moonstone",        tag: "New Beginnings & Intuition",  light: "#e8e6f0", dark: "#9a97b3" }
+  ];
+
+  var encGrid = document.getElementById("encyclopediaGrid");
+  var encSearch = document.getElementById("encyclopediaSearch");
+
+  function renderEncyclopedia(list){
+    encGrid.innerHTML = "";
+    if(list.length === 0){
+      encGrid.innerHTML = '<p class="enc-empty">No crystals match your search.</p>';
+      return;
+    }
+    list.forEach(function(c){
+      var card = document.createElement("div");
+      card.className = "enc-card";
+      card.innerHTML =
+        '<span class="enc-gem" style="--gem-light:' + c.light + ';--gem-dark:' + c.dark + '" aria-hidden="true"></span>' +
+        "<h4>" + c.name + "</h4>" +
+        "<p>" + c.tag + "</p>";
+      encGrid.appendChild(card);
+    });
+  }
+
+  encSearch.addEventListener("input", function(){
+    var q = encSearch.value.trim().toLowerCase();
+    var filtered = ENCYCLOPEDIA.filter(function(c){
+      return c.name.toLowerCase().indexOf(q) !== -1 || c.tag.toLowerCase().indexOf(q) !== -1;
+    });
+    renderEncyclopedia(filtered);
+  });
+
+  renderEncyclopedia(ENCYCLOPEDIA);
 
 })();
 </script>
