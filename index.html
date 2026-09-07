@@ -672,7 +672,7 @@
   .mini-flip-container{
     perspective: 1200px;
     width: 100%;
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 3 / 5;   /* a bit taller than before, to give text room to breathe */
   }
   .mini-flip-card{
     position: relative;
@@ -717,22 +717,23 @@
   }
   .mini-flip-back{
     transform: rotateY(180deg);
-    justify-content: center;
-    padding: 14px 10px;
+    justify-content: flex-start;   /* anchor to the top, not centered — prevents clipping */
+    padding: 22px 10px 16px;       /* generous top padding so the label always has room */
     background:
       radial-gradient(circle at 50% 20%, rgba(201,162,78,0.14), transparent 60%),
       var(--panel);
   }
   .mini-flip-back .mini-position{
+    flex: none;
     font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .mini-flip-back p{
     font-family: var(--serif);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.4;
     color: var(--ink);
   }
@@ -1258,15 +1259,15 @@
 
   /* -- 3-card spread: three independent mini flip cards -- */
   var spreadAffirmations = [
-    "This chapter already taught you what you needed to know.",
-    "Right now, you have everything required to take the next step.",
-    "What's ahead is shaped by the calm choices you make today.",
+    "This chapter taught you what you needed to know.",
+    "You have everything required to take the next step.",
+    "Calm choices today shape what's ahead.",
     "You carried more than you realise, and it made you steadier.",
     "This moment is enough. You don't need to rush it.",
     "The path ahead rewards patience over speed.",
-    "You are allowed to close a door gently and still move forward.",
+    "You can close a door gently and still move forward.",
     "Today's clarity is tomorrow's confidence.",
-    "Something you're building now will matter more than it feels like it does."
+    "What you're building now matters more than it feels."
   ];
 
   function pickThreeUnique(pool){
