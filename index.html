@@ -1143,6 +1143,96 @@
   .moon-date-row span:last-child{ color: var(--gold-bright); font-family: var(--serif); white-space: nowrap; }
 
   /* ============================================================
+     MANIFESTATION STATION JOURNAL — blurred locked preview
+     ============================================================ */
+  .journal-locked-wrap{
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 50px rgba(155,127,212,0.2), 0 20px 50px -20px var(--shadow);
+  }
+  .journal-dashboard{
+    padding: 22px;
+    background: linear-gradient(165deg, #201a34, #0c0a1f);
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .journal-label{
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .journal-input{
+    width: 100%;
+    padding: 13px 16px;
+    margin-bottom: 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13.5px;
+  }
+  .journal-input::placeholder{ color: var(--ink-faint); }
+  .journal-save-btn{ width: 100%; margin-bottom: 22px; }
+  .journal-history-title{
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .journal-entry{
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-soft);
+    font-size: 12.5px;
+  }
+  .journal-entry:first-of-type{ border-top: none; padding-top: 0; }
+  .journal-entry-date{
+    flex: none;
+    width: 52px;
+    color: var(--gold-bright);
+    font-family: var(--serif);
+  }
+  .journal-entry-text{ color: var(--ink-muted); }
+  .journal-lock-overlay{
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+    padding: 20px;
+    background: rgba(11,9,18,0.35);
+  }
+  .journal-lock-icon{
+    font-size: 26px;
+    color: var(--gold-bright);
+    margin-bottom: 6px;
+    text-shadow: 0 0 18px rgba(234,200,120,0.5);
+  }
+  .journal-lock-title{
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .journal-lock-sub{
+    font-size: 12px;
+    color: var(--ink-muted);
+    max-width: 240px;
+  }
+
+  /* ============================================================
      SHOWCASE GRID — feature preview cards on the upsell screen
      ============================================================ */
   .showcase-grid{
@@ -1496,6 +1586,36 @@
                 <div class="moon-date-row"><span>Next New Moon</span><span>Coming soon</span></div>
                 <div class="moon-date-row"><span>Mercury Retrograde</span><span>Coming soon</span></div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="premium-feature-block">
+          <h3>Manifestation Station Journal</h3>
+          <p class="feature-sub">Your private space to log intentions and track your ritual history.</p>
+          <div class="journal-locked-wrap">
+            <div class="journal-dashboard" aria-hidden="true">
+              <label class="journal-label" for="journalInputPreview">What are you manifesting with your crystal today?</label>
+              <input type="text" id="journalInputPreview" class="journal-input" placeholder="I am manifesting&hellip;" disabled>
+              <button type="button" class="btn-premium journal-save-btn" disabled>Save to my Ritual Journal</button>
+              <p class="journal-history-title">Past Entries</p>
+              <div class="journal-entry">
+                <span class="journal-entry-date">12 Sept</span>
+                <span class="journal-entry-text">Calling in clarity before my big presentation.</span>
+              </div>
+              <div class="journal-entry">
+                <span class="journal-entry-date">9 Sept</span>
+                <span class="journal-entry-text">Releasing comparison, welcoming my own pace.</span>
+              </div>
+              <div class="journal-entry">
+                <span class="journal-entry-date">5 Sept</span>
+                <span class="journal-entry-text">Grounding my energy before the new moon.</span>
+              </div>
+            </div>
+            <div class="journal-lock-overlay">
+              <span class="journal-lock-icon" aria-hidden="true">&#128274;</span>
+              <p class="journal-lock-title">Coming Soon</p>
+              <p class="journal-lock-sub">Your Ritual Journal is being prepared for members.</p>
             </div>
           </div>
         </div>
