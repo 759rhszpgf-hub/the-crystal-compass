@@ -227,10 +227,6 @@
     #checkin{ max-width: 760px; }
     .mood-panel{ padding: 36px; }
 
-    /* same wide runway + 4-column treatment for the encyclopedia grid */
-    #encyclopedia{ max-width: 760px; }
-    .enc-grid{ grid-template-columns: repeat(4, 1fr); }
-
     /* the ring + cosmic cat emblem grows into a larger, prouder focal
        point on iPad/laptop screens — same proportions, just bigger */
     .compass-ring{ width: 460px; height: 460px; top: 59px; }
@@ -906,6 +902,98 @@
   }
 
   /* ============================================================
+     MOON PHASE TRACKER — "Mystical Aura Horizon" placeholder
+     ============================================================ */
+  .moon-tracker-card{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gold);
+    overflow: hidden;
+    background: linear-gradient(135deg, #3a1f5c 0%, #201a48 55%, #0c0a1f 100%);
+    box-shadow: 0 0 50px rgba(155,127,212,0.25), 0 20px 50px -20px var(--shadow);
+  }
+  .moon-tracker-card::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 18% 15%, rgba(201,162,78,0.16), transparent 55%),
+      radial-gradient(circle at 85% 85%, rgba(155,127,212,0.22), transparent 60%);
+    pointer-events:none;
+  }
+  .moon-badge{
+    position:absolute;
+    top: 12px; right: 12px;
+    z-index: 2;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(201,162,78,0.5);
+    background: rgba(11,9,18,0.55);
+    color: var(--gold-bright);
+  }
+  .moon-visual{
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 65%, rgba(0,0,0,0.16) 0 5px, transparent 6px),
+      radial-gradient(circle at 62% 42%, rgba(0,0,0,0.14) 0 4px, transparent 5px),
+      radial-gradient(circle at 48% 78%, rgba(0,0,0,0.12) 0 4px, transparent 5px),
+      radial-gradient(circle at 32% 30%, #f6f4ec 0%, #dad7ea 35%, #9a97b3 72%, #6d698a 100%);
+    box-shadow: 0 0 26px rgba(232,225,255,0.35);
+  }
+  .moon-visual::after{
+    content:'';
+    position:absolute; inset:0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 78% 50%, transparent 52%, rgba(12,10,31,0.88) 60%);
+  }
+  .moon-info{
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+  }
+  .moon-current{
+    font-family: var(--serif);
+    font-size: 14.5px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .moon-current strong{ color: var(--gold-bright); }
+  .moon-sub{
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-bottom: 14px;
+  }
+  .moon-dates{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .moon-date-row{
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    background: rgba(11,9,18,0.35);
+    border: 1px solid rgba(201,162,78,0.18);
+    border-radius: 8px;
+    font-size: 11px;
+  }
+  .moon-date-row span:first-child{ color: var(--ink-muted); }
+  .moon-date-row span:last-child{ color: var(--gold-bright); font-family: var(--serif); white-space: nowrap; }
+
+  /* ============================================================
      FOOTER
      ============================================================ */
   footer{
@@ -932,6 +1020,8 @@
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
+    .moon-tracker-card{ flex-direction: column; align-items: flex-start; padding: 18px; }
+    .moon-badge{ position: static; display: inline-block; margin-bottom: 12px; }
     .mood-point{ min-height: 80px; padding: 14px 8px; font-size: 12.5px; }
   }
 
@@ -1130,18 +1220,33 @@
           <div class="ritual-cal-grid" id="ritualCalGrid"></div>
           <div class="ritual-detail" id="ritualDetail">Tap a glowing day above to see its suggested ritual.</div>
         </div>
+
+        <div class="premium-feature-block">
+          <h3>Crystal Encyclopedia</h3>
+          <p class="feature-sub">Search our library of crystals and their core properties.</p>
+          <input type="text" id="encyclopediaSearch" class="enc-search" placeholder="Search crystals or properties&hellip;" aria-label="Search crystals">
+          <div class="enc-grid" id="encyclopediaGrid"></div>
+        </div>
+
+        <div class="premium-feature-block">
+          <h3>Moon Phase Tracker</h3>
+          <p class="feature-sub">Coming soon &mdash; a live look at the sky above.</p>
+          <div class="moon-tracker-card">
+            <span class="moon-badge">Premium Cosmic Tracking</span>
+            <div class="moon-visual" aria-hidden="true"></div>
+            <div class="moon-info">
+              <p class="moon-current">Currently: <strong>Moon in Taurus</strong></p>
+              <p class="moon-sub">Waxing Gibbous &middot; 78% illuminated</p>
+              <div class="moon-dates">
+                <div class="moon-date-row"><span>Next Full Moon</span><span>Coming soon</span></div>
+                <div class="moon-date-row"><span>Next New Moon</span><span>Coming soon</span></div>
+                <div class="moon-date-row"><span>Mercury Retrograde</span><span>Coming soon</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section class="section" id="encyclopedia">
-    <div class="section-head">
-      <p class="eyebrow">Explore</p>
-      <h2>Crystal Encyclopedia</h2>
-      <p class="section-sub">Search our library of crystals and their core properties.</p>
-    </div>
-    <input type="text" id="encyclopediaSearch" class="enc-search" placeholder="Search crystals or properties&hellip;" aria-label="Search crystals">
-    <div class="enc-grid" id="encyclopediaGrid"></div>
   </section>
 
 </main>
