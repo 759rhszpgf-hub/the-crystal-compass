@@ -362,6 +362,148 @@
   }
 
   /* ============================================================
+     CRYSTAL CARD EXTRAS — free tip + premium journal upsell
+     ============================================================ */
+  .crystal-extra{
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+  }
+  .tip-toggle-btn{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tip-toggle-btn:hover{ border-color: var(--gold); box-shadow: 0 0 14px rgba(201,162,78,0.25); }
+  .tip-toggle-btn .tip-icon{ color: var(--gold); font-size: 13px; }
+  .tip-panel{
+    padding: 14px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    animation: reveal-in 0.4s ease;
+  }
+  .tip-panel[hidden]{ display: none; }
+  .tip-panel .tip-reminder{
+    display: block;
+    margin-top: 10px;
+    font-size: 11.5px;
+    font-style: italic;
+    color: var(--gold-bright);
+  }
+  .premium-tip-btn{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gold);
+    background: linear-gradient(135deg, rgba(155,127,212,0.2), rgba(11,9,18,0.55));
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-align: left;
+    box-shadow: 0 0 20px rgba(155,127,212,0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .premium-tip-btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 0 28px rgba(155,127,212,0.4);
+  }
+  .premium-tip-btn .amethyst-icon{
+    flex: none;
+    width: 18px;
+    height: 22px;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    background: linear-gradient(160deg, #c9aef0, #553a86);
+    box-shadow: 0 0 12px rgba(155,127,212,0.7);
+    animation: logo-glow 3s ease-in-out infinite;
+  }
+  .premium-tip-btn .lock-glyph{
+    margin-left: auto;
+    color: var(--gold-bright);
+    font-size: 12px;
+  }
+
+  /* ============================================================
+     PREMIUM UPGRADE MODAL
+     ============================================================ */
+  .modal-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(8,6,14,0.72);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .modal-overlay[hidden]{ display: none; }
+  .modal-box{
+    position: relative;
+    max-width: 360px;
+    width: 100%;
+    padding: 34px 26px 28px;
+    text-align: center;
+    background: linear-gradient(165deg, #241c33, #0c0a1f);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 60px rgba(155,127,212,0.35), 0 30px 60px -20px var(--shadow);
+    animation: reveal-in 0.35s ease;
+  }
+  .modal-close{
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    background: transparent;
+    color: var(--ink-muted);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .modal-close:hover{ border-color: var(--gold); color: var(--ink); }
+  .modal-icon{
+    width: 38px;
+    height: 46px;
+    margin: 0 auto 16px;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    background: linear-gradient(160deg, #c9aef0, #553a86);
+    box-shadow: 0 0 24px rgba(155,127,212,0.6);
+  }
+  .modal-box h3{
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--gold-bright);
+    margin-bottom: 10px;
+  }
+  .modal-box p{
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  .modal-box .btn-premium{ width: 100%; }
+
+  /* ============================================================
      DAILY GUIDANCE CARD (3D flip)
      ============================================================ */
   .flip-container{
@@ -1170,6 +1312,23 @@
       <p class="desc" id="crystalDesc"></p>
       <p class="crystal-price" id="crystalPrice"></p>
       <a href="#" id="crystalEtsyLink" class="btn-etsy" target="_blank" rel="noopener noreferrer">Find this crystal on Etsy &#8599;</a>
+
+      <div class="crystal-extra">
+        <button type="button" class="tip-toggle-btn" id="tipToggleBtn" aria-expanded="false">
+          <span class="tip-icon" aria-hidden="true">&#10022;</span>
+          Free Crystal Ritual Tip
+        </button>
+        <div class="tip-panel" id="tipPanel" hidden>
+          <span id="tipText"></span>
+          <span class="tip-reminder">Need this crystal for your ritual? Grab it on Etsy above!</span>
+        </div>
+
+        <button type="button" class="premium-tip-btn" id="journalUpsellBtn">
+          <span class="amethyst-icon" aria-hidden="true"></span>
+          Unlock Manifestation Station Journal
+          <span class="lock-glyph" aria-hidden="true">&#128274;</span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1351,6 +1510,16 @@
   <p>The Crystal Compass</p>
 </footer>
 
+<div class="modal-overlay" id="upgradeModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="upgradeModalTitle">
+    <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">&#10005;</button>
+    <div class="modal-icon" aria-hidden="true"></div>
+    <h3 id="upgradeModalTitle">This is a Premium Feature</h3>
+    <p>Your Manifestation Station Journal &mdash; guided prompts for every crystal match &mdash; unlocks with The Full Reading membership.</p>
+    <button type="button" class="btn-premium" id="modalUpgradeCta">See Premium Plans</button>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -1366,7 +1535,8 @@
       light: "#c9aef0",
       dark: "#553a86",
       glow: "rgba(155,127,212,0.55)",
-      query: "amethyst crystal"
+      query: "amethyst crystal",
+      tip: "Hold your amethyst for two quiet minutes before bed and silently release one worry from today."
     },
     tired: {
       name: "Citrine",
@@ -1375,7 +1545,8 @@
       light: "#f8dd9c",
       dark: "#a8681f",
       glow: "rgba(224,164,88,0.55)",
-      query: "citrine crystal"
+      query: "citrine crystal",
+      tip: "Hold your citrine in natural light for a moment and name one thing you're inviting more energy into."
     },
     unfocused: {
       name: "Clear Quartz",
@@ -1384,7 +1555,8 @@
       light: "#eef6f8",
       dark: "#8ea8b8",
       glow: "rgba(201,214,227,0.55)",
-      query: "clear quartz crystal point"
+      query: "clear quartz crystal point",
+      tip: "Cup your clear quartz in both hands and picture today's top priority in sharp, clear detail."
     },
     heartbroken: {
       name: "Rose Quartz",
@@ -1393,7 +1565,8 @@
       light: "#f6cbd8",
       dark: "#b8637f",
       glow: "rgba(232,168,184,0.55)",
-      query: "rose quartz crystal"
+      query: "rose quartz crystal",
+      tip: "Rest rose quartz over your heart and quietly say one gentle thing to yourself, like a close friend would."
     },
     inspired: {
       name: "Carnelian",
@@ -1402,7 +1575,8 @@
       light: "#ffb08a",
       dark: "#b34a1f",
       glow: "rgba(255,140,90,0.55)",
-      query: "carnelian crystal"
+      query: "carnelian crystal",
+      tip: "Hold carnelian in your palm and speak your boldest idea out loud, once, with full conviction."
     },
     grateful: {
       name: "Green Aventurine",
@@ -1411,7 +1585,8 @@
       light: "#b9e8c9",
       dark: "#3f8f5e",
       glow: "rgba(140,214,168,0.55)",
-      query: "green aventurine crystal"
+      query: "green aventurine crystal",
+      tip: "Carry green aventurine in your pocket today and notice one small stroke of good fortune as it happens."
     },
     motivated: {
       name: "Tiger's Eye",
@@ -1420,7 +1595,8 @@
       light: "#e6c07a",
       dark: "#7a5220",
       glow: "rgba(214,168,88,0.55)",
-      query: "tigers eye crystal"
+      query: "tigers eye crystal",
+      tip: "Hold tiger's eye before your hardest task today and say, 'I have what this moment needs.'"
     },
     peaceful: {
       name: "Blue Lace Agate",
@@ -1429,7 +1605,8 @@
       light: "#cfe8f5",
       dark: "#6f9db3",
       glow: "rgba(180,214,232,0.55)",
-      query: "blue lace agate crystal"
+      query: "blue lace agate crystal",
+      tip: "Hold blue lace agate near your throat and speak one honest thought out loud, softly, just once."
     }
   };
 
@@ -1440,6 +1617,9 @@
   var descEl = document.getElementById("crystalDesc");
   var priceEl = document.getElementById("crystalPrice");
   var etsyLink = document.getElementById("crystalEtsyLink");
+  var tipToggleBtn = document.getElementById("tipToggleBtn");
+  var tipPanel = document.getElementById("tipPanel");
+  var tipText = document.getElementById("tipText");
 
   function selectMood(mood, btn){
     var data = CRYSTALS[mood];
@@ -1456,6 +1636,11 @@
     descEl.textContent = data.desc;
     priceEl.textContent = "From " + data.price;
     etsyLink.href = "https://www.etsy.com/search?q=" + encodeURIComponent(data.query);
+    tipText.textContent = data.tip;
+
+    // collapse the tip panel again, since it belongs to the previous crystal
+    tipPanel.hidden = true;
+    tipToggleBtn.setAttribute("aria-expanded", "false");
 
     reveal.hidden = false;
     reveal.style.animation = "none";
@@ -1474,6 +1659,43 @@
     btn.addEventListener("click", function(){
       selectMood(btn.getAttribute("data-mood"), btn);
     });
+  });
+
+  tipToggleBtn.addEventListener("click", function(){
+    var isHidden = tipPanel.hidden;
+    tipPanel.hidden = !isHidden;
+    tipToggleBtn.setAttribute("aria-expanded", String(isHidden));
+  });
+
+  /* -- premium journal upsell: opens the shared upgrade modal -- */
+  var journalUpsellBtn = document.getElementById("journalUpsellBtn");
+  var upgradeModal = document.getElementById("upgradeModal");
+  var modalCloseBtn = document.getElementById("modalCloseBtn");
+  var modalUpgradeCta = document.getElementById("modalUpgradeCta");
+
+  function openUpgradeModal(){
+    upgradeModal.hidden = false;
+  }
+  function closeUpgradeModal(){
+    upgradeModal.hidden = true;
+  }
+
+  journalUpsellBtn.addEventListener("click", openUpgradeModal);
+  modalCloseBtn.addEventListener("click", closeUpgradeModal);
+  upgradeModal.addEventListener("click", function(e){
+    if(e.target === upgradeModal) closeUpgradeModal();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && !upgradeModal.hidden) closeUpgradeModal();
+  });
+  modalUpgradeCta.addEventListener("click", function(){
+    closeUpgradeModal();
+    var premiumSection = document.getElementById("premium");
+    if(premiumSection){
+      setTimeout(function(){
+        premiumSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
   });
 
   /* ----------------------------------------------------------
