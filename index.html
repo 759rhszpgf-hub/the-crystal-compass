@@ -227,6 +227,11 @@
     #checkin{ max-width: 760px; }
     .mood-panel{ padding: 36px; }
 
+    /* wider runway for the membership panel too, so its 2-up showcase
+       grid (and the features inside it) have real room to breathe */
+    #premium{ max-width: 760px; }
+    .showcase-grid{ grid-template-columns: 1fr 1fr; }
+
     /* the ring + cosmic cat emblem grows into a larger, prouder focal
        point on iPad/laptop screens — same proportions, just bigger */
     .compass-ring{ width: 460px; height: 460px; top: 59px; }
@@ -929,6 +934,7 @@
     position: static;
     display: inline-block;
     z-index: 2;
+    margin-bottom: 10px;
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -993,6 +999,67 @@
   }
   .moon-date-row span:first-child{ color: var(--ink-muted); }
   .moon-date-row span:last-child{ color: var(--gold-bright); font-family: var(--serif); white-space: nowrap; }
+
+  /* ============================================================
+     SHOWCASE GRID — feature preview cards on the upsell screen
+     ============================================================ */
+  .showcase-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 28px 0;
+    text-align: left;
+  }
+  .enc-showcase-card{
+    position: relative;
+    padding: 22px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gold);
+    overflow: hidden;
+    background: linear-gradient(135deg, #241c33 0%, #170f26 55%, #0c0a1f 100%);
+    box-shadow: 0 0 50px rgba(201,162,78,0.22), 0 20px 50px -20px var(--shadow);
+  }
+  .enc-showcase-card::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(201,162,78,0.16), transparent 55%),
+      radial-gradient(circle at 85% 85%, rgba(155,127,212,0.14), transparent 60%);
+    pointer-events:none;
+  }
+  .enc-showcase-card > *{ position: relative; z-index: 1; }
+  .enc-showcase-icon{
+    width: 30px; height: 38px;
+    margin-bottom: 12px;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    background: linear-gradient(160deg, var(--gold-bright), #7a5220);
+    box-shadow: 0 0 16px rgba(201,162,78,0.4);
+  }
+  .enc-showcase-card h4{
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .enc-showcase-card p{
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+  .enc-chip-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .enc-chip{
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    color: var(--ink-muted);
+    background: rgba(11,9,18,0.35);
+  }
 
   /* ============================================================
      FOOTER
@@ -1159,6 +1226,35 @@
           <span><strong>Unlimited Guidance Cards</strong>Draw as many daily cards as you like, with a saved history.</span>
         </li>
       </ul>
+
+      <div class="showcase-grid">
+        <div class="moon-tracker-card">
+          <span class="moon-badge">Premium Cosmic Tracking</span>
+          <div class="moon-visual" aria-hidden="true"></div>
+          <div class="moon-info">
+            <p class="moon-current">Currently: <strong>Moon in Taurus</strong></p>
+            <p class="moon-sub">Waxing Gibbous &middot; 78% illuminated</p>
+            <div class="moon-dates">
+              <div class="moon-date-row"><span>Next Full Moon</span><span>Coming soon</span></div>
+              <div class="moon-date-row"><span>Next New Moon</span><span>Coming soon</span></div>
+              <div class="moon-date-row"><span>Mercury Retrograde</span><span>Coming soon</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="enc-showcase-card">
+          <span class="moon-badge">Premium Feature</span>
+          <div class="enc-showcase-icon" aria-hidden="true"></div>
+          <h4>Crystal Encyclopedia</h4>
+          <p>Search a growing library of crystals and their core properties, right inside your dashboard.</p>
+          <div class="enc-chip-row">
+            <span class="enc-chip">Amethyst</span>
+            <span class="enc-chip">Rose Quartz</span>
+            <span class="enc-chip">Moonstone</span>
+            <span class="enc-chip">+9 more</span>
+          </div>
+        </div>
+      </div>
 
       <p class="price-line">&pound;3.33 <span>/ month</span></p>
       <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
