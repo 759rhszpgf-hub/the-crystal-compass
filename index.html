@@ -1160,6 +1160,19 @@
     pointer-events: none;
     -webkit-user-select: none;
     user-select: none;
+    transition: filter 0.5s ease;
+  }
+  /* once unlocked, the journal becomes real and usable, matching every
+     other premium feature that unlocks with the button */
+  .journal-locked-wrap.is-unlocked .journal-dashboard{
+    filter: none;
+    -webkit-filter: none;
+    pointer-events: auto;
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+  .journal-locked-wrap.is-unlocked .journal-lock-overlay{
+    display: none;
   }
   .journal-label{
     display: block;
@@ -1540,26 +1553,28 @@
         <div class="premium-feature-block">
           <h3>Manifestation Station Journal</h3>
           <p class="feature-sub">Your private space to log intentions and track your ritual history.</p>
-          <div class="journal-locked-wrap">
-            <div class="journal-dashboard" aria-hidden="true">
+          <div class="journal-locked-wrap" id="journalLockedWrap">
+            <div class="journal-dashboard" id="journalDashboard" aria-hidden="true">
               <label class="journal-label" for="journalInputPreview">What are you manifesting with your crystal today?</label>
               <input type="text" id="journalInputPreview" class="journal-input" placeholder="I am manifesting&hellip;" disabled>
-              <button type="button" class="btn-premium journal-save-btn" disabled>Save to my Ritual Journal</button>
+              <button type="button" class="btn-premium journal-save-btn" id="journalSaveBtn" disabled>Save to my Ritual Journal</button>
               <p class="journal-history-title">Past Entries</p>
-              <div class="journal-entry">
-                <span class="journal-entry-date">12 Sept</span>
-                <span class="journal-entry-text">Calling in clarity before my big presentation.</span>
-              </div>
-              <div class="journal-entry">
-                <span class="journal-entry-date">9 Sept</span>
-                <span class="journal-entry-text">Releasing comparison, welcoming my own pace.</span>
-              </div>
-              <div class="journal-entry">
-                <span class="journal-entry-date">5 Sept</span>
-                <span class="journal-entry-text">Grounding my energy before the new moon.</span>
+              <div id="journalEntryList">
+                <div class="journal-entry">
+                  <span class="journal-entry-date">12 Sept</span>
+                  <span class="journal-entry-text">Calling in clarity before my big presentation.</span>
+                </div>
+                <div class="journal-entry">
+                  <span class="journal-entry-date">9 Sept</span>
+                  <span class="journal-entry-text">Releasing comparison, welcoming my own pace.</span>
+                </div>
+                <div class="journal-entry">
+                  <span class="journal-entry-date">5 Sept</span>
+                  <span class="journal-entry-text">Grounding my energy before the new moon.</span>
+                </div>
               </div>
             </div>
-            <div class="journal-lock-overlay">
+            <div class="journal-lock-overlay" id="journalLockOverlay">
               <span class="journal-lock-icon" aria-hidden="true">&#128274;</span>
               <p class="journal-lock-title">Premium Manifestation Feature Locked</p>
               <p class="journal-lock-sub"><button type="button" class="inline-link" id="journalSubscribeLink">Subscribe to Premium</button> below to unlock your private space, log intentions, and save your crystal ritual history.</p>
@@ -1849,6 +1864,10 @@
   var premiumBtn = document.getElementById("premiumBtn");
   var premiumNote = document.getElementById("premiumNote");
   var premiumFeatures = document.getElementById("premiumFeatures");
+  var journalLockedWrap = document.getElementById("journalLockedWrap");
+  var journalDashboard = document.getElementById("journalDashboard");
+  var journalInput = document.getElementById("journalInputPreview");
+  var journalSaveBtn = document.getElementById("journalSaveBtn");
 
   premiumBtn.addEventListener("click", function(){
     if(isUnlocked) return; // already unlocked, nothing to do
@@ -1877,11 +1896,35 @@
         void premiumFeatures.offsetWidth; // restart the reveal-in animation
         premiumFeatures.style.animation = "";
 
+        // unblur and unlock the Manifestation Station Journal too, at the
+        // same time as everything else — no separate unlock step
+        journalLockedWrap.classList.add("is-unlocked");
+        journalDashboard.removeAttribute("aria-hidden");
+        journalInput.disabled = false;
+        journalSaveBtn.disabled = false;
+
         setTimeout(function(){
           premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 120);
       }, 500);
     }, 1500);
+  });
+
+  /* -- journal save button: now functional once unlocked, adds the
+     typed intention to the top of the Past Entries list -- */
+  var journalEntryList = document.getElementById("journalEntryList");
+  journalSaveBtn.addEventListener("click", function(){
+    var text = journalInput.value.trim();
+    if(!text) return;
+    var entry = document.createElement("div");
+    entry.className = "journal-entry";
+    var todayLabel = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    entry.innerHTML =
+      '<span class="journal-entry-date">' + todayLabel + '</span>' +
+      '<span class="journal-entry-text"></span>';
+    entry.querySelector(".journal-entry-text").textContent = text;
+    journalEntryList.insertBefore(entry, journalEntryList.firstChild);
+    journalInput.value = "";
   });
 
   /* -- 3-card spread: three independent mini flip cards -- */
