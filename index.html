@@ -2094,6 +2094,26 @@
   var journalSaveBtn = document.getElementById("journalSaveBtn");
   var syncMeaningWrap = document.getElementById("syncMeaningWrap");
 
+  // ================================================================
+  // TEMPORARY DEV TESTING TOGGLE
+  // Set to true to preview the unlocked state instantly on page load
+  // (no need to click the button or wait for the animation).
+  // Change back to false before this goes live for real users!
+  // ================================================================
+  var DEV_START_UNLOCKED = true;
+  if(DEV_START_UNLOCKED){
+    isUnlocked = true;
+    premiumBtn.textContent = "\u2713 Full Reading Unlocked";
+    premiumBtn.disabled = true;
+    paymentCta.hidden = true;
+    premiumFeatures.hidden = false;
+    journalLockedWrap.classList.add("is-unlocked");
+    journalDashboard.removeAttribute("aria-hidden");
+    journalInput.disabled = false;
+    journalSaveBtn.disabled = false;
+    syncMeaningWrap.classList.add("is-unlocked");
+  }
+
   premiumBtn.addEventListener("click", function(){
     if(isUnlocked) return; // already unlocked, nothing to do
 
