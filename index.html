@@ -1702,14 +1702,12 @@
      blurred for free users (see CSS .sync-meaning-wrap).
      ---------------------------------------------------------- */
   var ANGEL_NUMBERS = [
-    { num: "1111", meaning: "A powerful alignment moment \u2014 a sign to focus your thoughts on exactly what you want to manifest today." },
-    { num: "1212", meaning: "Step forward in faith. You're being guided gently toward your next chapter." },
-    { num: "1313", meaning: "Creative energy is high \u2014 trust the idea you keep circling back to." },
-    { num: "1414", meaning: "Stay grounded. The structure you build now supports the freedom you're working toward." },
-    { num: "1515", meaning: "Change is coming. Stay open \u2014 this shift is happening for you, not to you." },
-    { num: "2222", meaning: "Balance and trust. Small steps are working, even if you can't see the full picture yet." },
-    { num: "3333", meaning: "Your guides are near, encouraging growth, creativity, and self-expression today." },
-    { num: "4444", meaning: "A message of protection and stability. You're exactly where you're meant to be." }
+    { num: "1111", meaning: "A powerful gateway of manifestation is opening for you right now. Align your thoughts with your highest desires." },
+    { num: "2222", meaning: "Trust that everything is unfolding exactly as it is meant to. Balance, harmony, and peace are returning." },
+    { num: "1212", meaning: "Your thoughts and energies are aligning perfectly with your true soul purpose. Trust the universe." },
+    { num: "1313", meaning: "The ancient guides are surrounding you with creative inspiration. Release any lingering doubts." },
+    { num: "1515", meaning: "Significant, positive changes are heading your way. Embrace these shifts with an open heart." },
+    { num: "4444", meaning: "You are deeply protected and guided by the universe. Trust that you are stable and supported." }
   ];
   var todayAngel = ANGEL_NUMBERS[new Date().getDate() % ANGEL_NUMBERS.length];
   var syncNumberEl = document.getElementById("syncNumber");
@@ -1722,88 +1720,201 @@
   /* ----------------------------------------------------------
      1. MOOD CHECK-IN
      ---------------------------------------------------------- */
-  var CRYSTALS = {
-    anxious: {
-      name: "Amethyst",
-      desc: "A calming stone that quiets a racing mind, eases stress, and invites deeper, more peaceful sleep.",
-      price: "\u00A314.00",
-      light: "#c9aef0",
-      dark: "#553a86",
-      glow: "rgba(155,127,212,0.55)",
-      query: "amethyst crystal",
-      tip: "Hold your amethyst for two quiet minutes before bed and silently release one worry from today."
-    },
-    tired: {
-      name: "Citrine",
-      desc: "A bright, energising stone known for lifting low mood, restoring motivation, and sharpening focus.",
-      price: "\u00A311.50",
-      light: "#f8dd9c",
-      dark: "#a8681f",
-      glow: "rgba(224,164,88,0.55)",
-      query: "citrine crystal",
-      tip: "Hold your citrine in natural light for a moment and name one thing you're inviting more energy into."
-    },
-    unfocused: {
-      name: "Clear Quartz",
-      desc: "The master healer stone. It amplifies clarity, clears mental fog, and sharpens intention.",
-      price: "\u00A39.00",
-      light: "#eef6f8",
-      dark: "#8ea8b8",
-      glow: "rgba(201,214,227,0.55)",
-      query: "clear quartz crystal point",
-      tip: "Cup your clear quartz in both hands and picture today's top priority in sharp, clear detail."
-    },
-    heartbroken: {
-      name: "Rose Quartz",
-      desc: "The stone of unconditional love. It opens the heart, soothes grief, and encourages self-compassion.",
-      price: "\u00A312.50",
-      light: "#f6cbd8",
-      dark: "#b8637f",
-      glow: "rgba(232,168,184,0.55)",
-      query: "rose quartz crystal",
-      tip: "Rest rose quartz over your heart and quietly say one gentle thing to yourself, like a close friend would."
-    },
-    inspired: {
-      name: "Carnelian",
-      desc: "A vibrant, fiery stone that fuels creativity, courage, and a fresh spark of inspiration.",
-      price: "\u00A310.50",
-      light: "#ffb08a",
-      dark: "#b34a1f",
-      glow: "rgba(255,140,90,0.55)",
-      query: "carnelian crystal",
-      tip: "Hold carnelian in your palm and speak your boldest idea out loud, once, with full conviction."
-    },
-    grateful: {
-      name: "Green Aventurine",
-      desc: "Known as the stone of opportunity, it deepens gratitude and invites gentle, steady abundance.",
-      price: "\u00A39.50",
-      light: "#b9e8c9",
-      dark: "#3f8f5e",
-      glow: "rgba(140,214,168,0.55)",
-      query: "green aventurine crystal",
-      tip: "Carry green aventurine in your pocket today and notice one small stroke of good fortune as it happens."
-    },
-    motivated: {
-      name: "Tiger's Eye",
-      desc: "A grounding stone of confidence and willpower, perfect for turning motivation into action.",
-      price: "\u00A310.00",
-      light: "#e6c07a",
-      dark: "#7a5220",
-      glow: "rgba(214,168,88,0.55)",
-      query: "tigers eye crystal",
-      tip: "Hold tiger's eye before your hardest task today and say, 'I have what this moment needs.'"
-    },
-    peaceful: {
-      name: "Blue Lace Agate",
-      desc: "A gentle, soothing stone that supports calm communication and lasting inner peace.",
-      price: "\u00A39.50",
-      light: "#cfe8f5",
-      dark: "#6f9db3",
-      glow: "rgba(180,214,232,0.55)",
-      query: "blue lace agate crystal",
-      tip: "Hold blue lace agate near your throat and speak one honest thought out loud, softly, just once."
-    }
+  var CRYSTAL_POOLS = {
+    anxious: [
+      {
+        name: "Amethyst",
+        desc: "A calming stone that quiets a racing mind, eases stress, and invites deeper, more peaceful sleep.",
+        price: "\u00A314.00", light: "#c9aef0", dark: "#553a86", glow: "rgba(155,127,212,0.55)",
+        query: "amethyst crystal",
+        tip: "Hold your amethyst for two quiet minutes before bed and silently release one worry from today."
+      },
+      {
+        name: "Lepidolite",
+        desc: "A gentle lithium-rich stone that soothes anxious thoughts and restores a sense of emotional balance.",
+        price: "\u00A312.00", light: "#c9b8dd", dark: "#5c4a73", glow: "rgba(160,130,190,0.55)",
+        query: "lepidolite crystal",
+        tip: "Hold lepidolite in your palm and take five slow breaths, letting each one settle a little deeper."
+      },
+      {
+        name: "Black Tourmaline",
+        desc: "A protective, grounding stone that absorbs anxious, scattered energy and steadies your nerves.",
+        price: "\u00A310.50", light: "#6b6b74", dark: "#0d0d10", glow: "rgba(110,110,120,0.5)",
+        query: "black tourmaline crystal",
+        tip: "Hold black tourmaline with both hands and picture a calm, quiet shield settling around you."
+      }
+    ],
+    tired: [
+      {
+        name: "Citrine",
+        desc: "A bright, energising stone known for lifting low mood, restoring motivation, and sharpening focus.",
+        price: "\u00A311.50", light: "#f8dd9c", dark: "#a8681f", glow: "rgba(224,164,88,0.55)",
+        query: "citrine crystal",
+        tip: "Hold your citrine in natural light for a moment and name one thing you're inviting more energy into."
+      },
+      {
+        name: "Sunstone",
+        desc: "A warm, joyful stone that lifts heavy energy and gently restores a sense of vitality.",
+        price: "\u00A311.00", light: "#ffce8a", dark: "#c1701f", glow: "rgba(255,181,90,0.55)",
+        query: "sunstone crystal",
+        tip: "Hold sunstone up to the light and picture warmth spreading slowly through your tired shoulders."
+      },
+      {
+        name: "Red Jasper",
+        desc: "A steady, earthy stone that builds slow, sustained energy rather than a short-lived burst.",
+        price: "\u00A39.00", light: "#d98a7a", dark: "#7a2f22", glow: "rgba(196,90,70,0.5)",
+        query: "red jasper crystal",
+        tip: "Hold red jasper and plant both feet flat on the floor, breathing steadily for ten seconds."
+      }
+    ],
+    unfocused: [
+      {
+        name: "Clear Quartz",
+        desc: "The master healer stone. It amplifies clarity, clears mental fog, and sharpens intention.",
+        price: "\u00A39.00", light: "#eef6f8", dark: "#8ea8b8", glow: "rgba(201,214,227,0.55)",
+        query: "clear quartz crystal point",
+        tip: "Cup your clear quartz in both hands and picture today's top priority in sharp, clear detail."
+      },
+      {
+        name: "Fluorite",
+        desc: "A soothing stone that clears mental clutter and sharpens focus when your thoughts feel scattered.",
+        price: "\u00A310.00", light: "#a8d8d0", dark: "#3f7a70", glow: "rgba(150,210,195,0.5)",
+        query: "fluorite crystal",
+        tip: "Hold fluorite and name, out loud, the one task that actually matters most in the next hour."
+      },
+      {
+        name: "Sodalite",
+        desc: "A deep blue stone that supports rational thought, clarity, and clear, honest communication.",
+        price: "\u00A39.50", light: "#7a92c9", dark: "#28345c", glow: "rgba(110,140,200,0.5)",
+        query: "sodalite crystal",
+        tip: "Hold sodalite near your throat and speak your next task out loud, plainly, in one short sentence."
+      }
+    ],
+    heartbroken: [
+      {
+        name: "Rose Quartz",
+        desc: "The stone of unconditional love. It opens the heart, soothes grief, and encourages self-compassion.",
+        price: "\u00A312.50", light: "#f6cbd8", dark: "#b8637f", glow: "rgba(232,168,184,0.55)",
+        query: "rose quartz crystal",
+        tip: "Rest rose quartz over your heart and quietly say one gentle thing to yourself, like a close friend would."
+      },
+      {
+        name: "Rhodonite",
+        desc: "A pink-and-black stone linked to emotional healing, self-forgiveness, and mending a bruised heart.",
+        price: "\u00A311.50", light: "#e8a8ae", dark: "#7a3540", glow: "rgba(220,140,150,0.5)",
+        query: "rhodonite crystal",
+        tip: "Hold rhodonite and quietly forgive yourself for one small thing you've been carrying."
+      },
+      {
+        name: "Morganite",
+        desc: "A soft peach-pink stone that gently opens the heart and supports slow, tender emotional healing.",
+        price: "\u00A315.00", light: "#f3c9c9", dark: "#b87a85", glow: "rgba(240,190,190,0.5)",
+        query: "morganite crystal",
+        tip: "Hold morganite over your heart and breathe slowly until your shoulders soften, just a little."
+      }
+    ],
+    inspired: [
+      {
+        name: "Carnelian",
+        desc: "A vibrant, fiery stone that fuels creativity, courage, and a fresh spark of inspiration.",
+        price: "\u00A310.50", light: "#ffb08a", dark: "#b34a1f", glow: "rgba(255,140,90,0.55)",
+        query: "carnelian crystal",
+        tip: "Hold carnelian in your palm and speak your boldest idea out loud, once, with full conviction."
+      },
+      {
+        name: "Orange Calcite",
+        desc: "A bright, energising stone that boosts confidence and helps turn a spark of inspiration into action.",
+        price: "\u00A39.50", light: "#ffb85e", dark: "#b8611f", glow: "rgba(255,170,90,0.5)",
+        query: "orange calcite crystal",
+        tip: "Hold orange calcite and write down the very next small step toward your idea, nothing more."
+      },
+      {
+        name: "Amber",
+        desc: "An ancient, sun-warmed stone said to carry creative energy and steady, grounded inspiration.",
+        price: "\u00A313.00", light: "#f0b25a", dark: "#8a4f14", glow: "rgba(230,160,70,0.5)",
+        query: "amber crystal",
+        tip: "Hold amber to the light and let one old idea you'd shelved cross your mind again, gently."
+      }
+    ],
+    grateful: [
+      {
+        name: "Green Aventurine",
+        desc: "Known as the stone of opportunity, it deepens gratitude and invites gentle, steady abundance.",
+        price: "\u00A39.50", light: "#b9e8c9", dark: "#3f8f5e", glow: "rgba(140,214,168,0.55)",
+        query: "green aventurine crystal",
+        tip: "Carry green aventurine in your pocket today and notice one small stroke of good fortune as it happens."
+      },
+      {
+        name: "Peridot",
+        desc: "A yellow-green stone linked to gratitude and positivity, said to gently release lingering negativity.",
+        price: "\u00A312.00", light: "#d4e8a0", dark: "#6f8a2f", glow: "rgba(190,220,130,0.5)",
+        query: "peridot crystal",
+        tip: "Hold peridot and name three small things, out loud, that you're grateful for right now."
+      },
+      {
+        name: "Pyrite",
+        desc: "A metallic, golden stone associated with abundance, luck, and manifesting steady prosperity.",
+        price: "\u00A38.50", light: "#e8cf7a", dark: "#8a6f1f", glow: "rgba(220,190,110,0.5)",
+        query: "pyrite crystal",
+        tip: "Hold pyrite in your palm and picture one goal already quietly working out in your favour."
+      }
+    ],
+    motivated: [
+      {
+        name: "Tiger's Eye",
+        desc: "A grounding stone of confidence and willpower, perfect for turning motivation into action.",
+        price: "\u00A310.00", light: "#e6c07a", dark: "#7a5220", glow: "rgba(214,168,88,0.55)",
+        query: "tigers eye crystal",
+        tip: "Hold tiger's eye before your hardest task today and say, 'I have what this moment needs.'"
+      },
+      {
+        name: "Garnet",
+        desc: "A deep red stone tied to passion, drive, and the willpower to keep pursuing a difficult goal.",
+        price: "\u00A311.50", light: "#c9525a", dark: "#5c1420", glow: "rgba(190,70,80,0.5)",
+        query: "garnet crystal",
+        tip: "Hold garnet and picture yourself finishing the exact task you've been putting off."
+      },
+      {
+        name: "Bloodstone",
+        desc: "A grounding green stone flecked with red, linked to courage, stamina, and pushing through resistance.",
+        price: "\u00A39.00", light: "#5f8a63", dark: "#1f3a24", glow: "rgba(90,140,95,0.5)",
+        query: "bloodstone crystal",
+        tip: "Hold bloodstone and take one small action on your goal before you allow yourself to overthink it."
+      }
+    ],
+    peaceful: [
+      {
+        name: "Blue Lace Agate",
+        desc: "A gentle, soothing stone that supports calm communication and lasting inner peace.",
+        price: "\u00A39.50", light: "#cfe8f5", dark: "#6f9db3", glow: "rgba(180,214,232,0.55)",
+        query: "blue lace agate crystal",
+        tip: "Hold blue lace agate near your throat and speak one honest thought out loud, softly, just once."
+      },
+      {
+        name: "Amazonite",
+        desc: "A soothing blue-green stone that calms an overactive mind and supports gentle, honest communication.",
+        price: "\u00A310.50", light: "#a8d8c9", dark: "#3f7a68", glow: "rgba(150,210,190,0.5)",
+        query: "amazonite crystal",
+        tip: "Hold amazonite and let your shoulders drop, just for ten slow, quiet breaths."
+      },
+      {
+        name: "Moonstone",
+        desc: "A pale, glowing stone linked to intuition and gentle emotional balance, easing you into stillness.",
+        price: "\u00A312.50", light: "#e8e6f0", dark: "#9a97b3", glow: "rgba(220,215,235,0.5)",
+        query: "moonstone crystal",
+        tip: "Hold moonstone under soft light and let your next thought pass by without chasing it."
+      }
+    ]
   };
+
+  // pick today's crystal from each mood's pool using the same simple
+  // day-of-month rotation used for the Daily Synchronicity number, so
+  // each mood recommends a different crystal from its pool day to day
+  var CRYSTALS = {};
+  Object.keys(CRYSTAL_POOLS).forEach(function(mood){
+    var pool = CRYSTAL_POOLS[mood];
+    CRYSTALS[mood] = pool[new Date().getDate() % pool.length];
+  });
 
   var moodButtons = document.querySelectorAll(".mood-point");
   var reveal = document.getElementById("crystalReveal");
