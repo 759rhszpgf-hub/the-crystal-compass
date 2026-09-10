@@ -2100,7 +2100,7 @@
   // (no need to click the button or wait for the animation).
   // Change back to false before this goes live for real users!
   // ================================================================
-  var DEV_START_UNLOCKED = true;
+  var DEV_START_UNLOCKED = false;
   if(DEV_START_UNLOCKED){
     isUnlocked = true;
     premiumBtn.textContent = "\u2713 Full Reading Unlocked";
@@ -2117,7 +2117,7 @@
   premiumBtn.addEventListener("click", function(){
     if(isUnlocked) return; // already unlocked, nothing to do
 
-    // 1. mystical "processing" state
+    // 1. mystical "processing" state — spins for 1.5 seconds
     premiumBtn.disabled = true;
     premiumBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Reading the stars\u2026';
     premiumNote.textContent = "";
@@ -2126,35 +2126,26 @@
       // 2. mock payment success — flip the central state
       isUnlocked = true;
 
-      // 3. quick confirmation, then hide the paywall block entirely
-      premiumBtn.textContent = "\u2713 Full Reading Unlocked";
-      premiumNote.textContent = "Preview mode \u2014 no payment was taken.";
+      // 3. the instant the timer ends: hide the spinner/paywall block,
+      //    and reveal Daily Synchronicity + the Manifestation Journal
+      //    (and the rest of the premium dashboards) together, at once
+      paymentCta.hidden = true;
+
+      premiumFeatures.hidden = false;
+      premiumFeatures.style.animation = "none";
+      void premiumFeatures.offsetWidth; // restart the reveal-in animation
+      premiumFeatures.style.animation = "";
+
+      journalLockedWrap.classList.add("is-unlocked");
+      journalDashboard.removeAttribute("aria-hidden");
+      journalInput.disabled = false;
+      journalSaveBtn.disabled = false;
+
+      syncMeaningWrap.classList.add("is-unlocked");
 
       setTimeout(function(){
-        // hide the pricing/paywall block completely for unlocked users
-        paymentCta.hidden = true;
-
-        // 4. seamlessly reveal the Cosmic Tracking, Crystal Encyclopedia,
-        //    and other premium dashboards in its place
-        premiumFeatures.hidden = false;
-        premiumFeatures.style.animation = "none";
-        void premiumFeatures.offsetWidth; // restart the reveal-in animation
-        premiumFeatures.style.animation = "";
-
-        // unblur and unlock the Manifestation Station Journal too, at the
-        // same time as everything else — no separate unlock step
-        journalLockedWrap.classList.add("is-unlocked");
-        journalDashboard.removeAttribute("aria-hidden");
-        journalInput.disabled = false;
-        journalSaveBtn.disabled = false;
-
-        // drop the frosted blur on today's cosmic meaning too
-        syncMeaningWrap.classList.add("is-unlocked");
-
-        setTimeout(function(){
-          premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 120);
-      }, 500);
+        premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
     }, 1500);
   });
 
