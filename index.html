@@ -163,6 +163,21 @@
     justify-content:center;
     margin-bottom: 8px;
   }
+  /* triquetra watermark — sits behind the ring + cat as a soft, dark
+     metallic backdrop. Nested inside .hero-mark so it always stays
+     centered on the ring regardless of where hero-mark sits on the
+     page. TODO: swap in the real direct image URL (see note above). */
+  .triquetra-layer{
+    position: absolute;
+    inset: -30px;
+    z-index: 0;
+    background-image: url('REPLACE_WITH_DIRECT_IMAGE_URL');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.18;
+    pointer-events: none;
+  }
   /* cosmic cat logo — a sibling of .compass-ring, so it never inherits
      the ring's spin animation and always stays still and crisp */
   .cosmic-cat-logo{
@@ -226,50 +241,11 @@
     text-shadow: 0 0 24px rgba(234,200,120,0.5);
     margin-bottom: 14px;
   }
-  .sync-meaning-wrap{
-    position: relative;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-  }
   .sync-meaning{
     font-size: 13px;
     color: var(--ink-muted);
     line-height: 1.5;
     padding: 2px;
-    filter: blur(4px);
-    -webkit-filter: blur(4px);
-    pointer-events: none;
-    -webkit-user-select: none;
-    user-select: none;
-    transition: filter 0.5s ease;
-  }
-  .sync-meaning-wrap.is-unlocked .sync-meaning{
-    filter: none;
-    -webkit-filter: none;
-    pointer-events: auto;
-    -webkit-user-select: auto;
-    user-select: auto;
-  }
-  .sync-meaning-wrap.is-unlocked .sync-meaning-lock{
-    display: none;
-  }
-  .sync-meaning-lock{
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    background: rgba(11,9,18,0.32);
-    font-size: 11.5px;
-    letter-spacing: 0.03em;
-    color: var(--gold-bright);
-  }
-  .sync-meaning-lock .lock-icon{
-    font-size: 16px;
-    margin-bottom: 2px;
   }
 
   /* ============================================================
@@ -909,12 +885,16 @@
   .spread-grid{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
   }
   .mini-flip-container{
     -webkit-perspective: 1200px;
     perspective: 1200px;
     width: 100%;
+    max-width: 150px;
+    margin: 0 auto;
     aspect-ratio: 3 / 5;   /* a bit taller than before, to give text room to breathe */
   }
   .mini-flip-card{
@@ -1402,16 +1382,11 @@
   <div class="sync-box">
     <p class="sync-label">Daily Synchronicity</p>
     <p class="sync-number" id="syncNumber">&mdash;</p>
-    <div class="sync-meaning-wrap" id="syncMeaningWrap">
-      <p class="sync-meaning" id="syncMeaning"></p>
-      <div class="sync-meaning-lock" id="syncMeaningLock">
-        <span class="lock-icon" aria-hidden="true">&#128274;</span>
-        <span>Unlock today's cosmic meaning</span>
-      </div>
-    </div>
+    <p class="sync-meaning" id="syncMeaning"></p>
   </div>
 
-  <div class="hero-mark">
+  <div class="hero-mark" id="heroMark">
+    <div class="triquetra-layer" aria-hidden="true"></div>
     <div class="compass-ring" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
   </div>
@@ -2092,7 +2067,6 @@
   var journalDashboard = document.getElementById("journalDashboard");
   var journalInput = document.getElementById("journalInputPreview");
   var journalSaveBtn = document.getElementById("journalSaveBtn");
-  var syncMeaningWrap = document.getElementById("syncMeaningWrap");
 
   // ================================================================
   // TEMPORARY DEV TESTING TOGGLE
@@ -2111,7 +2085,6 @@
     journalDashboard.removeAttribute("aria-hidden");
     journalInput.disabled = false;
     journalSaveBtn.disabled = false;
-    syncMeaningWrap.classList.add("is-unlocked");
   }
 
   premiumBtn.addEventListener("click", function(){
@@ -2140,8 +2113,6 @@
       journalDashboard.removeAttribute("aria-hidden");
       journalInput.disabled = false;
       journalSaveBtn.disabled = false;
-
-      syncMeaningWrap.classList.add("is-unlocked");
 
       setTimeout(function(){
         premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
