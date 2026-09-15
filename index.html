@@ -154,6 +154,75 @@
   }
   @keyframes spin-ring{ to{ transform: translateX(-50%) rotate(360deg); } }
 
+  /* ============================================================
+     COSMIC RING EFFECT — two extra concentric rings, counter-
+     rotating for depth, plus occasional star-burst particles.
+     Sized as % of .hero-mark so they scale at every breakpoint
+     with no extra per-size CSS needed.
+     ============================================================ */
+  .cosmic-ring-outer,
+  .cosmic-ring-inner{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .cosmic-ring-outer{
+    width: 122%;
+    height: 122%;
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(201,162,78,0.26) 0deg 1deg,
+      transparent 1deg 18deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 68%, black 69%, black 71%, transparent 72%);
+            mask: radial-gradient(circle, transparent 68%, black 69%, black 71%, transparent 72%);
+    animation: spin-ring-ccw 150s linear infinite;
+    opacity: 0.7;
+  }
+  .cosmic-ring-inner{
+    width: 46%;
+    height: 46%;
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(201,162,78,0.4) 0deg 1.2deg,
+      transparent 1.2deg 9deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 55%, black 56%, black 60%, transparent 61%);
+            mask: radial-gradient(circle, transparent 55%, black 56%, black 60%, transparent 61%);
+    animation: spin-ring-cw 65s linear infinite;
+    opacity: 0.85;
+  }
+  @keyframes spin-ring-cw{ to{ transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes spin-ring-ccw{ to{ transform: translate(-50%, -50%) rotate(-360deg); } }
+
+  /* star-burst particles, spawned by JS along the ring's edge */
+  .cosmic-stars-layer{
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .cosmic-star{
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--gold-bright);
+    line-height: 1;
+    opacity: 0;
+    text-shadow: 0 0 8px rgba(234,200,120,0.9), 0 0 16px rgba(234,200,120,0.55);
+    animation: star-burst 1.3s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes star-burst{
+    0%{   opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+    18%{  opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100%{ opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.4); }
+  }
+
   .hero-mark{
     position: relative;
     width: 360px;
@@ -1391,9 +1460,12 @@
   </div>
 
   <div class="hero-mark" id="heroMark">
+    <div class="cosmic-ring-outer" aria-hidden="true"></div>
     <div class="compass-ring" aria-hidden="true"></div>
+    <div class="cosmic-ring-inner" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
     <div class="triquetra-layer" aria-hidden="true"></div>
+    <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
 
   <p class="scroll-cue">Begin below &#8595;</p>
