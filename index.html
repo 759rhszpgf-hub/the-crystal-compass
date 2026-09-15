@@ -163,13 +163,18 @@
     justify-content:center;
     margin-bottom: 8px;
   }
-  /* triquetra watermark — sits behind the ring + cat as a soft, dark
-     metallic backdrop. Nested inside .hero-mark so it always stays
-     centered on the ring regardless of where hero-mark sits on the
+  /* triquetra watermark — a smaller emblem sitting under the cat
+     specifically (bottom half of the ring), not the whole circle.
+     Nested inside .hero-mark so it always stays correctly placed
+     relative to the ring regardless of where hero-mark sits on the
      page. */
   .triquetra-layer{
     position: absolute;
-    inset: -30px;
+    left: 50%;
+    bottom: 2%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 55%;
     z-index: 0;
     background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
     background-size: contain;
