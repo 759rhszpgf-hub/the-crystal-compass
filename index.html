@@ -163,25 +163,19 @@
     justify-content:center;
     margin-bottom: 8px;
   }
-  /* triquetra watermark — a smaller emblem sitting under the cat
-     specifically (bottom half of the ring), not the whole circle.
-     Nested inside .hero-mark so it always stays correctly placed
-     relative to the ring regardless of where hero-mark sits on the
-     page. */
+  /* triquetra watermark — now its own element sitting directly below
+     the ring/cat graphic (not layered behind it), so the whole symbol
+     is fully visible with no overlap. */
   .triquetra-layer{
-    position: absolute;
-    left: 50%;
-    bottom: 2%;
-    transform: translateX(-50%);
-    width: 55%;
-    height: 55%;
-    z-index: 0;
+    width: 130px;
+    height: 130px;
+    margin: 6px auto 0;
     background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     mix-blend-mode: screen;
-    opacity: 0.4;
+    opacity: 0.5;
     pointer-events: none;
   }
   /* cosmic cat logo — a sibling of .compass-ring, so it never inherits
@@ -1352,6 +1346,7 @@
     .compass-ring{ width: 264px; height:264px; top: 22px; }
     .hero-mark{ width: 264px; height:264px; }
     .cosmic-cat-logo{ height: 173px; }  /* ~20% larger, mobile */
+    .triquetra-layer{ width: 100px; height: 100px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
@@ -1392,10 +1387,11 @@
   </div>
 
   <div class="hero-mark" id="heroMark">
-    <div class="triquetra-layer" aria-hidden="true"></div>
     <div class="compass-ring" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
   </div>
+
+  <div class="triquetra-layer" aria-hidden="true"></div>
 
   <p class="scroll-cue">Begin below &#8595;</p>
 </header>
