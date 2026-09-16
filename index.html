@@ -184,18 +184,17 @@
   .ring-outer-fine{
     width: 148%;
     height: 148%;
-    background: conic-gradient(
+    /* same stylized dash-tick dial language as .ring-inner-dotted —
+       short golden ticks separated by wider gaps — just scaled up to
+       the outer radius and thinned slightly so both rings read as
+       one continuous premium clockwork instrument */
+    background: repeating-conic-gradient(
       from 0deg,
-      rgba(201,162,78,0.10) 0deg,
-      rgba(234,200,120,0.95) 4deg,
-      rgba(201,162,78,0.10) 10deg,
-      rgba(201,162,78,0.10) 180deg,
-      rgba(234,200,120,0.95) 184deg,
-      rgba(201,162,78,0.10) 190deg,
-      rgba(201,162,78,0.10) 360deg
+      rgba(234,200,120,0.9) 0deg 1.6deg,
+      transparent 1.6deg 8deg
     );
-    -webkit-mask: radial-gradient(circle, transparent calc(50% - 2.5px), black calc(50% - 1.5px), black 50%, transparent calc(50% + 1px));
-            mask: radial-gradient(circle, transparent calc(50% - 2.5px), black calc(50% - 1.5px), black 50%, transparent calc(50% + 1px));
+    -webkit-mask: radial-gradient(circle, transparent 65.5%, black 66.3%, black 69.5%, transparent 70.3%);
+            mask: radial-gradient(circle, transparent 65.5%, black 66.3%, black 69.5%, transparent 70.3%);
     animation: ring-spin-cw 100s linear infinite;
     opacity: 0.85;
   }
