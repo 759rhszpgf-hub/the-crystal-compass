@@ -138,14 +138,14 @@
     animation: spin-ring 120s linear infinite;
     opacity: 0.95;
   }
-  /* braid-ring-svg: two interleaved dashed gold strokes with offset
-     dash-phase, giving the illusion of a two-strand twisted rope
-     woven around the circle — a premium Celtic-braid look, built
-     entirely from SVG gradients and strokes (no image assets). */
+  /* braid-ring-svg: a single thin, elegant gold thread — fine,
+     closely-spaced dashes with a soft glow for a delicate,
+     shimmering rope look. */
   .braid-ring-svg{
     display: block;
     width: 100%;
     height: 100%;
+    filter: drop-shadow(0 0 3px rgba(212,175,55,0.6));
   }
   .compass-ring::after{
     content:'';
@@ -206,7 +206,7 @@
     inset: 0;
     overflow: visible;
     pointer-events: none;
-    z-index: 2;
+    z-index: 999;
   }
   .cosmic-star{
     position: absolute;
@@ -1462,20 +1462,7 @@
     <div class="cosmic-ring-outer" aria-hidden="true"></div>
     <div class="compass-ring" aria-hidden="true">
       <svg class="braid-ring-svg" viewBox="0 0 200 200">
-        <defs>
-          <linearGradient id="braidGoldA" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#8a6a2a"/>
-            <stop offset="50%" stop-color="#eac878"/>
-            <stop offset="100%" stop-color="#8a6a2a"/>
-          </linearGradient>
-          <linearGradient id="braidGoldB" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#c9a24e"/>
-            <stop offset="50%" stop-color="#f6e2ab"/>
-            <stop offset="100%" stop-color="#c9a24e"/>
-          </linearGradient>
-        </defs>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="url(#braidGoldA)" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 8"/>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="url(#braidGoldB)" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 8" stroke-dashoffset="11"/>
+        <circle cx="100" cy="100" r="94" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
       </svg>
     </div>
     <div class="cosmic-ring-inner" aria-hidden="true"></div>
@@ -2442,7 +2429,7 @@
       star.textContent = "\u2605"; // ★
       star.style.left = "calc(50% + " + x + "px)";
       star.style.top = "calc(50% + " + y + "px)";
-      star.style.fontSize = (8 + Math.random() * 6) + "px";
+      star.style.fontSize = (10 + Math.random() * 6) + "px";
       star.style.setProperty("--dx", dx + "px");
       star.style.setProperty("--dy", dy + "px");
 
@@ -2453,12 +2440,14 @@
     };
 
     (function scheduleNextStar(){
-      var delay = 1400 + Math.random() * 1800; // 1.4s–3.2s, organic timing
+      var delay = 700 + Math.random() * 1000; // 0.7s–1.7s, frequent flashing
       setTimeout(function(){
         spawnStar();
         scheduleNextStar();
       }, delay);
     })();
+
+    spawnStar(); // fire one immediately, don't wait for the first delay
   }
 
 })();
