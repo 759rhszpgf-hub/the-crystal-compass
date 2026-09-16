@@ -122,33 +122,35 @@
   .hero{
     position: relative;
     text-align:center;
-    padding: 120px 24px 80px;
+    padding: 56px 24px 32px;
     display:flex;
     flex-direction:column;
     align-items:center;
   }
   .compass-ring{
     position:absolute;
-    top: 46px;
+    top: 30px;
     left: 50%;
-    width: 360px;
-    height: 360px;
+    width: 234px;
+    height: 234px;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: repeating-conic-gradient(
-      from 0deg,
-      rgba(201,162,78,0.4) 0deg 1deg,
-      transparent 1deg 11.25deg
-    );
-    -webkit-mask: radial-gradient(circle, transparent 60%, black 61%, black 65%, transparent 66%);
-            mask: radial-gradient(circle, transparent 60%, black 61%, black 65%, transparent 66%);
     animation: spin-ring 120s linear infinite;
-    opacity: 0.9;
+    opacity: 0.95;
+  }
+  /* braid-ring-svg: two interleaved dashed gold strokes with offset
+     dash-phase, giving the illusion of a two-strand twisted rope
+     woven around the circle — a premium Celtic-braid look, built
+     entirely from SVG gradients and strokes (no image assets). */
+  .braid-ring-svg{
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   .compass-ring::after{
     content:'';
     position:absolute;
-    inset: 41px;
+    inset: 27px;
     border-radius:50%;
     border: 1px solid rgba(201,162,78,0.22);
   }
@@ -225,21 +227,21 @@
 
   .hero-mark{
     position: relative;
-    width: 360px;
-    height: 360px;
+    width: 234px;
+    height: 234px;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   /* triquetra emblem — a bold standalone anchor mark sitting below
      the whole ring/cat graphic, centered above "Begin below ↓".
      mix-blend-mode dissolves the image's solid black background,
      leaving only the gold linework visible against the dark page. */
   .triquetra-layer{
-    width: 220px;
-    height: 220px;
-    margin: 26px auto 22px;
+    width: 150px;
+    height: 150px;
+    margin: 12px auto 10px;
     background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
     background-size: contain;
     background-position: center;
@@ -253,7 +255,7 @@
   .cosmic-cat-logo{
     position: relative;
     z-index: 1;
-    height: 211px;              /* ~20% larger than before */
+    height: 137px;
     max-width: 78%;             /* safety margin so it can't crowd the ring */
     width: auto;
     object-fit: contain;        /* scales cleanly, never squeezed or stretched */
@@ -261,22 +263,22 @@
   }
 
   .hero h1{
-    font-size: clamp(38px, 6vw, 58px);
+    font-size: clamp(34px, 5.5vw, 52px);
     letter-spacing: 0.01em;
-    margin-top: 10px;
+    margin-top: 8px;
     background: linear-gradient(180deg, var(--ink) 0%, var(--gold-bright) 120%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
   .hero .tagline{
-    margin-top: 18px;
+    margin-top: 12px;
     color: var(--ink-muted);
-    font-size: 18px;
+    font-size: 16px;
     max-width: 440px;
   }
   .hero .scroll-cue{
-    margin-top: 52px;
+    margin-top: 16px;
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -289,7 +291,7 @@
   .sync-box{
     width: 100%;
     max-width: 340px;
-    margin: 30px auto 6px;
+    margin: 16px auto 4px;
     padding: 22px 24px;
     text-align: center;
     border-radius: var(--radius-lg);
@@ -353,18 +355,18 @@
 
     /* the ring + cosmic cat emblem grows into a larger, prouder focal
        point on iPad/laptop screens — same proportions, just bigger */
-    .compass-ring{ width: 460px; height: 460px; top: 59px; }
-    .compass-ring::after{ inset: 52px; }
-    .hero-mark{ width: 460px; height: 460px; }
-    .cosmic-cat-logo{ height: 270px; }
+    .compass-ring{ width: 300px; height: 300px; top: 38px; }
+    .compass-ring::after{ inset: 34px; }
+    .hero-mark{ width: 300px; height: 300px; }
+    .cosmic-cat-logo{ height: 176px; }
   }
   @media (min-width: 1100px){
     /* full desktop / large laptop: one more step up, so it still reads
        as the page's premium centerpiece on big monitors */
-    .compass-ring{ width: 560px; height: 560px; top: 72px; }
-    .compass-ring::after{ inset: 64px; }
-    .hero-mark{ width: 560px; height: 560px; }
-    .cosmic-cat-logo{ height: 328px; }
+    .compass-ring{ width: 360px; height: 360px; top: 46px; }
+    .compass-ring::after{ inset: 41px; }
+    .hero-mark{ width: 360px; height: 360px; }
+    .cosmic-cat-logo{ height: 211px; }
   }
 
   /* -- individual buttons: uniform size regardless of column width -- */
@@ -1413,10 +1415,10 @@
   @media (max-width: 560px){
     .section{ padding: 72px 20px; }
     .hero{ padding-top: 96px; }
-    .compass-ring{ width: 264px; height:264px; top: 22px; }
-    .hero-mark{ width: 264px; height:264px; }
-    .cosmic-cat-logo{ height: 173px; }  /* ~20% larger, mobile */
-    .triquetra-layer{ width: 160px; height: 160px; margin: 20px auto 16px; }
+    .compass-ring{ width: 190px; height:190px; top: 16px; }
+    .hero-mark{ width: 190px; height:190px; }
+    .cosmic-cat-logo{ height: 112px; }
+    .triquetra-layer{ width: 110px; height: 110px; margin: 10px auto 8px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
@@ -1458,7 +1460,24 @@
 
   <div class="hero-mark" id="heroMark">
     <div class="cosmic-ring-outer" aria-hidden="true"></div>
-    <div class="compass-ring" aria-hidden="true"></div>
+    <div class="compass-ring" aria-hidden="true">
+      <svg class="braid-ring-svg" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="braidGoldA" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8a6a2a"/>
+            <stop offset="50%" stop-color="#eac878"/>
+            <stop offset="100%" stop-color="#8a6a2a"/>
+          </linearGradient>
+          <linearGradient id="braidGoldB" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#c9a24e"/>
+            <stop offset="50%" stop-color="#f6e2ab"/>
+            <stop offset="100%" stop-color="#c9a24e"/>
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="92" fill="none" stroke="url(#braidGoldA)" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 8"/>
+        <circle cx="100" cy="100" r="92" fill="none" stroke="url(#braidGoldB)" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 8" stroke-dashoffset="11"/>
+      </svg>
+    </div>
     <div class="cosmic-ring-inner" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
