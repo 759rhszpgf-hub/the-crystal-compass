@@ -228,8 +228,8 @@
   .cosmic-cat-logo{
     position: relative;
     z-index: 1;
-    height: 137px;
-    max-width: 78%;             /* safety margin so it can't crowd the ring */
+    height: 86%;                /* fills most of the ring — tight framing, no big gap */
+    max-width: 82%;             /* safety margin so it can't crowd the ring */
     width: auto;
     object-fit: contain;        /* scales cleanly, never squeezed or stretched */
     filter: drop-shadow(0 0 22px rgba(234,200,120,0.35));
@@ -328,15 +328,14 @@
 
     /* the ring + cosmic cat emblem grows into a larger, prouder focal
        point on iPad/laptop screens — same proportions, just bigger.
-       .compass-ring auto-sizes with .hero-mark, no override needed. */
+       .compass-ring and .cosmic-cat-logo both auto-size with
+       .hero-mark now, so no override is needed for either. */
     .hero-mark{ width: 300px; height: 300px; }
-    .cosmic-cat-logo{ height: 176px; }
   }
   @media (min-width: 1100px){
     /* full desktop / large laptop: one more step up, so it still reads
        as the page's premium centerpiece on big monitors */
     .hero-mark{ width: 360px; height: 360px; }
-    .cosmic-cat-logo{ height: 211px; }
   }
 
   /* -- individual buttons: uniform size regardless of column width -- */
@@ -1386,7 +1385,6 @@
     .section{ padding: 72px 20px; }
     .hero{ padding-top: 40px; }
     .hero-mark{ width: 190px; height:190px; }
-    .cosmic-cat-logo{ height: 112px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
