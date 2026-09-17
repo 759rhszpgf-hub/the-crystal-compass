@@ -234,20 +234,24 @@
     justify-content:center;
     margin-bottom: 4px;
   }
-  /* triquetra emblem — a bold standalone anchor mark sitting below
-     the whole ring/cat graphic, centered above "Begin below ↓".
+  /* triquetra emblem — a small pendant sitting inside the ring, in the
+     gap just below the cat's base (matches reference screenshot).
      mix-blend-mode dissolves the image's solid black background,
      leaving only the gold linework visible against the dark page. */
   .triquetra-layer{
-    width: 150px;
-    height: 150px;
-    margin: 12px auto 10px;
+    position: absolute;
+    left: 50%;
+    bottom: 4%;
+    transform: translateX(-50%);
+    width: 18%;
+    height: 18%;
+    z-index: 0;
     background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     mix-blend-mode: screen;
-    opacity: 0.85;
+    opacity: 0.75;
     pointer-events: none;
   }
   /* cosmic cat logo — a sibling of .compass-ring, so it never inherits
@@ -1418,7 +1422,6 @@
     .compass-ring{ width: 190px; height:190px; top: 16px; }
     .hero-mark{ width: 190px; height:190px; }
     .cosmic-cat-logo{ height: 112px; }
-    .triquetra-layer{ width: 110px; height: 110px; margin: 10px auto 8px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
@@ -1462,15 +1465,14 @@
     <div class="cosmic-ring-outer" aria-hidden="true"></div>
     <div class="compass-ring" aria-hidden="true">
       <svg class="braid-ring-svg" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="94" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+        <circle cx="100" cy="100" r="94" fill="none" stroke="#d4af37" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2.5 2.5"/>
       </svg>
     </div>
     <div class="cosmic-ring-inner" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
+    <div class="triquetra-layer" aria-hidden="true"></div>
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
-
-  <div class="triquetra-layer" aria-hidden="true"></div>
 
   <p class="scroll-cue">Begin below &#8595;</p>
 </header>
