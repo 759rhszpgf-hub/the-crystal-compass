@@ -223,26 +223,6 @@
     justify-content:center;
     margin-bottom: 4px;
   }
-  /* triquetra emblem — its own standalone element, completely clear
-     of the ring (not nested inside it). Generous top margin pushes it
-     well clear of the ring's bounds; small bottom margin keeps it
-     tightly grouped with "Begin below ↓" as one cohesive unit.
-     mix-blend-mode dissolves the image's solid black background,
-     leaving only the gold linework visible against the dark page. */
-  .triquetra-layer{
-    width: 130px;
-    height: 130px;
-    margin-top: 44px;
-    margin-bottom: 8px;
-    margin-inline: auto;
-    background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    mix-blend-mode: screen;
-    opacity: 0.8;
-    pointer-events: none;
-  }
   /* cosmic cat logo — a sibling of .compass-ring, so it never inherits
      the ring's spin animation and always stays still and crisp */
   .cosmic-cat-logo{
@@ -271,7 +251,7 @@
     max-width: 440px;
   }
   .hero .scroll-cue{
-    margin-top: 16px;
+    margin-top: 24px;
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -1407,7 +1387,6 @@
     .hero{ padding-top: 40px; }
     .hero-mark{ width: 190px; height:190px; }
     .cosmic-cat-logo{ height: 112px; }
-    .triquetra-layer{ width: 95px; height: 95px; margin-top: 30px; margin-bottom: 6px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
@@ -1454,8 +1433,6 @@
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
-
-  <div class="triquetra-layer" aria-hidden="true"></div>
 
   <p class="scroll-cue">Begin below &#8595;</p>
 </header>
