@@ -224,14 +224,17 @@
     margin-bottom: 4px;
   }
   /* triquetra emblem — its own standalone element, completely clear
-     of the ring (not nested inside it), sitting with clean breathing
-     room directly above "Begin below ↓". mix-blend-mode dissolves the
-     image's solid black background, leaving only the gold linework
-     visible against the dark page. */
+     of the ring (not nested inside it). Generous top margin pushes it
+     well clear of the ring's bounds; small bottom margin keeps it
+     tightly grouped with "Begin below ↓" as one cohesive unit.
+     mix-blend-mode dissolves the image's solid black background,
+     leaving only the gold linework visible against the dark page. */
   .triquetra-layer{
     width: 130px;
     height: 130px;
-    margin: 18px auto 16px;
+    margin-top: 44px;
+    margin-bottom: 8px;
+    margin-inline: auto;
     background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
     background-size: contain;
     background-position: center;
@@ -1404,7 +1407,7 @@
     .hero{ padding-top: 40px; }
     .hero-mark{ width: 190px; height:190px; }
     .cosmic-cat-logo{ height: 112px; }
-    .triquetra-layer{ width: 95px; height: 95px; margin: 14px auto 12px; }
+    .triquetra-layer{ width: 95px; height: 95px; margin-top: 30px; margin-bottom: 6px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
