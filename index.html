@@ -117,36 +117,6 @@
   }
 
   /* ============================================================
-     GEODE ACCENT DIVIDER
-     Sits between the hero ("Begin below") and the first section
-     ("Step one"), spanning the full viewport width so one geode
-     rests near the left edge and one near the right edge — subtle
-     glowing crystal brackets either side of the page, independent
-     of the narrower centered content column used elsewhere.
-     ============================================================ */
-  .geode-divider{
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px 24px 26px;
-    pointer-events: none;
-  }
-  .geode-accent{
-    height: 50px;
-    width: auto;
-    display: block;
-    border-radius: 8px;
-    opacity: 0.85;
-    filter: drop-shadow(0 0 14px rgba(201,162,78,0.35)) drop-shadow(0 0 26px rgba(155,127,212,0.25));
-  }
-  @media (max-width: 560px){
-    .geode-accent{ height: 38px; }
-  }
-
-  /* ============================================================
      HERO
      ============================================================ */
   .hero{
@@ -1530,11 +1500,6 @@
 
   <p class="scroll-cue">Begin below &#8595;</p>
 </header>
-
-<div class="geode-divider" aria-hidden="true">
-  <img class="geode-accent" src="https://i.postimg.cc/rFPHV8x8/geode.jpg" alt="">
-  <img class="geode-accent" src="https://i.postimg.cc/rFPHV8x8/geode.jpg" alt="">
-</div>
 
 <main>
 
