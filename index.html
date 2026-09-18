@@ -1018,11 +1018,9 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-end;
     text-align:center;
-    background:
-      radial-gradient(circle at 50% 30%, rgba(201,162,78,0.14), transparent 60%),
-      var(--panel);
+    background: var(--panel);
     box-shadow: 0 16px 30px -14px var(--shadow);
     /* failsafe hiding, independent of backface-visibility support:
        swaps instantly at the halfway point of the 0.8s flip */
@@ -1038,20 +1036,25 @@
     opacity: 1;
     visibility: visible;
   }
-  .mini-flip-face .mini-emblem{
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    mix-blend-mode: screen;
-    filter: drop-shadow(0 0 8px rgba(234,200,120,0.5)) brightness(1.15) contrast(1.05);
-    animation: logo-glow 3s ease-in-out infinite;
+  /* the front face's cosmic cat fills the whole mini card, edge to
+     edge, clipped to the card's rounded corners by the overflow:hidden
+     above — same treatment as the main daily guidance card */
+  .mini-flip-face .mini-back-img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+    z-index:0;
   }
   .mini-flip-face .mini-label{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 8px 4px;
     font-size: 10.5px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--gold-bright);
+    background: linear-gradient(to top, rgba(11,9,18,0.8), transparent);
   }
   .mini-flip-back{
     -webkit-transform: rotateY(180deg);
@@ -1650,7 +1653,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Past card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
                   <span class="mini-label">Past</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
@@ -1662,7 +1665,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Present card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
                   <span class="mini-label">Present</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
@@ -1674,7 +1677,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Path Ahead card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
+                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
                   <span class="mini-label">Path Ahead</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
