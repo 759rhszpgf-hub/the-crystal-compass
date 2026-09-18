@@ -278,27 +278,6 @@
     justify-content:center;
     margin-bottom: 8px;
   }
-  /* triquetra watermark — sits inside the ring system, in the small
-     gap directly below the cat. Sized as a % of .hero-mark so it scales
-     correctly with the rings at every breakpoint without overlapping
-     the cat above it. Its own position is independent of the rings'
-     rotation, so it always stays perfectly still and centered. */
-  .triquetra-layer{
-    position: absolute;
-    left: 50%;
-    bottom: 4%;
-    transform: translateX(-50%);
-    width: 18%;
-    height: 18%;
-    z-index: 0;
-    background-image: url('https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    mix-blend-mode: screen;
-    opacity: 0.6;
-    pointer-events: none;
-  }
   /* cosmic cat logo — a sibling of the rings, so it never inherits
      their spin animations and always stays still and crisp */
   .cosmic-cat-logo{
@@ -327,7 +306,7 @@
     max-width: 440px;
   }
   .hero .scroll-cue{
-    margin-top: 52px;
+    margin-top: 40px;
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -717,8 +696,6 @@
     pointer-events:none;
   }
   .flip-front{
-    padding: 0;
-    overflow: hidden;
     background:
       radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
       var(--panel);
@@ -739,30 +716,12 @@
     z-index: 2;
     border-color: rgba(201,162,78,0.4);
   }
-  /* full-bleed tarot-deck-style back art — same asset as the landing
-     page centerpiece, stretched edge-to-edge, clipped to the card's
-     rounded corners by .flip-front's overflow:hidden above */
-  .tarot-back-img{
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .flip-front .card-hint{
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 20px 14px 16px;
-    background: linear-gradient(to top, rgba(11,9,18,0.75), transparent);
+  .flip-front .card-hint-static{
+    margin-top: 2px;
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold-bright);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   }
   .flip-back{
     -webkit-transform: rotateY(180deg);
@@ -783,36 +742,39 @@
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
   }
-  .logo-frame{
-    width: 190px;
-    max-width: 66%;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto 16px;
+  /* shared golden Triquetra emblem — used on both faces of the daily
+     guidance card (and, smaller, on the 3-card spread) so every card
+     drawn always shows the same spiritual emblem, never photo art */
+  .card-emblem-wrap{
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
   }
-  .logo-frame::before{
+  .card-emblem-wrap::before{
     content:'';
     position: absolute;
-    inset: 0;
+    inset: -9px;
     border-radius: 50%;
     border: 1px solid rgba(201,162,78,0.28);
-    box-shadow: 0 0 26px rgba(201,162,78,0.22), inset 0 0 20px rgba(201,162,78,0.08);
+    box-shadow: 0 0 24px rgba(201,162,78,0.22), inset 0 0 18px rgba(201,162,78,0.08);
     pointer-events: none;
   }
-  .card-logo{
-    width: 86%;
-    height: 86%;
+  .card-emblem{
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     mix-blend-mode: screen;
-    filter: drop-shadow(0 0 10px rgba(234,200,120,0.4)) brightness(1.12) contrast(1.05);
+    filter: drop-shadow(0 0 12px rgba(234,200,120,0.5)) brightness(1.15) contrast(1.05);
     animation: logo-glow 3s ease-in-out infinite;
   }
   @keyframes logo-glow{
-    0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.3)) brightness(1.12) contrast(1.05); }
-    50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.75)) brightness(1.12) contrast(1.05); }
+    0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.3)) brightness(1.15) contrast(1.05); }
+    50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.75)) brightness(1.15) contrast(1.05); }
   }
   #affirmationText{
     font-family: var(--serif);
@@ -1037,9 +999,11 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-end;
+    justify-content:center;
     text-align:center;
-    background: var(--panel);
+    background:
+      radial-gradient(circle at 50% 30%, rgba(201,162,78,0.14), transparent 60%),
+      var(--panel);
     box-shadow: 0 16px 30px -14px var(--shadow);
     /* failsafe hiding, independent of backface-visibility support:
        swaps instantly at the halfway point of the 0.8s flip */
@@ -1055,22 +1019,20 @@
     opacity: 1;
     visibility: visible;
   }
-  .mini-flip-face .mini-back-img{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    object-fit: cover;
-    z-index:0;
+  .mini-flip-face .mini-emblem{
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 8px rgba(234,200,120,0.5)) brightness(1.15) contrast(1.05);
+    animation: logo-glow 3s ease-in-out infinite;
   }
   .mini-flip-face .mini-label{
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    padding: 8px 4px;
     font-size: 10.5px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--gold-bright);
-    background: linear-gradient(to top, rgba(11,9,18,0.8), transparent);
   }
   .mini-flip-back{
     -webkit-transform: rotateY(180deg);
@@ -1511,7 +1473,6 @@
     <div class="ring-middle-dashed" aria-hidden="true"></div>
     <div class="ring-inner-dotted" aria-hidden="true"></div>
     <img class="cosmic-cat-logo" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass cosmic cat logo" width="211" height="211">
-    <div class="triquetra-layer" aria-hidden="true"></div>
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
 
@@ -1599,12 +1560,14 @@
     <div class="flip-container" id="flipContainer">
       <div class="flip-card" id="flipCard" role="button" tabindex="0" aria-label="Tap to reveal your daily guidance card">
         <div class="flip-face flip-front">
-          <img class="tarot-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="The Crystal Compass — tap to reveal your card">
-          <span class="card-hint">Tap to Reveal</span>
+          <div class="card-emblem-wrap">
+            <img class="card-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="The Crystal Compass triquetra emblem">
+          </div>
+          <span class="card-hint-static">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
-          <div class="logo-frame">
-            <img class="card-logo" src="https://i.postimg.cc/vH0r1RJT/938ca4ed-5b69-45b6-8f34-8da94ddd86fd.jpg" alt="The Crystal Compass logo" width="100" height="100">
+          <div class="card-emblem-wrap">
+            <img class="card-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="The Crystal Compass triquetra emblem">
           </div>
           <p id="affirmationText">Your message will appear here.</p>
         </div>
@@ -1670,7 +1633,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Past card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
                   <span class="mini-label">Past</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
@@ -1682,7 +1645,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Present card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
                   <span class="mini-label">Present</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
@@ -1694,7 +1657,7 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Path Ahead card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/XJLHrNgb/cosmic-cat.png" alt="">
+                  <img class="mini-emblem" src="https://i.postimg.cc/GhbbxKxw/2e5d56e8-21d1-451d-b24f-2116f5504a77.jpg" alt="">
                   <span class="mini-label">Path Ahead</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
