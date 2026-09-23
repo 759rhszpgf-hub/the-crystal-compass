@@ -1151,7 +1151,7 @@
     display:block;
     width:100%;
     padding: 14px 18px;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -1165,37 +1165,72 @@
     border-color: var(--gold);
     box-shadow: 0 0 0 3px rgba(201,162,78,0.15);
   }
+  .enc-count{
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  /* bounded, scrollable frame — this is what actually "condenses" the
+     section: instead of the page growing taller as the crystal count
+     grows, the grid scrolls within a fixed-height panel with its own
+     slim gold scrollbar, so the rest of the page stays put */
+  .enc-scroll{
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-right: -6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,162,78,0.55) transparent;
+  }
+  .enc-scroll::-webkit-scrollbar{ width: 5px; }
+  .enc-scroll::-webkit-scrollbar-track{ background: transparent; }
+  .enc-scroll::-webkit-scrollbar-thumb{
+    background: rgba(201,162,78,0.5);
+    border-radius: 999px;
+  }
+  .enc-scroll::-webkit-scrollbar-thumb:hover{ background: rgba(201,162,78,0.8); }
   .enc-grid{
     display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
   .enc-card{
     background: var(--panel);
     border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 16px 10px;
+    border-radius: var(--radius-sm);
+    padding: 10px 6px;
     text-align:center;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
   }
-  .enc-card:hover{ border-color: var(--gold); box-shadow: 0 0 18px rgba(201,162,78,0.25); }
+  .enc-card:hover{
+    border-color: var(--gold);
+    box-shadow: 0 0 14px rgba(201,162,78,0.25);
+    transform: translateY(-1px);
+  }
+  /* small thumbnail placeholder — a faceted gem silhouette in each
+     crystal's own colorway, standing in for a photo thumbnail */
   .enc-gem{
     display:block;
-    width: 30px; height:38px;
-    margin: 0 auto 10px;
+    width: 22px; height:28px;
+    margin: 0 auto 7px;
     clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
     background: linear-gradient(160deg, var(--gem-light), var(--gem-dark));
+    box-shadow: 0 0 10px var(--gem-light);
   }
   .enc-card h4{
     font-family: var(--serif);
-    font-size: 13.5px;
+    font-size: 11.5px;
+    line-height: 1.2;
     color: var(--ink);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
   .enc-card p{
-    font-size: 11px;
+    font-size: 9.5px;
+    line-height: 1.25;
     color: var(--ink-muted);
-    line-height: 1.3;
   }
   .enc-empty{
     grid-column: 1 / -1;
@@ -1203,6 +1238,9 @@
     color: var(--ink-faint);
     font-size: 13.5px;
     padding: 24px 0;
+  }
+  @media (max-width: 560px){
+    .enc-grid{ grid-template-columns: repeat(2, 1fr); }
   }
 
   /* ============================================================
@@ -1701,7 +1739,10 @@
           <h3>Crystal Encyclopedia</h3>
           <p class="feature-sub">Search our library of crystals and their core properties.</p>
           <input type="text" id="encyclopediaSearch" class="enc-search" placeholder="Search crystals or properties&hellip;" aria-label="Search crystals">
-          <div class="enc-grid" id="encyclopediaGrid"></div>
+          <p class="enc-count" id="encyclopediaCount" aria-live="polite"></p>
+          <div class="enc-scroll">
+            <div class="enc-grid" id="encyclopediaGrid"></div>
+          </div>
         </div>
 
         <div class="premium-feature-block">
@@ -2397,14 +2438,33 @@
     { name: "Pyrite",           tag: "Abundance & Manifestation",   light: "#e8cf7a", dark: "#8a6f1f" },
     { name: "Garnet",           tag: "Passion & Willpower",         light: "#c9525a", dark: "#5c1420" },
     { name: "Amazonite",        tag: "Calm Communication & Peace",  light: "#a8d8c9", dark: "#3f7a68" },
-    { name: "Bloodstone",       tag: "Courage & Vitality",          light: "#5f8a63", dark: "#1f3a24" }
+    { name: "Bloodstone",       tag: "Courage & Vitality",          light: "#5f8a63", dark: "#1f3a24" },
+    { name: "Smoky Quartz",     tag: "Grounding & Protection",      light: "#b9a89a", dark: "#4a3a30" },
+    { name: "Celestite",        tag: "Angelic Calm & Communication", light: "#c9dff0", dark: "#5a7a9a" },
+    { name: "Obsidian",         tag: "Shielding & Hard Truths",     light: "#5a5a62", dark: "#0a0a0d" },
+    { name: "Howlite",          tag: "Patience & Stress Relief",    light: "#f2eeee", dark: "#a89a9a" },
+    { name: "Kyanite",          tag: "Alignment & Communication",   light: "#7a9fd4", dark: "#27407a" },
+    { name: "Larimar",          tag: "Serenity & Ocean Calm",       light: "#a8d8dc", dark: "#3f7a86" },
+    { name: "Prehnite",         tag: "Inner Knowing & Unconditional Love", light: "#b8d89a", dark: "#5a7a3f" },
+    { name: "Aquamarine",       tag: "Courage & Clear Expression",  light: "#a8dcd8", dark: "#3f8a86" },
+    { name: "Turquoise",        tag: "Protection & Wholeness",      light: "#6fc9c0", dark: "#1f6f68" },
+    { name: "Apatite",          tag: "Motivation & Manifestation",  light: "#6fd4c9", dark: "#1f7a6f" },
+    { name: "Chrysocolla",      tag: "Empowerment & Expression",    light: "#7ac9b8", dark: "#2a7a68" },
+    { name: "Iolite",           tag: "Inner Vision & Intuition",    light: "#8a8ad4", dark: "#38386f" },
+    { name: "Unakite",          tag: "Emotional Balance & Growth",  light: "#c78f7a", dark: "#6f4a2f" },
+    { name: "Angelite",         tag: "Peace & Angelic Connection",  light: "#b8c9e8", dark: "#5a6f9a" },
+    { name: "Shungite",         tag: "EMF Protection & Purification", light: "#5a5a5a", dark: "#0f0f0f" }
   ];
 
   var encGrid = document.getElementById("encyclopediaGrid");
   var encSearch = document.getElementById("encyclopediaSearch");
+  var encCount = document.getElementById("encyclopediaCount");
 
   function renderEncyclopedia(list){
     encGrid.innerHTML = "";
+    if(encCount){
+      encCount.textContent = list.length + " of " + ENCYCLOPEDIA.length + " crystals";
+    }
     if(list.length === 0){
       encGrid.innerHTML = '<p class="enc-empty">No crystals match your search.</p>';
       return;
