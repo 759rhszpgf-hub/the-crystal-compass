@@ -1352,6 +1352,49 @@
   .moon-date-row span:last-child{ color: var(--gold-bright); font-family: var(--serif); white-space: nowrap; }
 
   /* ============================================================
+     DAILY HOROSCOPE — zodiac button grid
+     ============================================================ */
+  .zodiac-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  @media (min-width: 500px){
+    .zodiac-grid{ grid-template-columns: repeat(4, 1fr); }
+  }
+  .zodiac-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 14px 6px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--ink-muted);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  }
+  .zodiac-btn .zodiac-glyph{
+    font-size: 19px;
+    line-height: 1;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(201,162,78,0.35);
+  }
+  .zodiac-btn:hover,
+  .zodiac-btn:focus-visible{
+    border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(201,162,78,0.3);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  /* ============================================================
      MANIFESTATION STATION JOURNAL — blurred locked preview
      ============================================================ */
   .journal-locked-wrap{
@@ -1914,6 +1957,49 @@
         </div>
 
         <div class="premium-feature-block">
+          <h3>Daily Horoscope</h3>
+          <p class="feature-sub">Tap your sign for today's guidance.</p>
+          <div class="zodiac-grid">
+            <button type="button" class="zodiac-btn" data-sign="Aries" data-glyph="&#9800;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9800;</span>Aries
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Taurus" data-glyph="&#9801;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9801;</span>Taurus
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Gemini" data-glyph="&#9802;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9802;</span>Gemini
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Cancer" data-glyph="&#9803;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9803;</span>Cancer
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Leo" data-glyph="&#9804;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9804;</span>Leo
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Virgo" data-glyph="&#9805;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9805;</span>Virgo
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Libra" data-glyph="&#9806;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9806;</span>Libra
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Scorpio" data-glyph="&#9807;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9807;</span>Scorpio
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Sagittarius" data-glyph="&#9808;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9808;</span>Sagittarius
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Capricorn" data-glyph="&#9809;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9809;</span>Capricorn
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Aquarius" data-glyph="&#9810;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9810;</span>Aquarius
+            </button>
+            <button type="button" class="zodiac-btn" data-sign="Pisces" data-glyph="&#9811;">
+              <span class="zodiac-glyph" aria-hidden="true">&#9811;</span>Pisces
+            </button>
+          </div>
+        </div>
+
+        <div class="premium-feature-block">
           <h3>Manifestation Station Journal</h3>
           <p class="feature-sub">Your private space to log intentions and track your ritual history.</p>
           <div class="journal-locked-wrap" id="journalLockedWrap">
@@ -2026,6 +2112,18 @@
 
       <h4>3. Limitation of Liability</h4>
       <p>By using The Crystal Compass, you acknowledge and agree that you are fully responsible for your own life choices and actions. The creators and developers of this application accept no legal or financial liability for any decisions made, or actions taken, based on the readings, guidance texts, or crystal descriptions provided herein.</p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-modal-overlay" id="horoscopeModal" aria-hidden="true">
+  <div class="legal-modal-box" role="dialog" aria-modal="true" aria-labelledby="horoscopeModalTitle">
+    <div class="legal-modal-header">
+      <h3 id="horoscopeModalTitle">Daily Horoscope</h3>
+      <button type="button" class="legal-close-btn" data-legal-close>Close</button>
+    </div>
+    <div class="legal-modal-body">
+      <p id="horoscopeText">Your personalized guidance is being written among the stars.</p>
     </div>
   </div>
 </div>
@@ -2277,6 +2375,27 @@
 
   document.addEventListener("keydown", function(e){
     if(e.key === "Escape") closeAllLegalModals();
+  });
+
+  /* -- Daily Horoscope: each zodiac button fills the shared
+     horoscope modal with its sign before opening it, reusing the
+     same openLegalModal()/closeLegalModal() fade system above -- */
+  var zodiacButtons = document.querySelectorAll(".zodiac-btn");
+  var horoscopeModalTitle = document.getElementById("horoscopeModalTitle");
+  var horoscopeText = document.getElementById("horoscopeText");
+
+  zodiacButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var sign = btn.getAttribute("data-sign");
+      var glyph = btn.getAttribute("data-glyph") || "";
+      if(horoscopeModalTitle){
+        horoscopeModalTitle.innerHTML = '<span aria-hidden="true">' + glyph + '</span> ' + sign;
+      }
+      if(horoscopeText){
+        horoscopeText.textContent = "Your personalized " + sign + " guidance is being written among the stars. Check back soon for your full daily reading.";
+      }
+      openLegalModal("horoscopeModal");
+    });
   });
 
   /* -- "Subscribe to Premium" link inside the locked journal overlay --
