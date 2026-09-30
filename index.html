@@ -281,7 +281,10 @@
   /* golden vector compass rose — a sibling of the rings, sized in
      the same envelope the old cat image occupied, but now spins
      smoothly of its own accord so the whole centerpiece feels like
-     one living clockwork instrument along with the three rings */
+     one living clockwork instrument along with the three rings.
+     Everything drawn inside the SVG (cardinal letters, jewel dots,
+     fine lines, interior twinkles, amethyst core) is a child of this
+     one element, so it all spins together as a single unit. */
   .compass-rose{
     position: relative;
     z-index: 1;
@@ -296,6 +299,21 @@
   @keyframes compass-spin-cw{
     from{ transform: rotate(0deg); }
     to{   transform: rotate(360deg); }
+  }
+
+  /* tiny twinkling sparkles drifting in the empty space inside the
+     compass layer — each one has its own delay/duration set inline,
+     so they flash softly and out of sync with each other */
+  .compass-twinkle{
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: compass-twinkle 4.2s ease-in-out infinite;
+  }
+  @keyframes compass-twinkle{
+    0%, 100%{ opacity: 0;    transform: scale(0.3); }
+    45%{      opacity: 0.95; transform: scale(1.15); }
+    60%{      opacity: 0.8;  transform: scale(0.9); }
   }
 
   .hero h1{
@@ -1737,6 +1755,40 @@
           <stop offset="0%" stop-color="#EAC878"/>
           <stop offset="100%" stop-color="#C9A24E"/>
         </linearGradient>
+
+        <!-- diamond-white jewel: bright white core fading to a pale icy rim -->
+        <radialGradient id="compassJewelWhite" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="55%" stop-color="#F4F0FF"/>
+          <stop offset="100%" stop-color="#D9D2EE"/>
+        </radialGradient>
+
+        <!-- amethyst jewel: pale lilac highlight into deep violet -->
+        <radialGradient id="compassJewelAmethyst" cx="40%" cy="38%" r="65%">
+          <stop offset="0%" stop-color="#E6D8FF"/>
+          <stop offset="45%" stop-color="#B18CF0"/>
+          <stop offset="100%" stop-color="#5B3A9A"/>
+        </radialGradient>
+
+        <!-- radiant center hub: glowing diamond-white core blending
+             softly outward into a mystical amethyst-purple accent -->
+        <radialGradient id="compassHubCore" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="32%" stop-color="#F6F1FF"/>
+          <stop offset="62%" stop-color="#C9AEF5"/>
+          <stop offset="100%" stop-color="#7B52C4"/>
+        </radialGradient>
+
+        <!-- soft purple halo behind the hub -->
+        <radialGradient id="compassHubHalo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#E9DCFF" stop-opacity="0.85"/>
+          <stop offset="45%" stop-color="#9B7FD4" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#9B7FD4" stop-opacity="0"/>
+        </radialGradient>
+
+        <filter id="compassSoftGlow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="1.4"/>
+        </filter>
       </defs>
 
       <!-- ultra-thin crosshair gridlines through the central axis -->
@@ -1744,6 +1796,19 @@
       <line x1="6" y1="100" x2="194" y2="100" stroke="url(#compassRoseGold)" stroke-width="0.4" opacity="0.3"/>
       <line x1="100" y1="6" x2="100" y2="194" stroke="url(#compassRoseGold)" stroke-width="0.4" opacity="0.22" transform="rotate(45 100 100)"/>
       <line x1="100" y1="6" x2="100" y2="194" stroke="url(#compassRoseGold)" stroke-width="0.4" opacity="0.22" transform="rotate(135 100 100)"/>
+
+      <!-- NEW: one more set of ultra-fine, delicate gold layout lines,
+           sitting between the main gridlines at 22.5-degree offsets,
+           plus two hairline concentric circles for extra depth -->
+      <g stroke="url(#compassRoseGold)" fill="none">
+        <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(22.5 100 100)"/>
+        <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(67.5 100 100)"/>
+        <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(112.5 100 100)"/>
+        <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(157.5 100 100)"/>
+        <circle cx="100" cy="100" r="50" stroke-width="0.3" opacity="0.22"/>
+        <circle cx="100" cy="100" r="86" stroke-width="0.3" opacity="0.2"/>
+        <circle cx="100" cy="100" r="70" stroke-width="0.25" opacity="0.16" stroke-dasharray="1.2 2.4"/>
+      </g>
 
       <!-- outer degree accent ticks -->
       <g stroke="url(#compassRoseGold)" stroke-linecap="round">
@@ -1790,6 +1855,23 @@
         <line x1="100" y1="62" x2="100" y2="68" stroke-width="0.45" opacity="0.5" transform="rotate(345 100 100)"/>
       </g>
 
+      <!-- NEW: tiny twinkling sparkles drifting through the empty space
+           inside the compass layer. Each is a small 4-point star with its
+           own delay and duration so they flash softly and out of sync.
+           They are children of the spinning SVG, so they turn with it. -->
+      <g fill="#FFF6E0">
+        <path class="compass-twinkle" style="animation-delay:0s;animation-duration:4.2s"   d="M70,70 L71,73 L74,74 L71,75 L70,78 L69,75 L66,74 L69,73 Z"/>
+        <path class="compass-twinkle" style="animation-delay:1.3s;animation-duration:5s"   d="M132,58 L132.8,60.6 L135.4,61.4 L132.8,62.2 L132,64.8 L131.2,62.2 L128.6,61.4 L131.2,60.6 Z"/>
+        <path class="compass-twinkle" style="animation-delay:2.4s;animation-duration:4.6s" d="M142,128 L143,131 L146,132 L143,133 L142,136 L141,133 L138,132 L141,131 Z"/>
+        <path class="compass-twinkle" style="animation-delay:0.7s;animation-duration:5.4s" d="M60,134 L60.8,136.6 L63.4,137.4 L60.8,138.2 L60,140.8 L59.2,138.2 L56.6,137.4 L59.2,136.6 Z"/>
+        <path class="compass-twinkle" style="animation-delay:3.1s;animation-duration:4.4s" d="M118,82 L118.7,84.3 L121,85 L118.7,85.7 L118,88 L117.3,85.7 L115,85 L117.3,84.3 Z"/>
+        <path class="compass-twinkle" style="animation-delay:1.9s;animation-duration:5.8s" d="M84,118 L84.7,120.3 L87,121 L84.7,121.7 L84,124 L83.3,121.7 L81,121 L83.3,120.3 Z"/>
+      </g>
+      <g fill="#E3D4FF">
+        <path class="compass-twinkle" style="animation-delay:2.0s;animation-duration:4.8s" d="M150,92 L150.6,94 L152.6,94.6 L150.6,95.2 L150,97.2 L149.4,95.2 L147.4,94.6 L149.4,94 Z"/>
+        <path class="compass-twinkle" style="animation-delay:0.4s;animation-duration:5.2s" d="M46,96 L46.6,98 L48.6,98.6 L46.6,99.2 L46,101.2 L45.4,99.2 L43.4,98.6 L45.4,98 Z"/>
+      </g>
+
       <!-- primary 4-point needle (N / E / S / W) -->
       <path d="M100,26 L110,94 L172,100 L110,106 L100,174 L90,106 L28,100 L90,94 Z" fill="url(#compassRoseGold)" opacity="0.95"/>
 
@@ -1802,12 +1884,48 @@
         <path d="M100,54 L104,94 L100,100 L96,94 Z" transform="rotate(315 100 100)"/>
       </g>
 
-      <!-- central metallic hub, anchored precisely on the axis where
-           every needle point converges -->
-      <circle cx="100" cy="100" r="11" fill="none" stroke="url(#compassRoseGold)" stroke-width="0.6" opacity="0.45"/>
-      <circle cx="100" cy="100" r="7.5" fill="none" stroke="url(#compassRoseGold)" stroke-width="1" opacity="0.8"/>
-      <circle cx="100" cy="100" r="4" fill="url(#compassRoseGold)" opacity="0.95"/>
-      <circle cx="100" cy="100" r="1.5" fill="#F2EBDF"/>
+      <!-- NEW: cardinal letters N / E / S / W. Each sits inside the inner
+           compass ring, on its own axis just before the tip of its needle,
+           on a tiny dark jewel-box disc with a fine gold rim so the sharp
+           gold letter stays crisp and readable against the gold needle.
+           Everything here spins together with the wheel. -->
+      <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="8.6" text-anchor="middle" fill="#EAC878">
+        <circle cx="100" cy="40"  r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+        <circle cx="160" cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+        <circle cx="100" cy="160" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+        <circle cx="40"  cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+        <text x="100" y="43"   >N</text>
+        <text x="160" y="103"  >E</text>
+        <text x="100" y="163"  >S</text>
+        <text x="40"  y="103"  >W</text>
+      </g>
+
+      <!-- NEW: jewel tip accent dots on the outermost tips of the four
+           primary arms, alternating diamond-white and amethyst-purple -->
+      <g>
+        <circle cx="100" cy="26"  r="3.6" fill="#FFFFFF" opacity="0.35" filter="url(#compassSoftGlow)"/>
+        <circle cx="100" cy="26"  r="2.4" fill="url(#compassJewelWhite)" stroke="#EAC878" stroke-width="0.35"/>
+
+        <circle cx="172" cy="100" r="3.6" fill="#B18CF0" opacity="0.45" filter="url(#compassSoftGlow)"/>
+        <circle cx="172" cy="100" r="2.4" fill="url(#compassJewelAmethyst)" stroke="#EAC878" stroke-width="0.35"/>
+
+        <circle cx="100" cy="174" r="3.6" fill="#FFFFFF" opacity="0.35" filter="url(#compassSoftGlow)"/>
+        <circle cx="100" cy="174" r="2.4" fill="url(#compassJewelWhite)" stroke="#EAC878" stroke-width="0.35"/>
+
+        <circle cx="28"  cy="100" r="3.6" fill="#B18CF0" opacity="0.45" filter="url(#compassSoftGlow)"/>
+        <circle cx="28"  cy="100" r="2.4" fill="url(#compassJewelAmethyst)" stroke="#EAC878" stroke-width="0.35"/>
+      </g>
+
+      <!-- NEW: custom radiant center hub. A soft amethyst halo, fine gold
+           rings, and a brilliant diamond-white core that melts into a
+           mystical amethyst-purple gradient, anchored precisely on the
+           axis where every needle point converges -->
+      <circle cx="100" cy="100" r="15" fill="url(#compassHubHalo)"/>
+      <circle cx="100" cy="100" r="11" fill="none" stroke="url(#compassRoseGold)" stroke-width="0.6" opacity="0.55"/>
+      <circle cx="100" cy="100" r="8" fill="none" stroke="#C9AEF5" stroke-width="0.6" opacity="0.7"/>
+      <circle cx="100" cy="100" r="6.2" fill="url(#compassHubCore)" stroke="url(#compassRoseGold)" stroke-width="0.8"/>
+      <circle cx="100" cy="100" r="2.6" fill="#FFFFFF"/>
+      <circle cx="99" cy="99" r="0.9" fill="#FFFFFF"/>
     </svg>
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
