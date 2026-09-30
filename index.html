@@ -293,8 +293,15 @@
     width: auto;
     display: block;
     filter: drop-shadow(0 0 22px rgba(234,200,120,0.35));
-    animation: compass-spin-cw 70s linear infinite;
+  }
+  /* only this inner group turns: the needles, fine lines, ticks, jewel
+     dots, twinkles and the amethyst core. The four N/E/S/W badges sit
+     OUTSIDE this group, so they stay fixed and upright at 12, 3, 6 and
+     9 o'clock while everything else spins behind them. */
+  .compass-spin{
+    transform-box: view-box;
     transform-origin: 50% 50%;
+    animation: compass-spin-cw 70s linear infinite;
   }
   @keyframes compass-spin-cw{
     from{ transform: rotate(0deg); }
@@ -1791,6 +1798,8 @@
         </filter>
       </defs>
 
+      <g class="compass-spin">
+
       <!-- ultra-thin crosshair gridlines through the central axis -->
       <line x1="100" y1="6" x2="100" y2="194" stroke="url(#compassRoseGold)" stroke-width="0.4" opacity="0.3"/>
       <line x1="6" y1="100" x2="194" y2="100" stroke="url(#compassRoseGold)" stroke-width="0.4" opacity="0.3"/>
@@ -1884,22 +1893,6 @@
         <path d="M100,54 L104,94 L100,100 L96,94 Z" transform="rotate(315 100 100)"/>
       </g>
 
-      <!-- NEW: cardinal letters N / E / S / W. Each sits inside the inner
-           compass ring, on its own axis just before the tip of its needle,
-           on a tiny dark jewel-box disc with a fine gold rim so the sharp
-           gold letter stays crisp and readable against the gold needle.
-           Everything here spins together with the wheel. -->
-      <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="8.6" text-anchor="middle" fill="#EAC878">
-        <circle cx="100" cy="40"  r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-        <circle cx="160" cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-        <circle cx="100" cy="160" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-        <circle cx="40"  cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-        <text x="100" y="43"   >N</text>
-        <text x="160" y="103"  >E</text>
-        <text x="100" y="163"  >S</text>
-        <text x="40"  y="103"  >W</text>
-      </g>
-
       <!-- NEW: jewel tip accent dots on the outermost tips of the four
            primary arms, alternating diamond-white and amethyst-purple -->
       <g>
@@ -1926,6 +1919,31 @@
       <circle cx="100" cy="100" r="6.2" fill="url(#compassHubCore)" stroke="url(#compassRoseGold)" stroke-width="0.8"/>
       <circle cx="100" cy="100" r="2.6" fill="#FFFFFF"/>
       <circle cx="99" cy="99" r="0.9" fill="#FFFFFF"/>
+    </g>
+
+      <!-- NEW: cardinal letters N / E / S / W. Each sits inside the inner
+           compass ring, on its own axis just before the tip of its needle,
+           on a tiny dark jewel-box disc with a fine gold rim so the sharp
+           gold letter stays crisp and readable against the gold needle.
+           These badges are NOT inside the spinning group, so they stay fixed. -->
+      <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="8.6" text-anchor="middle" fill="#EAC878">
+        <g>
+          <circle cx="100" cy="40"  r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+          <text x="100" y="43">N</text>
+        </g>
+        <g>
+          <circle cx="160" cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+          <text x="160" y="103">E</text>
+        </g>
+        <g>
+          <circle cx="100" cy="160" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+          <text x="100" y="163">S</text>
+        </g>
+        <g>
+          <circle cx="40"  cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
+          <text x="40" y="103">W</text>
+        </g>
+      </g>
     </svg>
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
