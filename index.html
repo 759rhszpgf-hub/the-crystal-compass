@@ -1634,6 +1634,12 @@
   .legal-modal-overlay.is-open .legal-modal-box{
     transform: translateY(0) scale(1);
   }
+  /* the Daily Horoscope pop-up gets a comfortable minimum width so the
+     longer readings have plenty of breathing room. min() keeps it from
+     ever overflowing a very narrow phone screen. */
+  #horoscopeModal .legal-modal-box{
+    min-width: min(350px, 100%);
+  }
   .legal-modal-header{
     display: flex;
     align-items: center;
@@ -2076,6 +2082,10 @@
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
           <span><strong>Cosmic Tracking</strong>Follow moon phases and unlock personalized celestial guidance.</span>
+        </li>
+        <li>
+          <span class="tick" aria-hidden="true">&#10003;</span>
+          <span><strong>Daily Horoscopes</strong>Unlock personalized celestial insight and guidance for your zodiac sign every single day.</span>
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
@@ -2601,6 +2611,101 @@
   /* -- Daily Horoscope: each zodiac button fills the shared
      horoscope modal with its sign before opening it, reusing the
      same openLegalModal()/closeLegalModal() fade system above -- */
+  /* Daily Horoscopes: every sign has several readings. The reading shown
+     is picked from today's date, so it changes each day and cycles through
+     the whole set. Each sign starts at a different point in its cycle, so
+     the twelve signs never all rotate in step. To add more variety later,
+     just add more reading strings to any sign's list below. */
+  var HOROSCOPES = {
+    "Aries": [
+      "Your fire is a sacred ember today, not a wildfire. Before you leap, pause long enough to feel which path truly calls your spirit. Courage is at its most elegant when it is guided by intention. Move with purpose, speak with warmth, and trust that the doors worth opening will answer a confident, gentle knock.",
+      "Today favours bold beginnings softened by grace. Start the thing you have been circling, even if only with a single small step. Your enthusiasm is contagious, so share it generously, and let your confidence be warm rather than loud.",
+      "A moment of stillness is your secret strength today. Let your restless energy settle like glitter in water, and watch your next step become clear. Patience is not delay for you now; it is precision.",
+      "Your spirit is seeking a worthy challenge, and one is quietly approaching. Meet it with an open heart and a steady breath. What once felt like a wall may reveal itself as a doorway."
+    ],
+    "Taurus": [
+      "Beauty and stillness are your allies today. Slow down and let your senses lead you toward what is truly nourishing, whether a quiet meal, a favourite fragrance, or a moment in the sunlight. What you tend with patience is quietly ripening. Release the urge to rush, and allow abundance to arrive in its own graceful time.",
+      "Today asks you to tend your inner garden. Prune what no longer blooms, and water what brings you peace. Your steady presence is a comfort to others, so allow yourself the same comfort in return.",
+      "Luxury lies in simplicity for you today. A warm cup, a soft texture, a song you love: let small pleasures remind you that you already have much to treasure.",
+      "Change may brush against your comfort today, and you are wise enough to welcome it. Hold your values firmly and your plans lightly, and trust that stability lives within you, not around you."
+    ],
+    "Gemini": [
+      "Your curious mind is a luminous thread today, weaving connections between people and ideas. A conversation may hold a message meant just for you, so listen as deeply as you speak. Gather your scattered thoughts into one clear intention, and notice how effortlessly the right words rise when you stop trying to say everything at once.",
+      "Your words carry unusual warmth today. A message sent with sincerity could mend or open something beautiful. Speak from the heart, and let your wit be a gentle light rather than a spark.",
+      "Curiosity leads you somewhere delightful today. Follow a question you have been saving, and allow yourself to enjoy not knowing the answer yet. The wonder is part of the wisdom.",
+      "Take a quiet pause from the noise today. Your mind is a lovely, busy garden, and it flourishes with a little stillness. Write down one clear thought and let the rest drift by like clouds."
+    ],
+    "Cancer": [
+      "Your intuition is especially tender and true today. Honour the quiet signals of your heart, and create a small sanctuary of comfort for yourself and those you love. It is wise to protect your energy without closing your heart. Let yourself be held by familiar rituals, and remember that softness is a form of strength.",
+      "Home, in every sense, calls to you today. Soften your space, nourish your body, and wrap your heart in kindness. Those who matter will feel the care you radiate without a word.",
+      "A tender memory may rise today, offering gratitude rather than ache. Let it remind you how deeply you are able to love, and carry that love forward like a lantern.",
+      "Trust your inner tides today. If your mood shifts, flow with it gently instead of resisting. Your sensitivity is not fragile; it is the instrument through which you perceive what is true."
+    ],
+    "Leo": [
+      "Your radiance needs no performance today. Simply be fully, warmly yourself, and let your natural generosity draw the right people near. Offer encouragement freely, and receive praise with grace. A creative spark is asking for your attention, so give it a moment of devotion. What you shine upon will flourish.",
+      "Generosity returns to you tenfold today. Offer your warmth without expecting applause, and notice how naturally the world brightens in answer. Your presence is the gift.",
+      "Let your heart lead your creativity today. Whether you paint, write, dress beautifully, or simply smile at a stranger, express something that feels authentically yours.",
+      "A gentle humility becomes you today. Listen to someone's story with full attention, and you may find a golden insight tucked inside. True radiance makes room for others to glow."
+    ],
+    "Virgo": [
+      "There is gentle magic in the details today, and your thoughtful eye will find it. Tend to one small corner of your life with care, and notice the calm it creates within you. Remember that you are allowed to be unfinished. Release the pursuit of perfection, and let simple, steady devotion be enough.",
+      "Order is a form of self-love, and today it comes easily. Tidy one space, finish one task, and feel the quiet satisfaction settle in. You deserve the calm you are creating.",
+      "Your discernment is especially sharp today, and it serves you well. Trust the subtle sense that tells you what to keep and what to release, and be gentle with yourself as you choose.",
+      "Offer yourself the kindness you so freely offer others today. Rest without justification, and let your well of care refill. Your helpfulness shines brightest when it flows from fullness."
+    ],
+    "Libra": [
+      "Harmony is returning to you, one balanced breath at a time. Turn toward what feels honest rather than merely agreeable, and trust that a kind truth can be spoken beautifully. Surround yourself with elegance and quiet. When a decision lingers, listen for the choice that leaves your heart feeling light and settled.",
+      "Beauty awaits in an unexpected place today. Pause to notice it, and let it restore your sense of balance. Your gift for seeing grace is a doorway for those around you.",
+      "A relationship may ask for honest, loving clarity today. Speak gently and listen fully, and trust that fairness begins with including yourself. Harmony built on truth lasts.",
+      "Today is lovely for choosing quietly. Weigh your options by how they feel in your body, not only how they look on paper. Your calm centre already knows."
+    ],
+    "Scorpio": [
+      "Beneath the surface, a quiet transformation is unfolding, and you are ready for it. Let go of what has served its season, and trust the depth of your own wisdom. Your intensity is a gift when it is guided by compassion. Today, choose honest reflection over old patterns, and allow something new to be born.",
+      "Your depth is a sanctuary today. Retreat inward for a little while, and let a hidden truth surface in its own time. What emerges will feel like a quiet homecoming.",
+      "Power rests in gentleness today. Let go of a guarded stance, and allow someone trusted to witness your tenderness. Vulnerability is among your most magnetic gifts.",
+      "A closing chapter offers its final gift today. Thank it, and release it with reverence. The space it leaves behind is fertile, ready for something truer."
+    ],
+    "Sagittarius": [
+      "Your spirit longs for open horizons, and today invites a little expansion. Follow a spark of curiosity, whether through a book, a fresh idea, or a gentle wander somewhere unfamiliar. Optimism is your compass. Aim your hopes at something meaningful, and trust that the path will unfold one inspired step at a time.",
+      "Adventure may be as simple as a new perspective today. Look at a familiar situation through a wider lens, and let a smile of understanding reach your eyes. Freedom is a state of mind.",
+      "Your honesty is a golden arrow today, so aim it with kindness. Speak your truth in a way that uplifts, and notice how willingly others receive it. Wisdom and warmth travel well together.",
+      "A lesson from your travels, near or far, returns to guide you now. Trust the experience you have gathered. You are further along the road than you realise."
+    ],
+    "Capricorn": [
+      "Your steady dedication is building something lasting, even when progress feels quiet. Honour how far you have already climbed, and allow yourself a moment of rest at the summit of today's effort. Success is more graceful when it is shared with joy. Set one clear, achievable intention, and let consistency carry you.",
+      "Today favours quiet, meaningful progress. Choose the task that truly matters and give it your unhurried best. Your integrity is the foundation on which lasting things are built.",
+      "Allow joy to sit beside your ambition today. A moment of laughter or play does not diminish your discipline; it renews it. You are allowed to enjoy the climb.",
+      "Someone may look to you for steady guidance today. Offer it with patience and warmth, and remember that leadership is also the art of listening. Your calm is a gift."
+    ],
+    "Aquarius": [
+      "Your vision is ahead of its time, and today it asks for a little patience. Share a bold idea with someone who listens with an open heart. Remember that your uniqueness is not something to soften. Take a moment of stillness to reconnect with your inner sky, and let fresh inspiration arrive on its own wings.",
+      "Connection is your medicine today. Reach out to a kindred spirit, and let a spark of shared understanding light up your day. Community is where your vision grows wings.",
+      "Your originality is welcome here. Follow an unusual idea for a little while and see where it leads. The future you imagine is built from small, courageous experiments.",
+      "A gentle detachment serves you today. Step back from the noise, breathe, and view your situation from above like a star-gazer. Perspective turns worry into wonder."
+    ],
+    "Pisces": [
+      "Your dreams are speaking softly today, so make space to hear them. Let music, water, or quiet imagination carry you toward clarity. Your compassion is a gift, and it deserves to be returned to you. Gently set a boundary where you need one, and trust that your sensitivity is a source of deep, guiding wisdom.",
+      "Creativity flows like moonlit water through you today. Let your imagination wander without a destination, and capture whatever shimmers. Beauty made for its own sake nourishes your soul.",
+      "Your empathy runs deep today, so tend to your own cup first. Take a quiet moment near water, music, or candlelight, and let yourself be restored. You cannot pour from an empty vessel.",
+      "A soft intuition is guiding you toward a gentle yes or a graceful no. Trust the feeling beneath the words. Your inner compass has always known the way."
+    ]
+  };
+
+  var ZODIAC_ORDER = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+
+  function getDailyHoroscope(sign){
+    var list = HOROSCOPES[sign];
+    if(!list || !list.length){
+      return "Your guidance is gathering among the stars. Please try again in a moment.";
+    }
+    var now = new Date();
+    // whole-number day count based on the visitor's own calendar date
+    var dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    var offset = ZODIAC_ORDER.indexOf(sign);
+    if(offset < 0) offset = 0;
+    return list[(dayNumber + offset) % list.length];
+  }
+
   var zodiacButtons = document.querySelectorAll(".zodiac-btn");
   var horoscopeModalTitle = document.getElementById("horoscopeModalTitle");
   var horoscopeText = document.getElementById("horoscopeText");
@@ -2613,7 +2718,7 @@
         horoscopeModalTitle.innerHTML = '<span aria-hidden="true">' + glyph + '</span> ' + sign;
       }
       if(horoscopeText){
-        horoscopeText.textContent = "Your personalized " + sign + " guidance is being written among the stars. Check back soon for your full daily reading.";
+        horoscopeText.textContent = getDailyHoroscope(sign);
       }
       openLegalModal("horoscopeModal");
     });
