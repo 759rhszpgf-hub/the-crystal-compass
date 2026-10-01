@@ -2161,16 +2161,16 @@
 
         <div class="premium-feature-block">
           <h3>Moon Phase Tracker</h3>
-          <p class="feature-sub">Coming soon &mdash; a live look at the sky above.</p>
+          <p class="feature-sub">A live look at the sky above.</p>
           <div class="moon-tracker-card">
             <span class="moon-badge">Premium Cosmic Tracking</span>
             <div class="moon-visual" aria-hidden="true"></div>
             <div class="moon-info">
-              <p class="moon-current">Currently: <strong>Moon in Taurus</strong></p>
-              <p class="moon-sub">Waxing Gibbous &middot; 78% illuminated</p>
+              <p class="moon-current">Currently: <strong id="moonPhaseName">Calculating&hellip;</strong></p>
+              <p class="moon-sub" id="moonIllumination">&nbsp;</p>
               <div class="moon-dates">
-                <div class="moon-date-row"><span>Next Full Moon</span><span>Coming soon</span></div>
-                <div class="moon-date-row"><span>Next New Moon</span><span>Coming soon</span></div>
+                <div class="moon-date-row"><span>Next Full Moon</span><span id="moonNextFull">&hellip;</span></div>
+                <div class="moon-date-row"><span>Next New Moon</span><span id="moonNextNew">&hellip;</span></div>
                 <div class="moon-date-row"><span>Mercury Retrograde</span><span>Coming soon</span></div>
               </div>
             </div>
@@ -3034,6 +3034,158 @@
     spawnStar();
     setInterval(spawnStar, 650);
   }
+
+  /* ----------------------------------------------------------
+     6. LIVE MOON PHASE TRACKER — real astronomical calculations
+     using only the device's current date and time. No internet
+     connection or outside service is needed.
+
+     - Current phase + illumination use the low-precision lunar
+       series from Jean Meeus, "Astronomical Algorithms" (ch. 48).
+     - Next Full / New Moon use Meeus's phase-time method (ch. 49),
+       accurate to within a few minutes.
+     ---------------------------------------------------------- */
+  function moonToRad(deg){ return deg * Math.PI / 180; }
+  function moonNorm360(deg){
+    deg = deg % 360;
+    return deg < 0 ? deg + 360 : deg;
+  }
+  function moonSin(deg){ return Math.sin(moonToRad(deg)); }
+  function moonCos(deg){ return Math.cos(moonToRad(deg)); }
+
+  // Julian Date for a JavaScript Date object (UTC based)
+  function moonJulianDate(date){
+    return date.getTime() / 86400000 + 2440587.5;
+  }
+
+  // returns { illumination: 0-100, angle: 0-360, name: "Waxing Gibbous" }
+  // angle: 0 = new moon, 90 = first quarter, 180 = full, 270 = last quarter
+  function computeMoonState(date){
+    var T = (moonJulianDate(date) - 2451545.0) / 36525;
+
+    // mean elongation of the Moon (D), Sun's mean anomaly (M),
+    // Moon's mean anomaly (Mp)
+    var D  = moonNorm360(297.8501921 + 445267.1114034 * T - 0.0018819 * T * T + (T * T * T) / 545868);
+    var M  = moonNorm360(357.5291092 + 35999.0502909 * T - 0.0001536 * T * T);
+    var Mp = moonNorm360(134.9633964 + 477198.8675055 * T + 0.0087414 * T * T + (T * T * T) / 69699);
+
+    // phase angle i (Sun-Moon angle seen from Earth, degrees)
+    var i = 180
+          - D
+          - 6.289 * moonSin(Mp)
+          + 2.100 * moonSin(M)
+          - 1.274 * moonSin(2 * D - Mp)
+          - 0.658 * moonSin(2 * D)
+          - 0.214 * moonSin(2 * Mp)
+          - 0.110 * moonSin(D);
+
+    var fraction = (1 + moonCos(i)) / 2;          // 0 to 1
+    var angle = moonNorm360(180 - i);              // true elongation
+
+    var name;
+    if(angle < 12 || angle >= 348)       name = "New Moon";
+    else if(angle < 78)                  name = "Waxing Crescent";
+    else if(angle < 102)                 name = "First Quarter";
+    else if(angle < 168)                 name = "Waxing Gibbous";
+    else if(angle < 192)                 name = "Full Moon";
+    else if(angle < 258)                 name = "Waning Gibbous";
+    else if(angle < 282)                 name = "Last Quarter";
+    else                                 name = "Waning Crescent";
+
+    return { illumination: fraction * 100, angle: angle, name: name };
+  }
+
+  // exact moment (as a Julian Ephemeris Day) of the k-th New Moon
+  // (k is a whole number) or Full Moon (k ends in .5)
+  function moonPhaseJDE(k, isFull){
+    var T = k / 1236.85;
+    var jde = 2451550.09766 + 29.530588861 * k
+            + 0.00015437 * T * T
+            - 0.000000150 * T * T * T
+            + 0.00000000073 * T * T * T * T;
+
+    var E  = 1 - 0.002516 * T - 0.0000074 * T * T;
+    var M  = moonNorm360(2.5534 + 29.10535670 * k - 0.0000014 * T * T - 0.00000011 * T * T * T);
+    var Mp = moonNorm360(201.5643 + 385.81693528 * k + 0.0107582 * T * T + 0.00001238 * T * T * T - 0.000000058 * T * T * T * T);
+    var F  = moonNorm360(160.7108 + 390.67050284 * k - 0.0016118 * T * T - 0.00000227 * T * T * T + 0.000000011 * T * T * T * T);
+    var Om = moonNorm360(124.7746 - 1.56375588 * k + 0.0020672 * T * T + 0.00000215 * T * T * T);
+
+    var corr;
+    if(isFull){
+      corr = -0.40614 * moonSin(Mp)
+           + 0.17302 * E * moonSin(M)
+           + 0.01614 * moonSin(2 * Mp)
+           + 0.01043 * moonSin(2 * F)
+           + 0.00734 * E * moonSin(Mp - M)
+           - 0.00515 * E * moonSin(Mp + M)
+           + 0.00209 * E * E * moonSin(2 * M)
+           - 0.00111 * moonSin(Mp - 2 * F)
+           - 0.00057 * moonSin(Mp + 2 * F)
+           + 0.00056 * E * moonSin(2 * Mp + M)
+           - 0.00042 * moonSin(3 * Mp)
+           + 0.00042 * E * moonSin(M + 2 * F)
+           + 0.00038 * E * moonSin(M - 2 * F)
+           - 0.00024 * E * moonSin(2 * Mp - M)
+           - 0.00017 * moonSin(Om);
+    } else {
+      corr = -0.40720 * moonSin(Mp)
+           + 0.17241 * E * moonSin(M)
+           + 0.01608 * moonSin(2 * Mp)
+           + 0.01039 * moonSin(2 * F)
+           + 0.00739 * E * moonSin(Mp - M)
+           - 0.00514 * E * moonSin(Mp + M)
+           + 0.00208 * E * E * moonSin(2 * M)
+           - 0.00111 * moonSin(Mp - 2 * F)
+           - 0.00057 * moonSin(Mp + 2 * F)
+           + 0.00056 * E * moonSin(2 * Mp + M)
+           - 0.00042 * moonSin(3 * Mp)
+           + 0.00042 * E * moonSin(M + 2 * F)
+           + 0.00038 * E * moonSin(M - 2 * F)
+           - 0.00024 * E * moonSin(2 * Mp - M)
+           - 0.00017 * moonSin(Om);
+    }
+    return jde + corr;
+  }
+
+  // the next New Moon (isFull = false) or Full Moon (isFull = true)
+  // that happens after the given date, returned as a JavaScript Date
+  function nextMoonPhaseDate(now, isFull){
+    var kStart = Math.floor((moonJulianDate(now) - 2451550.09766) / 29.530588861) - 1;
+    for(var n = 0; n < 5; n++){
+      var k = kStart + n + (isFull ? 0.5 : 0);
+      var jde = moonPhaseJDE(k, isFull);
+      var ms = (jde - 2440587.5) * 86400000;
+      if(ms > now.getTime()) return new Date(ms);
+    }
+    return null;
+  }
+
+  function formatMoonDate(date){
+    if(!date) return "\u2014";
+    return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  }
+
+  var moonPhaseNameEl = document.getElementById("moonPhaseName");
+  var moonIlluminationEl = document.getElementById("moonIllumination");
+  var moonNextFullEl = document.getElementById("moonNextFull");
+  var moonNextNewEl = document.getElementById("moonNextNew");
+
+  function updateMoonTracker(){
+    var now = new Date();
+    var state = computeMoonState(now);
+
+    if(moonPhaseNameEl) moonPhaseNameEl.textContent = state.name;
+    if(moonIlluminationEl){
+      moonIlluminationEl.textContent = Math.round(state.illumination) + "% illuminated";
+    }
+    if(moonNextFullEl) moonNextFullEl.textContent = formatMoonDate(nextMoonPhaseDate(now, true));
+    if(moonNextNewEl)  moonNextNewEl.textContent  = formatMoonDate(nextMoonPhaseDate(now, false));
+  }
+
+  updateMoonTracker();
+  // keep the readout fresh if the page is left open
+  setInterval(updateMoonTracker, 10 * 60 * 1000);
+
 
 })();
 </script>
