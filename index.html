@@ -940,6 +940,13 @@
     font-size: 14px;
     color: var(--ink-muted);
   }
+  /* small, muted breakdown line sitting right under the yearly price */
+  .price-breakdown{
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    margin-bottom: 2px;
+  }
 
   .btn-premium{
     display:inline-block;
@@ -2058,7 +2065,8 @@
       </ul>
 
       <div class="payment-cta" id="paymentCta">
-        <p class="price-line">&pound;3.33 <span>/ month</span></p>
+        <p class="price-line">&pound;14.44<span>/year</span></p>
+        <p class="price-breakdown">(Just &pound;1.20 a month / less than 28p a week!)</p>
         <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
         <p class="fine-print">Cancel anytime. No commitment.</p>
         <p class="premium-note" id="premiumNote" aria-live="polite"></p>
