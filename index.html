@@ -554,7 +554,7 @@
   }
 
   /* ============================================================
-     CRYSTAL CARD EXTRAS — free tip + premium journal upsell
+     CRYSTAL CARD EXTRAS — free tip + premium rituals upsell
      ============================================================ */
   .crystal-extra{
     margin-top: 22px;
@@ -1428,107 +1428,67 @@
   }
 
   /* ============================================================
-     MANIFESTATION STATION JOURNAL — blurred locked preview
+     PREMIUM MANIFESTATION RITUALS — luxury scrolling guide
      ============================================================ */
-  .journal-locked-wrap{
-    position: relative;
+  .ritual-scroll{
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 8px 22px 20px;
     border-radius: var(--radius-lg);
-    overflow: hidden;
     border: 1px solid var(--gold);
-    box-shadow: 0 0 50px rgba(155,127,212,0.2), 0 20px 50px -20px var(--shadow);
-  }
-  .journal-dashboard{
-    padding: 22px;
     background: linear-gradient(165deg, #201a34, #0c0a1f);
-    filter: blur(4px);
-    -webkit-filter: blur(4px);
-    pointer-events: none;
-    -webkit-user-select: none;
-    user-select: none;
-    transition: filter 0.5s ease;
+    box-shadow: 0 0 50px rgba(155,127,212,0.2), 0 20px 50px -20px var(--shadow);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,162,78,0.55) transparent;
   }
-  /* once unlocked, the journal becomes real and usable, matching every
-     other premium feature that unlocks with the button */
-  .journal-locked-wrap.is-unlocked .journal-dashboard{
-    filter: none;
-    -webkit-filter: none;
-    pointer-events: auto;
-    -webkit-user-select: auto;
-    user-select: auto;
-  }
-  .journal-locked-wrap.is-unlocked .journal-lock-overlay{
-    display: none;
-  }
-  .journal-label{
-    display: block;
-    font-size: 12.5px;
-    color: var(--ink-muted);
-    margin-bottom: 10px;
-  }
-  .journal-input{
-    width: 100%;
-    padding: 13px 16px;
-    margin-bottom: 14px;
-    background: var(--panel);
-    border: 1px solid var(--border);
+  .ritual-scroll::-webkit-scrollbar{ width: 5px; }
+  .ritual-scroll::-webkit-scrollbar-track{ background: transparent; }
+  .ritual-scroll::-webkit-scrollbar-thumb{
+    background: rgba(201,162,78,0.5);
     border-radius: 999px;
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 13.5px;
   }
-  .journal-input::placeholder{ color: var(--ink-faint); }
-  .journal-save-btn{ width: 100%; margin-bottom: 22px; }
-  .journal-history-title{
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
-  }
-  .journal-entry{
+  .ritual-scroll::-webkit-scrollbar-thumb:hover{ background: rgba(201,162,78,0.8); }
+  .ritual-item{
     display: flex;
-    gap: 12px;
-    padding: 10px 0;
+    gap: 14px;
+    padding: 18px 0;
     border-top: 1px solid var(--border-soft);
-    font-size: 12.5px;
   }
-  .journal-entry:first-of-type{ border-top: none; padding-top: 0; }
-  .journal-entry-date{
+  .ritual-item:first-child{ border-top: none; }
+  .ritual-num{
     flex: none;
-    width: 52px;
-    color: var(--gold-bright);
-    font-family: var(--serif);
-  }
-  .journal-entry-text{ color: var(--ink-muted); }
-  .journal-lock-overlay{
-    position: absolute;
-    inset: 0;
-    z-index: 2;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    gap: 4px;
-    padding: 20px;
-    background: rgba(11,9,18,0.35);
-  }
-  .journal-lock-icon{
-    font-size: 26px;
-    color: var(--gold-bright);
-    margin-bottom: 6px;
-    text-shadow: 0 0 18px rgba(234,200,120,0.5);
-  }
-  .journal-lock-title{
     font-family: var(--serif);
-    font-size: 17px;
-    color: var(--ink);
+    font-size: 11.5px;
+    color: var(--gold-bright);
+    box-shadow: 0 0 14px rgba(201,162,78,0.25);
   }
-  .journal-lock-sub{
-    font-size: 12px;
-    line-height: 1.5;
+  .ritual-body h4{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 15.5px;
+    line-height: 1.3;
+    color: var(--gold-bright);
+    margin: 4px 0 6px;
+  }
+  .ritual-body p{
+    font-size: 13px;
+    line-height: 1.65;
     color: var(--ink-muted);
-    max-width: 270px;
+  }
+  .ritual-note{
+    padding-top: 16px;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+    font-size: 11.5px;
+    font-style: italic;
+    color: var(--ink-faint);
   }
   .inline-link{
     background: none;
@@ -2020,7 +1980,7 @@
 
         <button type="button" class="premium-tip-btn" id="journalUpsellBtn">
           <span class="amethyst-icon" aria-hidden="true"></span>
-          Unlock Manifestation Station Journal
+          Unlock Premium Manifestation Rituals
           <span class="lock-glyph" aria-hidden="true">&#128274;</span>
         </button>
       </div>
@@ -2093,7 +2053,7 @@
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Manifestation Rituals</strong>Log intentions and track your personal ritual history in a private journal.</span>
+          <span><strong>Premium Manifestation Rituals</strong>Guided crystal visualisation, intention-setting and meditation practices for your daily ritual.</span>
         </li>
       </ul>
 
@@ -2231,34 +2191,59 @@
         </div>
 
         <div class="premium-feature-block">
-          <h3>Manifestation Station Journal</h3>
-          <p class="feature-sub">Your private space to log intentions and track your ritual history.</p>
-          <div class="journal-locked-wrap" id="journalLockedWrap">
-            <div class="journal-dashboard" id="journalDashboard" aria-hidden="true">
-              <label class="journal-label" for="journalInputPreview">What are you manifesting with your crystal today?</label>
-              <input type="text" id="journalInputPreview" class="journal-input" placeholder="I am manifesting&hellip;" disabled>
-              <button type="button" class="btn-premium journal-save-btn" id="journalSaveBtn" disabled>Save to my Ritual Journal</button>
-              <p class="journal-history-title">Past Entries</p>
-              <div id="journalEntryList">
-                <div class="journal-entry">
-                  <span class="journal-entry-date">12 Sept</span>
-                  <span class="journal-entry-text">Calling in clarity before my big presentation.</span>
-                </div>
-                <div class="journal-entry">
-                  <span class="journal-entry-date">9 Sept</span>
-                  <span class="journal-entry-text">Releasing comparison, welcoming my own pace.</span>
-                </div>
-                <div class="journal-entry">
-                  <span class="journal-entry-date">5 Sept</span>
-                  <span class="journal-entry-text">Grounding my energy before the new moon.</span>
-                </div>
+          <h3>Premium Manifestation Rituals</h3>
+          <p class="feature-sub">Seven crystal practices to turn your intentions into ritual. Scroll to explore.</p>
+          <div class="ritual-scroll" tabindex="0" role="region" aria-label="Premium Manifestation Rituals guide">
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">I</span>
+              <div class="ritual-body">
+                <h4>Cleanse &amp; Centre</h4>
+                <p>Begin by clearing your space and your stone. Pass your crystal through gentle smoke, moonlight or a soft sweep of selenite, then sit quietly and take five slow breaths until your thoughts settle.</p>
               </div>
             </div>
-            <div class="journal-lock-overlay" id="journalLockOverlay">
-              <span class="journal-lock-icon" aria-hidden="true">&#128274;</span>
-              <p class="journal-lock-title">Premium Manifestation Feature Locked</p>
-              <p class="journal-lock-sub"><button type="button" class="inline-link" id="journalSubscribeLink">Subscribe to Premium</button> below to unlock your private space, log intentions, and save your crystal ritual history.</p>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">II</span>
+              <div class="ritual-body">
+                <h4>Choose Your Stone with Intention</h4>
+                <p>Let your crystal match your purpose: citrine for abundance, rose quartz for love, amethyst for peace, tiger's eye for courage. Hold it in both hands and ask which quality you most wish to invite in.</p>
+              </div>
             </div>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">III</span>
+              <div class="ritual-body">
+                <h4>Write Your Intention in the Present Tense</h4>
+                <p>Phrase your intention as though it is already unfolding. Say &ldquo;I am calm and clear&rdquo; rather than &ldquo;I want to be calm.&rdquo; Keep it short, warm and specific, and speak it aloud while holding your stone.</p>
+              </div>
+            </div>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">IV</span>
+              <div class="ritual-body">
+                <h4>The Golden Light Visualisation</h4>
+                <p>Close your eyes and picture a soft golden light gathering inside your crystal. See it rise through your hands and fill your heart, with your intention glowing at its centre. Linger for two or three minutes, letting yourself feel it as already true.</p>
+              </div>
+            </div>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">V</span>
+              <div class="ritual-body">
+                <h4>Crystal Meditation</h4>
+                <p>Rest your stone over your heart or in your open palm. Breathe in for four counts and out for six, silently repeating your intention on each exhale. When your mind wanders, return gently to the weight and warmth of the crystal.</p>
+              </div>
+            </div>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">VI</span>
+              <div class="ritual-body">
+                <h4>The Gratitude Seal</h4>
+                <p>Close your ritual with thanks. Name three things you are grateful for as if they were already here, then touch the crystal to your heart and say &ldquo;thank you&rdquo; to seal your intention with appreciation.</p>
+              </div>
+            </div>
+            <div class="ritual-item">
+              <span class="ritual-num" aria-hidden="true">VII</span>
+              <div class="ritual-body">
+                <h4>Keep It Close &amp; Return Daily</h4>
+                <p>Carry your stone in a pocket, or place it where you will see it each morning. Touch it whenever you need a reminder, and revisit your intention for a few quiet breaths each day, letting your ritual deepen with repetition.</p>
+              </div>
+            </div>
+            <p class="ritual-note">Offered for reflection and relaxation.</p>
           </div>
         </div>
       </div>
@@ -2364,7 +2349,7 @@
     <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">&#10005;</button>
     <div class="modal-icon" aria-hidden="true"></div>
     <h3 id="upgradeModalTitle">This is a Premium Feature</h3>
-    <p>Your Manifestation Station Journal &mdash; guided prompts for every crystal match &mdash; unlocks with The Full Reading membership.</p>
+    <p>Your Premium Manifestation Rituals &mdash; guided crystal visualisation and meditation practices &mdash; unlock with The Full Reading membership.</p>
     <button type="button" class="btn-premium" id="modalUpgradeCta">See Premium Plans</button>
   </div>
 </div>
@@ -2756,21 +2741,8 @@
     });
   });
 
-  /* -- "Subscribe to Premium" link inside the locked journal overlay --
-     scrolls to the price/button area and gives it a brief gold glow pulse */
-  var journalSubscribeLink = document.getElementById("journalSubscribeLink");
+  /* the price / unlock button area, used by the premium unlock flow below */
   var paymentCta = document.getElementById("paymentCta");
-  if(journalSubscribeLink && paymentCta){
-    journalSubscribeLink.addEventListener("click", function(){
-      paymentCta.scrollIntoView({ behavior: "smooth", block: "center" });
-      paymentCta.classList.remove("payment-highlight");
-      void paymentCta.offsetWidth; // restart animation if clicked again
-      paymentCta.classList.add("payment-highlight");
-      setTimeout(function(){
-        paymentCta.classList.remove("payment-highlight");
-      }, 1500);
-    });
-  }
 
   /* ----------------------------------------------------------
      2. DAILY GUIDANCE CARD
@@ -2840,10 +2812,6 @@
   var premiumBtn = document.getElementById("premiumBtn");
   var premiumNote = document.getElementById("premiumNote");
   var premiumFeatures = document.getElementById("premiumFeatures");
-  var journalLockedWrap = document.getElementById("journalLockedWrap");
-  var journalDashboard = document.getElementById("journalDashboard");
-  var journalInput = document.getElementById("journalInputPreview");
-  var journalSaveBtn = document.getElementById("journalSaveBtn");
 
   // ================================================================
   // TEMPORARY DEV TESTING TOGGLE
@@ -2858,10 +2826,6 @@
     premiumBtn.disabled = true;
     paymentCta.hidden = true;
     premiumFeatures.hidden = false;
-    journalLockedWrap.classList.add("is-unlocked");
-    journalDashboard.removeAttribute("aria-hidden");
-    journalInput.disabled = false;
-    journalSaveBtn.disabled = false;
   }
 
   premiumBtn.addEventListener("click", function(){
@@ -2877,7 +2841,7 @@
       isUnlocked = true;
 
       // 3. the instant the timer ends: hide the spinner/paywall block,
-      //    and reveal Daily Synchronicity + the Manifestation Journal
+      //    and reveal the 3-Card Spread, Premium Manifestation Rituals
       //    (and the rest of the premium dashboards) together, at once
       paymentCta.hidden = true;
 
@@ -2886,32 +2850,10 @@
       void premiumFeatures.offsetWidth; // restart the reveal-in animation
       premiumFeatures.style.animation = "";
 
-      journalLockedWrap.classList.add("is-unlocked");
-      journalDashboard.removeAttribute("aria-hidden");
-      journalInput.disabled = false;
-      journalSaveBtn.disabled = false;
-
       setTimeout(function(){
         premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 120);
     }, 1500);
-  });
-
-  /* -- journal save button: now functional once unlocked, adds the
-     typed intention to the top of the Past Entries list -- */
-  var journalEntryList = document.getElementById("journalEntryList");
-  journalSaveBtn.addEventListener("click", function(){
-    var text = journalInput.value.trim();
-    if(!text) return;
-    var entry = document.createElement("div");
-    entry.className = "journal-entry";
-    var todayLabel = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-    entry.innerHTML =
-      '<span class="journal-entry-date">' + todayLabel + '</span>' +
-      '<span class="journal-entry-text"></span>';
-    entry.querySelector(".journal-entry-text").textContent = text;
-    journalEntryList.insertBefore(entry, journalEntryList.firstChild);
-    journalInput.value = "";
   });
 
   /* -- 3-card spread: three independent mini flip cards -- */
