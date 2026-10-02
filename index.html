@@ -282,9 +282,9 @@
      the same envelope the old cat image occupied, but now spins
      smoothly of its own accord so the whole centerpiece feels like
      one living clockwork instrument along with the three rings.
-     Everything drawn inside the SVG (cardinal letters, jewel dots,
-     fine lines, interior twinkles, amethyst core) is a child of this
-     one element, so it all spins together as a single unit. */
+     Everything drawn inside the SVG (concentric gold and purple rings,
+     jewel dots, fine lines, interior twinkles, amethyst core) is a
+     child of this one element, so it all spins together as one unit. */
   .compass-rose{
     position: relative;
     z-index: 1;
@@ -294,10 +294,9 @@
     display: block;
     filter: drop-shadow(0 0 22px rgba(234,200,120,0.35));
   }
-  /* only this inner group turns: the needles, fine lines, ticks, jewel
-     dots, twinkles and the amethyst core. The four N/E/S/W badges sit
-     OUTSIDE this group, so they stay fixed and upright at 12, 3, 6 and
-     9 o'clock while everything else spins behind them. */
+  /* this inner group holds the whole wheel and turns as one: the
+     concentric rings, needles, fine lines, ticks, jewel dots, twinkles
+     and the amethyst core. */
   .compass-spin{
     transform-box: view-box;
     transform-origin: 50% 50%;
@@ -938,6 +937,14 @@
   .price-line span{
     font-family: var(--sans);
     font-size: 14px;
+    color: var(--ink-muted);
+  }
+  /* small, high-trust security line at the bottom of the price area */
+  .secure-note{
+    margin: 12px auto 0;
+    max-width: 320px;
+    font-size: 12px;
+    line-height: 1.5;
     color: var(--ink-muted);
   }
   /* small, muted breakdown line sitting right under the yearly price */
@@ -1766,6 +1773,15 @@
           <stop offset="100%" stop-color="#9B7FD4" stop-opacity="0"/>
         </radialGradient>
 
+        <!-- gentle glow for the translucent purple rings -->
+        <filter id="compassPurpleGlow" x="-5%" y="-5%" width="110%" height="110%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0.55" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
         <filter id="compassSoftGlow" x="-100%" y="-100%" width="300%" height="300%">
           <feGaussianBlur stdDeviation="1.4"/>
         </filter>
@@ -1787,9 +1803,33 @@
         <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(67.5 100 100)"/>
         <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(112.5 100 100)"/>
         <line x1="100" y1="10" x2="100" y2="190" stroke-width="0.25" opacity="0.2" transform="rotate(157.5 100 100)"/>
-        <circle cx="100" cy="100" r="50" stroke-width="0.3" opacity="0.22"/>
-        <circle cx="100" cy="100" r="86" stroke-width="0.3" opacity="0.2"/>
-        <circle cx="100" cy="100" r="70" stroke-width="0.25" opacity="0.16" stroke-dasharray="1.2 2.4"/>
+      </g>
+
+      <!-- NEW: multi-ring mandala. Four bands of ultra-fine concentric
+           lines moving inward: 6 lines, then 5, then 4, then 3. The line
+           colours alternate between metallic gold and glowing, translucent
+           amethyst purple. -->
+      <g fill="none" stroke="url(#compassRoseGold)" stroke-width="0.28">
+        <circle cx="100" cy="100" r="99" opacity="0.85"/>
+        <circle cx="100" cy="100" r="95.8" opacity="0.85"/>
+        <circle cx="100" cy="100" r="92.6" opacity="0.85"/>
+        <circle cx="100" cy="100" r="86" opacity="0.85"/>
+        <circle cx="100" cy="100" r="82.8" opacity="0.85"/>
+        <circle cx="100" cy="100" r="79.6" opacity="0.85"/>
+        <circle cx="100" cy="100" r="66.4" opacity="0.85"/>
+        <circle cx="100" cy="100" r="63.2" opacity="0.85"/>
+        <circle cx="100" cy="100" r="27.4" opacity="0.85"/>
+      </g>
+      <g fill="none" stroke="#B18CF0" stroke-width="0.3" opacity="0.8" filter="url(#compassPurpleGlow)">
+        <circle cx="100" cy="100" r="97.4"/>
+        <circle cx="100" cy="100" r="94.2"/>
+        <circle cx="100" cy="100" r="91"/>
+        <circle cx="100" cy="100" r="84.4"/>
+        <circle cx="100" cy="100" r="81.2"/>
+        <circle cx="100" cy="100" r="68"/>
+        <circle cx="100" cy="100" r="64.8"/>
+        <circle cx="100" cy="100" r="29"/>
+        <circle cx="100" cy="100" r="25.8"/>
       </g>
 
       <!-- outer degree accent ticks -->
@@ -1854,8 +1894,8 @@
         <path class="compass-twinkle" style="animation-delay:0.4s;animation-duration:5.2s" d="M46,96 L46.6,98 L48.6,98.6 L46.6,99.2 L46,101.2 L45.4,99.2 L43.4,98.6 L45.4,98 Z"/>
       </g>
 
-      <!-- primary 4-point needle (N / E / S / W) -->
-      <path d="M100,26 L110,94 L172,100 L110,106 L100,174 L90,106 L28,100 L90,94 Z" fill="url(#compassRoseGold)" opacity="0.95"/>
+      <!-- primary 4-point needle, ultra-thin and gold -->
+      <path d="M100,26 L105.5,95 L172,100 L105.5,105 L100,174 L94.5,105 L28,100 L94.5,95 Z" fill="url(#compassRoseGold)" opacity="0.95"/>
 
       <!-- four smaller, delicate secondary points (NE / SE / SW / NW),
            completing the intricate 8-point compass rose -->
@@ -1893,30 +1933,6 @@
       <circle cx="100" cy="100" r="2.6" fill="#FFFFFF"/>
       <circle cx="99" cy="99" r="0.9" fill="#FFFFFF"/>
     </g>
-
-      <!-- NEW: cardinal letters N / E / S / W. Each sits inside the inner
-           compass ring, on its own axis just before the tip of its needle,
-           on a tiny dark jewel-box disc with a fine gold rim so the sharp
-           gold letter stays crisp and readable against the gold needle.
-           These badges are NOT inside the spinning group, so they stay fixed. -->
-      <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="8.6" text-anchor="middle" fill="#EAC878">
-        <g>
-          <circle cx="100" cy="40"  r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-          <text x="100" y="43">N</text>
-        </g>
-        <g>
-          <circle cx="160" cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-          <text x="160" y="103">E</text>
-        </g>
-        <g>
-          <circle cx="100" cy="160" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-          <text x="100" y="163">S</text>
-        </g>
-        <g>
-          <circle cx="40"  cy="100" r="7.4" fill="#120E1B" stroke="#EAC878" stroke-width="0.6"/>
-          <text x="40" y="103">W</text>
-        </g>
-      </g>
     </svg>
     <div class="cosmic-stars-layer" id="cosmicStarsLayer" aria-hidden="true"></div>
   </div>
@@ -2031,7 +2047,7 @@
     <div class="premium-panel">
       <div class="seal" aria-hidden="true">&#10022;</div>
       <h2>The Full Reading</h2>
-      <p class="section-sub">Go deeper with a monthly membership built around your energy.</p>
+      <p class="section-sub">Go deeper with a yearly membership built around your energy.</p>
 
       <ul class="feature-list">
         <li>
@@ -2040,15 +2056,11 @@
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Ritual Calendar</strong>A personal calendar of moon phases and suggested rituals for the month.</span>
+          <span><strong>Ritual Calendar</strong>A monthly calendar of suggested ritual days to pause, reflect and set intentions.</span>
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Unlimited Guidance Cards</strong>Draw as many daily cards as you like, with a saved history.</span>
-        </li>
-        <li>
-          <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Cosmic Tracking</strong>Follow moon phases and unlock personalized celestial guidance.</span>
+          <span><strong>Premium Manifestation Rituals</strong>Guided crystal visualisation, intention-setting and meditation practices for your daily ritual.</span>
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
@@ -2056,19 +2068,20 @@
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Crystal Encyclopedia</strong>Access a deep digital library of healing stones and properties.</span>
+          <span><strong>60-Crystal Encyclopedia</strong>Explore a searchable library of 60 healing stones and their core properties.</span>
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Premium Manifestation Rituals</strong>Guided crystal visualisation, intention-setting and meditation practices for your daily ritual.</span>
+          <span><strong>Cosmic Moon Tracking</strong>Follow the live moon phase, its illumination, and the dates of the next full and new moons.</span>
         </li>
       </ul>
 
       <div class="payment-cta" id="paymentCta">
-        <p class="price-line">&pound;14.44<span>/year</span></p>
-        <p class="price-breakdown">(Just &pound;1.20 a month / less than 28p a week!)</p>
+        <p class="price-line">&pound;11.11<span>/year</span></p>
+        <p class="price-breakdown">(Just 92p a month / less than 22p a week!)</p>
         <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
         <p class="fine-print">Cancel anytime. No commitment.</p>
+        <p class="secure-note">&#128274; Secure annual processing. Your card details are never stored or saved by this application.</p>
         <p class="premium-note" id="premiumNote" aria-live="polite"></p>
       </div>
 
