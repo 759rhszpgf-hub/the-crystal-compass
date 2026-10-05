@@ -843,7 +843,7 @@
   }
   #affirmationText{
     font-family: var(--serif);
-    font-size: 19px;
+    font-size: 17px;
     line-height: 1.5;
     color: var(--ink);
   }
@@ -2873,38 +2873,143 @@
   /* ----------------------------------------------------------
      2. DAILY GUIDANCE CARD
      ---------------------------------------------------------- */
-  var AFFIRMATIONS = [
-    "You are exactly where you need to be to grow into who you're becoming.",
-    "Today, you choose calm over chaos, and clarity over confusion.",
-    "Your energy is valuable. Spend it on what truly deserves it.",
-    "Small, steady steps are still moving you forward.",
-    "You are allowed to rest without guilt. Rest is part of the work.",
-    "Abundance is already on its way to you \u2014 stay open to receive it.",
-    "You are not behind. You are on your own timeline.",
-    "Every breath is a chance to begin again.",
-    "Trust the timing of your life.",
-    "You have survived every hard day so far. That is your proof.",
-    "Let today be lighter than yesterday.",
-    "You are the calm in your own storm."
+  /* ----------------------------------------------------------
+     DAILY GUIDANCE CARD ENGINE
+     Every card is built from three parts: an opening line, a message
+     and a closing blessing. There are 23 openings, 29 messages and 25
+     blessings. Because 23, 29 and 25 share no common factors, picking
+     each part from the calendar date (with a different step for each)
+     means:
+       - everyone sees the same card on the same date,
+       - ALL THREE parts change every single day,
+       - the exact same complete card cannot come back for 16,675 days
+         (about 45 years).
+     Individual lines are shared between cards, but the full
+     combination is different every day.
+     ---------------------------------------------------------- */
+  var GUIDANCE_OPENINGS = [
+    "The stars lean close to you today.",
+    "A quiet golden light gathers along your path.",
+    "Today the universe is listening gently.",
+    "The moon holds a soft secret for you this morning.",
+    "A new chapter is turning its page in the stillness.",
+    "Your energy glows a little brighter than you realise.",
+    "The cosmos has been arranging small miracles for you.",
+    "A gentle current of grace is moving through your day.",
+    "The sky is wide, and so is your possibility.",
+    "Something tender and true is stirring within you.",
+    "The universe is weaving a thread meant just for you.",
+    "A hush of starlight settles over your thoughts.",
+    "Your intuition is awake and speaking softly.",
+    "The day opens like a flower made of light.",
+    "Ancient stars are smiling on your steps.",
+    "Peace is waiting patiently at your door.",
+    "Your spirit is lit from within today.",
+    "A sacred pause is offered to you.",
+    "The tide of your life is turning in your favour.",
+    "Today the unseen is on your side.",
+    "A shimmer of magic lives in the ordinary hours.",
+    "Your heart is a compass, and it is steady.",
+    "The dawn brings a blessing wrapped in quiet."
   ];
+
+  var GUIDANCE_MESSAGES = [
+    "Trust the timing of your life, for nothing is arriving late.",
+    "Choose calm over chaos and clarity over confusion.",
+    "Spend your energy only on what truly deserves it.",
+    "Small, steady steps are still carrying you forward.",
+    "Rest without guilt; rest is part of the sacred work.",
+    "Stay open to receive the abundance already on its way.",
+    "You are not behind; you are simply on your own timeline.",
+    "Every breath is a fresh invitation to begin again.",
+    "Release what no longer serves you and make room for lightness.",
+    "Listen closely to the quiet voice within, for it knows.",
+    "Let your kindness begin with how you speak to yourself.",
+    "Follow the spark of curiosity, even if only for a moment.",
+    "Speak your truth gently, and it will land where it should.",
+    "Honour how far you have come before you look ahead.",
+    "Protect your peace as you would protect something precious.",
+    "Allow joy to sit beside your ambition today.",
+    "What you tend with patience is quietly beginning to bloom.",
+    "Let go of the need to control, and feel the relief.",
+    "Set one clear intention, and let it guide the rest.",
+    "You are allowed to take up space and shine.",
+    "Gratitude turns what you have into more than enough.",
+    "Let someone in today, and notice how your heart softens.",
+    "Soften your shoulders, steady your breath, and begin again.",
+    "Every ending you have survived has made you wiser and stronger.",
+    "Hold your dreams lightly and your values firmly.",
+    "Let beauty slow you down and remind you what matters.",
+    "A gentle boundary is an act of love for yourself.",
+    "Walk toward what feels light, even if it is unfamiliar.",
+    "Your presence alone is a gift to someone today."
+  ];
+
+  var GUIDANCE_BLESSINGS = [
+    "May peace follow you everywhere you go.",
+    "May your heart feel held.",
+    "May clarity arrive exactly when you need it.",
+    "May your path rise gently to meet you.",
+    "May abundance find you in unexpected ways.",
+    "May you feel deeply, quietly protected.",
+    "May your hours be soft and your spirit bright.",
+    "May love reach you in every form.",
+    "May you rest easy in your own light.",
+    "May courage meet you at every doorway.",
+    "May stillness be your strength today.",
+    "May something beautiful surprise you.",
+    "May you remember how worthy you are.",
+    "May your intentions bloom in perfect time.",
+    "May gratitude fill your cup to the brim.",
+    "May the stars guard your sleep tonight.",
+    "May you walk lightly and joyfully.",
+    "May your energy stay clear and luminous.",
+    "May you be met with kindness today.",
+    "May the universe answer in whispers you can hear.",
+    "May harmony settle into every corner of your day.",
+    "May you feel the warmth of the moon on your face.",
+    "May your wisdom guide you home to yourself.",
+    "May all be well, and may it be well with you.",
+    "May your day unfold with ease and wonder."
+  ];
+
+  function buildGuidanceCard(parts){
+    return GUIDANCE_OPENINGS[parts[0]] + " " +
+           GUIDANCE_MESSAGES[parts[1]] + " " +
+           GUIDANCE_BLESSINGS[parts[2]];
+  }
+
+  // today's card, based on the visitor's own calendar date. The steps
+  // 7, 11 and 13 scramble the order so the lists don't read in sequence.
+  function todaysGuidanceParts(){
+    var now = new Date();
+    var dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    return [
+      (dayNumber * 7)  % GUIDANCE_OPENINGS.length,
+      (dayNumber * 11) % GUIDANCE_MESSAGES.length,
+      (dayNumber * 13) % GUIDANCE_BLESSINGS.length
+    ];
+  }
 
   var flipCard = document.getElementById("flipCard");
   var affirmationText = document.getElementById("affirmationText");
   var newCardBtn = document.getElementById("newCardBtn");
-  var lastIndex = -1;
 
-  function randomAffirmation(){
-    var i;
-    do{
-      i = Math.floor(Math.random() * AFFIRMATIONS.length);
-    } while (i === lastIndex && AFFIRMATIONS.length > 1);
-    lastIndex = i;
-    return AFFIRMATIONS[i];
+  // the first card drawn each visit is today's card; "Draw Another Card"
+  // then draws extra cards at random
+  var pendingGuidance = todaysGuidanceParts();
+
+  function randomGuidanceParts(){
+    return [
+      Math.floor(Math.random() * GUIDANCE_OPENINGS.length),
+      Math.floor(Math.random() * GUIDANCE_MESSAGES.length),
+      Math.floor(Math.random() * GUIDANCE_BLESSINGS.length)
+    ];
   }
 
   function revealCard(){
     if(!flipCard.classList.contains("flipped")){
-      affirmationText.textContent = randomAffirmation();
+      affirmationText.textContent = buildGuidanceCard(pendingGuidance);
       flipCard.classList.add("flipped");
     }
   }
@@ -2920,8 +3025,9 @@
   newCardBtn.addEventListener("click", function(){
     if(flipCard.classList.contains("flipped")){
       flipCard.classList.remove("flipped");
+      pendingGuidance = randomGuidanceParts();
       setTimeout(function(){
-        affirmationText.textContent = randomAffirmation();
+        affirmationText.textContent = buildGuidanceCard(pendingGuidance);
       }, 480);
     } else {
       revealCard();
