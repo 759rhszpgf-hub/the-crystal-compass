@@ -2538,6 +2538,17 @@
   var tipPanel = document.getElementById("tipPanel");
   var tipText = document.getElementById("tipText");
 
+  // Builds the purchase link for any crystal automatically from its name,
+  // e.g. Amethyst -> https://www.etsy.com/search?q=Amethyst%20crystal
+  // If you later give a crystal its own real Etsy listing URL in its
+  // "etsyLink" field, that exact link is used instead of the search.
+  function buildEtsyLink(crystal){
+    var custom = crystal.etsyLink || "";
+    var isPlaceholder = /^https?:\/\/(www\.)?etsy\.com\/?$/i.test(custom);
+    if(custom && !isPlaceholder) return custom;
+    return "https://www.etsy.com/search?q=" + encodeURIComponent(crystal.name + " crystal");
+  }
+
   function selectMood(mood, btn){
     var data = CRYSTALS[mood];
     if(!data) return;
@@ -2552,7 +2563,7 @@
     nameEl.textContent = data.name;
     descEl.textContent = data.desc;
     priceEl.textContent = "From " + data.price;
-    etsyLink.href = data.etsyLink;
+    etsyLink.href = buildEtsyLink(data);
     tipText.textContent = data.tip;
 
     // collapse the tip panel again, since it belongs to the previous crystal
