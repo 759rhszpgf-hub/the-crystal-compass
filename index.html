@@ -1139,7 +1139,7 @@
   }
   .mini-flip-back p{
     font-family: var(--serif);
-    font-size: 12px;
+    font-size: 11.5px;
     line-height: 1.4;
     color: var(--ink);
   }
@@ -1443,6 +1443,124 @@
   }
 
   /* ============================================================
+     ASTRO-CRYSTAL BIRTH CHART — gold dropdown + Cosmic Trinity
+     ============================================================ */
+  .astro-label{
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .astro-select{
+    display: block;
+    width: 100%;
+    padding: 14px 46px 14px 20px;
+    background-color: var(--panel);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%23EAC878' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(201,162,78,0.22);
+    transition: box-shadow 0.25s ease;
+  }
+  .astro-select:hover,
+  .astro-select:focus{
+    outline: none;
+    box-shadow: 0 0 30px rgba(201,162,78,0.42);
+  }
+  .astro-select option{
+    background: #17161A;
+    color: #F2EBDF;
+  }
+  .astro-result{
+    margin-top: 22px;
+    padding: 22px 20px 18px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gold);
+    background: linear-gradient(165deg, #201a34, #0c0a1f);
+    box-shadow: 0 0 50px rgba(155,127,212,0.2), 0 20px 50px -20px var(--shadow);
+    animation: reveal-in 0.5s ease;
+  }
+  .astro-result[hidden]{ display: none; }
+  .astro-title{
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--gold-bright);
+    margin-bottom: 2px;
+  }
+  .astro-subtitle{
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .astro-stone{
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .astro-subtitle + .astro-stone{ border-top: none; }
+  .astro-gem{
+    flex: none;
+    width: 34px;
+    height: 42px;
+    margin-top: 4px;
+    clip-path: polygon(50% 0%, 100% 34%, 84% 100%, 16% 100%, 0% 34%);
+    background: linear-gradient(160deg, var(--gem-light, #cfcfcf), var(--gem-dark, #555));
+    box-shadow: 0 0 18px var(--gem-glow, rgba(255,255,255,0.3));
+  }
+  .astro-body{ min-width: 0; }
+  .astro-role{
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .astro-name{
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--gold-bright);
+    margin-bottom: 6px;
+  }
+  .astro-summary{
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+  }
+  .astro-link{
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--gold-bright);
+    text-decoration: underline;
+  }
+  .astro-link:hover{ color: var(--gold); }
+  .astro-note{
+    padding-top: 14px;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+    font-size: 11.5px;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  /* ============================================================
      PREMIUM MANIFESTATION RITUALS — luxury scrolling guide
      ============================================================ */
   .ritual-scroll{
@@ -1701,6 +1819,12 @@
     .compass-rose{ height: 173px; }
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
+
+    /* the 3-card spread stacks into one column on phones, so each
+       timeline message has plenty of room to breathe */
+    .spread-grid{ grid-template-columns: 1fr; max-width: 300px; gap: 14px; }
+    .mini-flip-container{ max-width: none; aspect-ratio: 16 / 10; }
+    .mini-flip-back p{ font-size: 13px; line-height: 1.45; }
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
@@ -2106,6 +2230,10 @@
           <span class="tick" aria-hidden="true">&#10003;</span>
           <span><strong>Cosmic Moon Tracking</strong>Follow the live moon phase, its illumination, and the dates of the next full and new moons.</span>
         </li>
+        <li>
+          <span class="tick" aria-hidden="true">&#10003;</span>
+          <span><strong>Astro-Crystal Birth Chart</strong>Discover your Cosmic Trinity of Sun, Moon and Rising crystals, with a spiritual summary for each stone.</span>
+        </li>
       </ul>
 
       <div class="payment-cta" id="paymentCta">
@@ -2241,6 +2369,28 @@
               <span class="zodiac-glyph" aria-hidden="true">&#9811;</span>Pisces
             </button>
           </div>
+        </div>
+
+        <div class="premium-feature-block">
+          <h3>Astro-Crystal Birth Chart</h3>
+          <p class="feature-sub">Choose your zodiac sign to reveal your Cosmic Trinity Crystals.</p>
+          <label class="astro-label" for="astroSignSelect">Your zodiac sign</label>
+          <select id="astroSignSelect" class="astro-select">
+            <option value="">Select your sign&hellip;</option>
+            <option value="Aries">&#9800; Aries</option>
+            <option value="Taurus">&#9801; Taurus</option>
+            <option value="Gemini">&#9802; Gemini</option>
+            <option value="Cancer">&#9803; Cancer</option>
+            <option value="Leo">&#9804; Leo</option>
+            <option value="Virgo">&#9805; Virgo</option>
+            <option value="Libra">&#9806; Libra</option>
+            <option value="Scorpio">&#9807; Scorpio</option>
+            <option value="Sagittarius">&#9808; Sagittarius</option>
+            <option value="Capricorn">&#9809; Capricorn</option>
+            <option value="Aquarius">&#9810; Aquarius</option>
+            <option value="Pisces">&#9811; Pisces</option>
+          </select>
+          <div class="astro-result" id="astroResult" aria-live="polite" hidden></div>
         </div>
 
         <div class="premium-feature-block">
@@ -3088,27 +3238,147 @@
     }, 1500);
   });
 
-  /* -- 3-card spread: three independent mini flip cards -- */
-  var spreadAffirmations = [
-    "This chapter taught you what you needed to know.",
-    "You have everything required to take the next step.",
-    "Calm choices today shape what's ahead.",
-    "You carried more than you realise, and it made you steadier.",
-    "This moment is enough. You don't need to rush it.",
-    "The path ahead rewards patience over speed.",
-    "You can close a door gently and still move forward.",
-    "Today's clarity is tomorrow's confidence.",
-    "What you're building now matters more than it feels."
-  ];
-
-  function pickThreeUnique(pool){
-    var copy = pool.slice();
-    var picks = [];
-    for(var n = 0; n < 3 && copy.length > 0; n++){
-      var i = Math.floor(Math.random() * copy.length);
-      picks.push(copy.splice(i, 1)[0]);
+  /* -- 3-card spread: timeline combination engine --
+     Each position (Past, Present, Path Ahead) has its own pool of
+     opening lines, messages and blessings, written for that moment in
+     time. The cards are picked from the visitor's calendar date, with a
+     different step for every part. Because 11, 13 and 9 share no common
+     factors, all three parts change every day and the same complete card
+     cannot come back for 1,287 days (about 3.5 years) in each position. */
+  var SPREAD_TIMELINE = {
+    past: {
+      openings: [
+        "Look back with soft, grateful eyes.",
+        "The road behind you shimmers.",
+        "Old chapters whisper their blessings.",
+        "What was has made you luminous.",
+        "Your earlier steps left golden footprints.",
+        "The past bows gently before you.",
+        "Memory glows like candlelight.",
+        "Every season you survived is honoured.",
+        "Behind you lies hard-won wisdom.",
+        "A faded door closes with grace.",
+        "The stars remember your courage."
+      ],
+      messages: [
+        "You carried more than you realise, and grew steadier.",
+        "What you released has made room for light.",
+        "Every lesson was a gift in quiet disguise.",
+        "You are not defined by what has ended.",
+        "Old hurts are softening into understanding.",
+        "You learned to trust yourself along the way.",
+        "The strength you built is still yours.",
+        "Nothing you lived was wasted.",
+        "You have outgrown what once felt so heavy.",
+        "Forgive the version of you who did not yet know.",
+        "Your resilience has been writing your story all along.",
+        "What tested you has taught you how to shine.",
+        "The chapter is complete, and you completed it well."
+      ],
+      blessings: [
+        "Carry the wisdom, leave the weight.",
+        "Thank it, bless it, release it.",
+        "May the past rest peacefully.",
+        "You are free to move on.",
+        "Gratitude will lighten your steps.",
+        "Let it be a gentle memory.",
+        "May old wounds become quiet strength.",
+        "You have come so far.",
+        "Bless it and walk on."
+      ],
+      steps: [3, 5, 2]
+    },
+    present: {
+      openings: [
+        "Right now, the universe is leaning in.",
+        "This very moment is a doorway.",
+        "You are exactly where you are meant to be.",
+        "The present glows with quiet promise.",
+        "Here, in this breath, magic lives.",
+        "Today your spirit is wide awake.",
+        "Stillness is speaking to you now.",
+        "This moment holds a gentle blessing.",
+        "Your energy is gathering itself beautifully.",
+        "This hour is softer than it seems.",
+        "Now is where peace lives."
+      ],
+      messages: [
+        "Nothing needs fixing; simply be present with yourself.",
+        "Trust what you feel, and let it guide you.",
+        "You already have what this moment asks for.",
+        "Choose one kind thought, and let it settle.",
+        "Your calm is more powerful than your worry.",
+        "Listen closely; your intuition is speaking.",
+        "Let this moment be enough, just as it is.",
+        "You are allowed to rest in the middle of the journey.",
+        "Gently release the need for answers today.",
+        "Notice one beautiful thing, and let it lift you.",
+        "What you focus on now begins to grow.",
+        "Your heart knows the next small step.",
+        "You are more ready than you feel."
+      ],
+      blessings: [
+        "Breathe in peace, breathe out doubt.",
+        "May this moment hold you gently.",
+        "Stay soft and stay present.",
+        "You are doing beautifully.",
+        "Let stillness be your strength.",
+        "May clarity find you here.",
+        "Receive this moment fully.",
+        "You are right on time.",
+        "Rest here, and be well."
+      ],
+      steps: [4, 3, 4]
+    },
+    ahead: {
+      openings: [
+        "A bright horizon is opening before you.",
+        "The road ahead is lit with starlight.",
+        "Something lovely is preparing to arrive.",
+        "Your future is stirring with possibility.",
+        "New doors are quietly unlatching.",
+        "The path rises gently to greet you.",
+        "Good fortune is already gathering for you.",
+        "A golden season is drawing near.",
+        "The universe has been planning on your behalf.",
+        "Tomorrow smiles upon your intentions.",
+        "A fresh beginning waits just beyond the bend."
+      ],
+      messages: [
+        "Keep walking; the right door will open.",
+        "Trust that what is meant for you will find you.",
+        "Your intentions are taking root in unseen ways.",
+        "Say yes to what feels light and true.",
+        "Patience will be rewarded beyond your hopes.",
+        "Abundance is moving toward you at the perfect pace.",
+        "You will meet the future with steady courage.",
+        "Leave space in your heart for a lovely surprise.",
+        "Your next chapter is gentler than you fear.",
+        "Every small step now becomes a blessing later.",
+        "You are being guided, even when it is quiet.",
+        "Release the fear of the unknown and keep going.",
+        "What you are building will carry you far."
+      ],
+      blessings: [
+        "May your path rise to meet you.",
+        "The best is still unfolding.",
+        "Walk forward with an open heart.",
+        "May every step be blessed.",
+        "Go gently; you are guided.",
+        "May joy light your way.",
+        "The future welcomes you.",
+        "Step forward, and shine.",
+        "All is unfolding beautifully."
+      ],
+      steps: [5, 7, 5]
     }
-    return picks;
+  };
+
+  function spreadCardText(timelinePool, dayNumber){
+    var o = (dayNumber * timelinePool.steps[0]) % timelinePool.openings.length;
+    var m = (dayNumber * timelinePool.steps[1]) % timelinePool.messages.length;
+    var b = (dayNumber * timelinePool.steps[2]) % timelinePool.blessings.length;
+    return timelinePool.openings[o] + " " + timelinePool.messages[m] + " " + timelinePool.blessings[b];
   }
 
   document.querySelectorAll(".mini-flip-card").forEach(function(card){
@@ -3125,15 +3395,18 @@
     });
   });
 
-  // assign three unique spread messages once, when the section first reveals
+  // fill the three spread cards once, when the section first reveals.
+  // Past, Present and Path Ahead follow the order of the cards on screen.
   var spreadFilled = false;
   function fillSpreadOnce(){
     if(spreadFilled) return;
     spreadFilled = true;
-    var picks = pickThreeUnique(spreadAffirmations);
+    var now = new Date();
+    var dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    var timelinePools = [SPREAD_TIMELINE.past, SPREAD_TIMELINE.present, SPREAD_TIMELINE.ahead];
     var texts = document.querySelectorAll("#premiumFeatures .mini-affirmation");
     texts.forEach(function(el, i){
-      el.textContent = picks[i] || spreadAffirmations[0];
+      if(timelinePools[i]) el.textContent = spreadCardText(timelinePools[i], dayNumber);
     });
   }
 
@@ -3582,6 +3855,99 @@
   // keep the readout fresh if the page is left open
   setInterval(updateMoonTracker, 10 * 60 * 1000);
 
+
+  /* ----------------------------------------------------------
+     7. ASTRO-CRYSTAL BIRTH CHART — Cosmic Trinity Crystals
+     Picking a zodiac sign shows three stones from the crystal
+     database: a Sun stone (core self), a Moon stone (emotional world)
+     and a Rising stone (how you meet the world). Each entry is:
+     [sun stone, moon stone, rising stone, sun summary, moon summary,
+      rising summary]. Each stone's own description is added after the
+      summary, straight from the 122-crystal database.
+     ---------------------------------------------------------- */
+  var ASTRO_TRINITY = {
+    "Aries": ["Carnelian", "Moonstone", "Red Jasper", "Your fiery core is about bold beginnings, and this stone keeps that courage warm and well directed.", "Beneath the spark, your heart needs calm; this stone cools restless feelings into quiet confidence.", "The first impression you give is brave and direct; this stone steadies your stride as you lead."],
+    "Taurus": ["Emerald", "Rose Quartz", "Green Aventurine", "Your steady heart craves beauty and abundance, and this stone nurtures that sensual, grounded core.", "Your emotional world seeks comfort and safety; this stone wraps tender feelings in warmth.", "You meet the world with calm, dependable presence, and this stone helps your good fortune take root."],
+    "Gemini": ["Citrine", "Blue Lace Agate", "Clear Quartz", "Your bright, curious core thrives on connection, and this stone keeps your joyful mind clear.", "Your feelings move quickly like the wind; this stone soothes the chatter into gentle calm.", "You greet the world with wit and sparkle, and this stone helps your words land with clarity."],
+    "Cancer": ["Moonstone", "Pearl", "Selenite", "Your tender, intuitive core is guided by the tides, and this stone honours that gentle wisdom.", "Your emotional depth is a sacred home; this stone holds and protects it with soft light.", "You meet the world with caring sensitivity, and this stone helps you stay open while feeling safe."],
+    "Leo": ["Sunstone", "Tiger's Eye", "Imperial Topaz", "Your generous, radiant core was made to shine, and this stone amplifies that warm, golden light.", "Your heart longs to be seen and cherished; this stone fills it with steady, self-assured warmth.", "You enter every room with natural presence, and this stone lends your charisma graceful confidence."],
+    "Virgo": ["Moss Agate", "Fluorite", "Sodalite", "Your thoughtful core finds magic in the details, and this stone brings it gentle, grounded renewal.", "Your feelings seek order and calm; this stone eases overthinking into peaceful reassurance.", "You meet the world with careful, helpful grace, and this stone sharpens your clarity and calm."],
+    "Libra": ["Opal", "Morganite", "Lapis Lazuli", "Your harmonious core adores beauty and balance, and this stone refines that graceful, loving spirit.", "Your heart seeks peace in every bond; this stone brings softness and fairness to your feelings.", "You greet the world with charm and poise, and this stone helps you speak your truth gracefully."],
+    "Scorpio": ["Obsidian", "Garnet", "Labradorite", "Your intense core holds deep, transformative power, and this stone guards and guides that depth.", "Your emotions run deep and private; this stone protects your heart while helping it heal.", "You meet the world with magnetic mystery, and this stone reveals your inner light with confidence."],
+    "Sagittarius": ["Turquoise", "Amber", "Azurite", "Your adventurous core longs for wide horizons, and this stone keeps your spirit hopeful and free.", "Your heart needs warmth and freedom; this stone lifts your feelings with sunny optimism.", "You greet the world with open-hearted enthusiasm, and this stone sharpens your insight along the way."],
+    "Capricorn": ["Smoky Quartz", "Jade", "Black Onyx", "Your steadfast core builds lasting things, and this stone grounds your ambition in quiet strength.", "Your feelings are guarded and loyal; this stone invites ease and a gentler kind of strength.", "You meet the world with composed authority, and this stone strengthens your poise and protection."],
+    "Aquarius": ["Amethyst", "Angelite", "Sapphire", "Your visionary core thinks ahead of its time, and this stone keeps your ideas bright and calm.", "Your heart needs space to feel freely; this stone brings peaceful, angelic ease to your emotions.", "You greet the world with original brilliance, and this stone lends your vision wisdom and clarity."],
+    "Pisces": ["Aquamarine", "Larimar", "Celestite", "Your dreamy core flows with compassion, and this stone protects your sensitivity while it shines.", "Your emotions are an ocean of empathy; this stone calms the tides and soothes your heart.", "You meet the world with gentle, otherworldly grace, and this stone lifts your intuition and peace."]
+  };
+
+  var astroSelect = document.getElementById("astroSignSelect");
+  var astroResult = document.getElementById("astroResult");
+
+  function findCrystalByName(name){
+    for(var i = 0; i < CRYSTALS_DB.length; i++){
+      if(CRYSTALS_DB[i].name === name) return CRYSTALS_DB[i];
+    }
+    return null;
+  }
+
+  function makeAstroEl(tag, className, text){
+    var el = document.createElement(tag);
+    if(className) el.className = className;
+    if(text !== undefined) el.textContent = text;
+    return el;
+  }
+
+  function renderAstroChart(sign){
+    var entry = ASTRO_TRINITY[sign];
+    if(!entry){
+      astroResult.hidden = true;
+      return;
+    }
+    var roles = ["Sun Stone \u00B7 Your Core Self", "Moon Stone \u00B7 Your Emotional World", "Rising Stone \u00B7 Your Outer Presence"];
+    astroResult.innerHTML = "";
+    astroResult.appendChild(makeAstroEl("p", "astro-title", sign + " \u2014 Your Cosmic Trinity"));
+    astroResult.appendChild(makeAstroEl("p", "astro-subtitle", "Sun \u00B7 Moon \u00B7 Rising"));
+
+    for(var i = 0; i < 3; i++){
+      var crystal = findCrystalByName(entry[i]);
+      if(!crystal) continue;
+
+      var row = makeAstroEl("div", "astro-stone");
+      var gem = makeAstroEl("span", "astro-gem");
+      gem.setAttribute("aria-hidden", "true");
+      gem.style.setProperty("--gem-light", crystal.light);
+      gem.style.setProperty("--gem-dark", crystal.dark);
+      gem.style.setProperty("--gem-glow", hexToRgba(crystal.light, 0.5));
+
+      var body = makeAstroEl("div", "astro-body");
+      body.appendChild(makeAstroEl("p", "astro-role", roles[i]));
+      body.appendChild(makeAstroEl("p", "astro-name", crystal.name));
+      body.appendChild(makeAstroEl("p", "astro-summary", entry[i + 3] + " " + crystal.desc));
+
+      var link = makeAstroEl("a", "astro-link", "Find " + crystal.name + " on Etsy \u2197");
+      link.href = buildEtsyLink(crystal);
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      body.appendChild(link);
+
+      row.appendChild(gem);
+      row.appendChild(body);
+      astroResult.appendChild(row);
+    }
+
+    astroResult.appendChild(makeAstroEl("p", "astro-note",
+      "A symbolic trinity drawn from your sign. A full natal chart would need your exact birth date, time and place."));
+    astroResult.hidden = false;
+    astroResult.style.animation = "none";
+    void astroResult.offsetWidth; // restart the reveal animation
+    astroResult.style.animation = "";
+  }
+
+  if(astroSelect && astroResult){
+    astroSelect.addEventListener("change", function(){
+      renderAstroChart(astroSelect.value);
+    });
+  }
 
 })();
 </script>
