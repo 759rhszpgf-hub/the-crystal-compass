@@ -1563,7 +1563,37 @@
   /* ============================================================
      AFFIRMATION MANIFESTATION WHEEL
      ============================================================ */
+  /* the stage gives the wheel a little cosmic breathing room: a soft
+     purple glow and a layer of drifting, twinkling gold stars behind it.
+     The stars reuse the same .cosmic-star look and animation as the
+     centrepiece at the top of the page. */
+  .wheel-stage{
+    position: relative;
+    width: 100%;
+    padding: 30px 0 10px;
+  }
+  .wheel-stage::before{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(155,127,212,0.22) 0%, rgba(201,162,78,0.10) 45%, transparent 70%);
+    pointer-events: none;
+  }
+  .wheel-stars-layer{
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+  }
   .manifest-wheel{
+    z-index: 1;
     position: relative;
     width: min(300px, 80vw);
     aspect-ratio: 1 / 1;
@@ -2459,6 +2489,8 @@
         <div class="premium-feature-block">
           <h3>Affirmation Manifestation Wheel</h3>
           <p class="feature-sub">Spin the wheel to receive your alignment mantra for today.</p>
+          <div class="wheel-stage" id="wheelStage">
+          <div class="wheel-stars-layer" id="wheelStarsLayer" aria-hidden="true"></div>
           <div class="manifest-wheel" id="manifestWheel">
             <div class="wheel-rotor" id="wheelRotor">
               <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -2527,6 +2559,7 @@
       <path d="M140,1 L160,1 L150,26 Z" fill="url(#wheelGold)" stroke="#0c0a1f" stroke-width="0.8" stroke-linejoin="round"/>
       <circle cx="150" cy="9" r="2.4" fill="#FFFFFF"/>
     </svg>
+          </div>
           </div>
           <div class="wheel-action">
             <button type="button" class="btn-premium wheel-spin-btn" id="wheelSpinBtn">Spin the Wheel</button>
@@ -4194,6 +4227,58 @@
 
   if(wheelRotor && wheelSpinBtn && wheelResult){
     wheelSpinBtn.addEventListener("click", spinTheWheel);
+  }
+
+  /* ----------------------------------------------------------
+     9. WHEEL STAR SHOWER — the same softly twinkling, drifting gold
+     stars as the centrepiece, spawned around (never over) the
+     Affirmation Manifestation Wheel. It only runs while the wheel is
+     actually on screen and the tab is visible, and it stays off for
+     visitors who prefer reduced motion.
+     ---------------------------------------------------------- */
+  var wheelStage = document.getElementById("wheelStage");
+  var wheelStarsLayer = document.getElementById("wheelStarsLayer");
+  var wheelBox = document.getElementById("manifestWheel");
+  var wheelPrefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if(wheelStage && wheelStarsLayer && wheelBox && !wheelPrefersReducedMotion){
+    var spawnWheelStar = function(){
+      if(document.hidden) return;
+      var w = wheelStage.offsetWidth;
+      var h = wheelStage.offsetHeight;
+      if(!w || !h) return;                              // premium zone is still locked
+
+      var centreX = w / 2;
+      var centreY = h / 2;
+      var wheelRadius = wheelBox.offsetWidth / 2;
+      var x = 0, y = 0, tries = 0, clear = false;
+      while(tries < 12 && !clear){
+        x = Math.random() * w;
+        y = Math.random() * h;
+        clear = Math.hypot(x - centreX, y - centreY) > wheelRadius * 1.02;   // keep stars off the wheel itself
+        tries++;
+      }
+      if(!clear) return;
+
+      var angle = Math.random() * Math.PI * 2;
+      var drift = 14 + Math.random() * 14;
+      var star = document.createElement("span");
+      star.className = "cosmic-star";
+      star.textContent = "\u2605"; // star
+      star.style.left = x + "px";
+      star.style.top = y + "px";
+      star.style.fontSize = (8 + Math.random() * 6) + "px";
+      star.style.setProperty("--dx", (Math.cos(angle) * drift) + "px");
+      star.style.setProperty("--dy", (Math.sin(angle) * drift) + "px");
+
+      wheelStarsLayer.appendChild(star);
+      star.addEventListener("animationend", function(){ star.remove(); });
+      setTimeout(function(){
+        if(star.parentNode) star.parentNode.removeChild(star);
+      }, 2000);
+    };
+
+    setInterval(spawnWheelStar, 420);
   }
 
 })();
