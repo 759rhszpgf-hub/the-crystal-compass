@@ -1152,39 +1152,6 @@
     color: var(--ink);
   }
 
-  /* -- readings panel under the 3 cards: used on phones only, where the
-     card backs are too small to hold the full message -- */
-  .spread-readings{
-    display: none;
-    max-width: 480px;
-    margin: 16px auto 0;
-  }
-  .spread-reading{
-    height: auto;
-    margin-top: 12px;
-    padding: 16px 18px;
-    text-align: center;
-    border: 1px solid var(--gold);
-    border-radius: var(--radius-md);
-    background: linear-gradient(165deg, #201a34, #0c0a1f);
-    box-shadow: 0 0 30px rgba(201,162,78,0.18);
-    animation: reveal-in 0.5s ease;
-  }
-  .spread-reading[hidden]{ display: none; }
-  .spread-reading-pos{
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 6px;
-  }
-  .spread-reading-text{
-    font-family: var(--serif);
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: var(--ink);
-  }
-
   /* -- ritual calendar -- */
   .ritual-cal-header{
     display:grid;
@@ -1951,18 +1918,40 @@
     .sync-number{ font-size: 32px; }
 
     /* 3-card spread on phones: the three cards stay side by side in one
-       row, exactly as before. The small card backs show only the
-       position name and a gold star, and the full reading opens in a
-       panel underneath the row, which grows to fit the whole message. */
-    .mini-flip-back .mini-affirmation{ display: none; }
-    .mini-flip-back::after{
-      content: '\2726';
-      margin: auto 0;
-      font-size: 22px;
-      color: var(--gold-bright);
-      text-shadow: 0 0 14px rgba(234,200,120,0.6);
+       tight row. Once a card is tapped, its reading shows inside that
+       card, centred, and the card grows to fit the whole message
+       (height: auto), so nothing is ever clipped. A gold star sits
+       centred beneath each title. */
+    .mini-flip-container{
+      aspect-ratio: auto;
+      min-height: 150px;
+      display: flex;
     }
-    .spread-readings{ display: block; }
+    .mini-flip-card{
+      flex: 1;
+      height: auto;
+      min-height: 150px;
+    }
+    .mini-flip-card.flipped .mini-flip-back{
+      position: relative;
+      inset: auto;
+      height: auto;
+    }
+    .mini-flip-back{ padding: 16px 8px 14px; }
+    .mini-flip-back .mini-position::after{
+      content: '\2726';
+      display: block;
+      margin: 5px auto 9px;
+      font-size: 16px;
+      letter-spacing: 0;
+      color: var(--gold-bright);
+      text-shadow: 0 0 12px rgba(234,200,120,0.6);
+    }
+    .mini-flip-back p{
+      font-size: 11px;
+      line-height: 1.45;
+      text-align: center;
+    }
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
@@ -2431,20 +2420,6 @@
                   <p class="mini-affirmation">&mdash;</p>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="spread-readings" id="spreadReadings" aria-live="polite">
-            <div class="spread-reading" hidden>
-              <p class="spread-reading-pos">Past</p>
-              <p class="spread-reading-text">&mdash;</p>
-            </div>
-            <div class="spread-reading" hidden>
-              <p class="spread-reading-pos">Present</p>
-              <p class="spread-reading-text">&mdash;</p>
-            </div>
-            <div class="spread-reading" hidden>
-              <p class="spread-reading-pos">Path Ahead</p>
-              <p class="spread-reading-text">&mdash;</p>
             </div>
           </div>
         </div>
@@ -3634,13 +3609,10 @@
     return timelinePool.openings[o] + " " + timelinePool.messages[m] + " " + timelinePool.blessings[b];
   }
 
-  document.querySelectorAll(".mini-flip-card").forEach(function(card, cardIndex){
+  document.querySelectorAll(".mini-flip-card").forEach(function(card){
     function revealMini(){
       if(card.classList.contains("flipped")) return;
       card.classList.add("flipped");
-      // on phones the full reading opens underneath the row of cards
-      var readingBlocks = document.querySelectorAll("#spreadReadings .spread-reading");
-      if(readingBlocks[cardIndex]) readingBlocks[cardIndex].hidden = false;
     }
     card.addEventListener("click", revealMini);
     card.addEventListener("keydown", function(e){
@@ -3661,12 +3633,8 @@
     var dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
     var timelinePools = [SPREAD_TIMELINE.past, SPREAD_TIMELINE.present, SPREAD_TIMELINE.ahead];
     var texts = document.querySelectorAll("#premiumFeatures .mini-affirmation");
-    var readingTexts = document.querySelectorAll("#spreadReadings .spread-reading-text");
     texts.forEach(function(el, i){
-      if(!timelinePools[i]) return;
-      var reading = spreadCardText(timelinePools[i], dayNumber);
-      el.textContent = reading;
-      if(readingTexts[i]) readingTexts[i].textContent = reading;
+      if(timelinePools[i]) el.textContent = spreadCardText(timelinePools[i], dayNumber);
     });
   }
 
