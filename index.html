@@ -1152,6 +1152,45 @@
     color: var(--ink);
   }
 
+  /* -- reading block under the 3-card row: shown on phones only, where
+     the small card backs are too narrow to hold a full message. It uses
+     the full width, centres the text, and grows to fit it. -- */
+  .spread-reading{
+    display: none;
+    height: auto;
+    max-width: 480px;
+    margin: 18px auto 0;
+    padding: 22px 24px;
+    text-align: center;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(165deg, #201a34, #0c0a1f);
+    box-shadow: 0 0 40px rgba(155,127,212,0.22), 0 20px 40px -20px var(--shadow);
+    animation: reveal-in 0.5s ease;
+  }
+  .spread-reading-pos{
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .spread-reading-pos::after{
+    content: '\2726';
+    display: block;
+    margin: 6px auto 10px;
+    font-size: 16px;
+    letter-spacing: 0;
+    color: var(--gold-bright);
+    text-shadow: 0 0 12px rgba(234,200,120,0.6);
+  }
+  .spread-reading-text{
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
   /* -- ritual calendar -- */
   .ritual-cal-header{
     display:grid;
@@ -1917,41 +1956,25 @@
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
-    /* 3-card spread on phones: the three cards stay side by side in one
-       tight row. Once a card is tapped, its reading shows inside that
-       card, centred, and the card grows to fit the whole message
-       (height: auto), so nothing is ever clipped. A gold star sits
-       centred beneath each title. */
-    .mini-flip-container{
-      aspect-ratio: auto;
-      min-height: 150px;
-      display: flex;
-    }
-    .mini-flip-card{
-      flex: 1;
-      height: auto;
-      min-height: 150px;
-    }
-    .mini-flip-card.flipped .mini-flip-back{
-      position: relative;
-      inset: auto;
-      height: auto;
-    }
-    .mini-flip-back{ padding: 16px 8px 14px; }
+    /* 3-card spread on phones: the three cards stay in their compact
+       side-by-side row. Each card back shows just its title and a
+       centred gold star. The full reading opens in a spacious,
+       full-width block directly underneath the row (see .spread-reading),
+       so the prose is never squeezed into a narrow column. */
+    .mini-flip-back .mini-affirmation{ display: none; }
     .mini-flip-back .mini-position::after{
       content: '\2726';
       display: block;
-      margin: 5px auto 9px;
-      font-size: 16px;
+      margin: 6px auto 0;
+      font-size: 18px;
       letter-spacing: 0;
       color: var(--gold-bright);
       text-shadow: 0 0 12px rgba(234,200,120,0.6);
     }
-    .mini-flip-back p{
-      font-size: 11px;
-      line-height: 1.45;
-      text-align: center;
+    .mini-flip-card.is-selected .mini-flip-back{
+      box-shadow: 0 0 22px rgba(201,162,78,0.55), 0 16px 30px -14px var(--shadow);
     }
+    .spread-reading:not([hidden]){ display: block; }
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
@@ -2421,6 +2444,10 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="spread-reading" id="spreadReading" aria-live="polite" hidden>
+            <p class="spread-reading-pos" id="spreadReadingPos"></p>
+            <p class="spread-reading-text" id="spreadReadingText"></p>
           </div>
         </div>
 
@@ -3609,10 +3636,33 @@
     return timelinePool.openings[o] + " " + timelinePool.messages[m] + " " + timelinePool.blessings[b];
   }
 
+  // on phones, the tapped card's reading opens in one spacious block
+  // directly under the row (one reading at a time)
+  var spreadReadingBox = document.getElementById("spreadReading");
+  var spreadReadingPos = document.getElementById("spreadReadingPos");
+  var spreadReadingText = document.getElementById("spreadReadingText");
+
+  function showSpreadReading(card){
+    if(!spreadReadingBox) return;
+    document.querySelectorAll(".mini-flip-card").forEach(function(c){
+      c.classList.remove("is-selected");
+    });
+    card.classList.add("is-selected");
+    spreadReadingPos.textContent = card.querySelector(".mini-position").textContent;
+    spreadReadingText.textContent = card.querySelector(".mini-affirmation").textContent;
+    spreadReadingBox.hidden = false;
+    spreadReadingBox.style.animation = "none";
+    void spreadReadingBox.offsetWidth; // restart the reveal animation
+    spreadReadingBox.style.animation = "";
+    if(window.innerWidth <= 560){
+      spreadReadingBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
   document.querySelectorAll(".mini-flip-card").forEach(function(card){
     function revealMini(){
-      if(card.classList.contains("flipped")) return;
       card.classList.add("flipped");
+      showSpreadReading(card);
     }
     card.addEventListener("click", revealMini);
     card.addEventListener("keydown", function(e){
