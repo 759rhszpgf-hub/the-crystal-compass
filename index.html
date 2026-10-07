@@ -1923,20 +1923,28 @@
        (height: auto), so nothing is ever clipped. A gold star sits
        centred beneath each title. Text is a crisp 13px with slightly
        tighter inner padding. */
+    /* all three cards always share one identical height: the grid row
+       is as tall as the longest reading, every container stretches to
+       that height, and each card's face stretches to fill its container */
+    .spread-grid{ align-items: stretch; }
     .mini-flip-container{
       aspect-ratio: auto;
       min-height: 150px;
       display: flex;
+      align-self: stretch;
     }
     .mini-flip-card{
       flex: 1;
       height: auto;
       min-height: 150px;
+      display: flex;
+      flex-direction: column;
     }
     .mini-flip-card.flipped .mini-flip-back{
       position: relative;
       inset: auto;
       height: auto;
+      flex: 1 1 auto;
     }
     .mini-flip-back{ padding: 14px 6px 12px; }
     .mini-flip-back .mini-position::after{
