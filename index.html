@@ -1152,9 +1152,9 @@
     color: var(--ink);
   }
 
-  /* -- reading block under the 3-card row: shown on phones only, where
-     the small card backs are too narrow to hold a full message. It uses
-     the full width, centres the text, and grows to fit it. -- */
+  /* -- reading block under the 3-card row: no longer used on phones,
+     where the readings now flow inside the cards themselves. It stays
+     hidden everywhere. -- */
   .spread-reading{
     display: none;
     height: auto;
@@ -1956,26 +1956,65 @@
     .sync-box{ padding: 18px 20px; max-width: 92%; }
     .sync-number{ font-size: 32px; }
 
-    /* 3-card spread on phones: the three cards stay locked at one
-       identical size in their side-by-side row. Each card back shows
-       just its title and a centred gold star. The selected card's full
-       reading opens in a spacious, full-width, gold-bordered block
-       directly underneath the row (see .spread-reading), so the cards
-       never stretch and the prose has room to breathe. */
-    .mini-flip-back .mini-affirmation{ display: none; }
-    .mini-flip-back .mini-position::after{
-      content: '\2726';
-      display: block;
-      margin: 6px auto 0;
-      font-size: 18px;
-      letter-spacing: 0;
-      color: var(--gold-bright);
-      text-shadow: 0 0 12px rgba(234,200,120,0.6);
+    /* ------------------------------------------------------------
+       3-CARD SPREAD ON PHONES — uniform, luxurious, symmetrical.
+       The three cards (Past, Present, Path Ahead) sit side by side
+       in one grid row, and every card stretches to the exact same
+       height, set by whichever reading is longest. The readings
+       flow directly INSIDE each card at a crisp 13px, with slightly
+       tighter side padding so the text has room to breathe.
+
+       How it works: instead of the faces being absolutely positioned
+       (which can't grow with their text), both faces of a card are
+       stacked in the same grid cell. The card is then exactly as
+       tall as its tallest face, and the grid row stretches all
+       three cards to match. The 3D flip itself is unchanged.
+       ------------------------------------------------------------ */
+    .spread-grid{
+      align-items: stretch;
+      gap: 8px;
+      max-width: none;
+      /* a touch of extra width so the text columns are not cramped */
+      margin-left: -12px;
+      margin-right: -12px;
+    }
+    .mini-flip-container{
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      aspect-ratio: auto;
+    }
+    .mini-flip-card{
+      flex: 1 1 auto;
+      min-width: 0;
+      height: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .mini-flip-face{
+      position: relative;
+      inset: auto;
+      grid-area: 1 / 1;
+      min-width: 0;
+    }
+    .mini-flip-back{
+      padding: 18px 8px 14px;
+    }
+    .mini-flip-back .mini-position{
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .mini-flip-back p{
+      font-size: 13px;
+      line-height: 1.45;
+      overflow-wrap: break-word;
     }
     .mini-flip-card.is-selected .mini-flip-back{
       box-shadow: 0 0 22px rgba(201,162,78,0.55), 0 16px 30px -14px var(--shadow);
     }
-    .spread-reading:not([hidden]){ display: block; }
 
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
