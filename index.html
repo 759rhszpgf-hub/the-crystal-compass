@@ -143,7 +143,12 @@
      ------------------------------------------------------------ */
   .hero-starfield{
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;          /* JS then sets the exact pixel height of the whole landing area */
     overflow: hidden;
     pointer-events: none;
     z-index: -1;
@@ -401,6 +406,10 @@
     width: 180px;
     height: auto;
     margin: 20px auto 15px;
+    /* the emblem is a photo with a solid black background. "screen" blending
+       turns that black into see-through, so the starfield behind it keeps
+       twinkling right around the golden loop while the gold stays bright */
+    mix-blend-mode: screen;
   }
   @media (max-width: 560px){
     .infinity-anchor{ width: 130px; }
@@ -4478,15 +4487,22 @@
 
   /* ----------------------------------------------------------
      10. UPPER-CANVAS STARFIELD — a randomized shower of large gold
-     star bursts and tiny cosmic dust points across the whole dark
-     landing area (behind the title, the Daily Synchronicity box and
-     the golden infinity emblem).
+     star bursts and tiny cosmic dust points across the WHOLE dark
+     landing area: from the very top, behind the title and the Daily
+     Synchronicity box, down past the golden infinity emblem, and
+     stopping right above the "Step one" section.
 
      Every star gets its own random position, size, brightness, drift
      and fade speed. When a star finishes a twinkle it is moved to a
      brand-new random spot with a brand-new speed, so the sky keeps
      changing at random and never settles into a repeating pattern.
-     The number of stars scales with the size of the landing area.
+
+     Coverage: the canvas is sized in exact pixels to match the full
+     height of the landing area (and re-measured whenever images or
+     fonts finish loading, or the phone rotates). The first scatter is
+     spread evenly over a jittered grid that spans that whole height,
+     so no region of the black canvas is left empty. The number of
+     stars scales with the size of the landing area.
      ---------------------------------------------------------- */
   var heroSection = document.querySelector(".hero");
   var heroStarfield = document.getElementById("heroStarfield");
@@ -4494,19 +4510,31 @@
   if(heroSection && heroStarfield){
     var HERO_DUST_COLORS = ["#FFF6E0", "#FFF6E0", "#EAC878", "#E3D4FF"];
     var lastStarfieldWidth = 0;
+    var lastStarfieldHeight = 0;
 
     var starRand = function(min, max){
       return min + Math.random() * (max - min);
     };
 
-    // gives a star a fresh random position, drift, brightness and speed
-    var randomizeStar = function(star, isBig, startMidCycle){
+    // makes the star canvas exactly as tall as the whole landing area
+    var sizeStarfield = function(){
+      var h = heroSection.offsetHeight;
+      heroStarfield.style.height = h + "px";
+      return h;
+    };
+
+    // gives a star a fresh random position, drift, brightness and speed.
+    // "slot" (optional) is a {x, y} position in percent; without it the
+    // star lands anywhere on the canvas, evenly from top to bottom.
+    var randomizeStar = function(star, isBig, startMidCycle, slot){
       var duration = isBig ? starRand(3.5, 8) : starRand(2, 6);
       var angle = Math.random() * Math.PI * 2;
       var drift = isBig ? starRand(10, 26) : starRand(4, 14);
+      var x = slot ? slot.x : starRand(1, 99);
+      var y = slot ? slot.y : starRand(1, 99);
 
-      star.style.left = starRand(1, 99) + "%";
-      star.style.top = starRand(1, 99) + "%";
+      star.style.left = x + "%";
+      star.style.top = y + "%";
       star.style.setProperty("--dx", (Math.cos(angle) * drift) + "px");
       star.style.setProperty("--dy", (Math.sin(angle) * drift) + "px");
       star.style.setProperty("--peak", isBig ? starRand(0.75, 1) : starRand(0.35, 0.95));
@@ -4516,13 +4544,42 @@
       star.style.animationDelay = startMidCycle ? "-" + starRand(0, duration) + "s" : starRand(0, 1.5) + "s";
     };
 
-    var buildStarfield = function(){
-      var area = heroSection.offsetWidth * heroSection.offsetHeight;
-      if(!area) return;
-      lastStarfieldWidth = heroSection.offsetWidth;
+    // builds a shuffled, jittered grid of positions covering the full canvas
+    var makeStarSlots = function(total, width){
+      var cols = Math.max(3, Math.round(width / 62));
+      var rows = Math.ceil(total / cols);
+      var cells = [];
+      for(var r = 0; r < rows; r++){
+        for(var c = 0; c < cols; c++){
+          cells.push({ r: r, c: c });
+        }
+      }
+      for(var i = cells.length - 1; i > 0; i--){
+        var k = Math.floor(Math.random() * (i + 1));
+        var tmp = cells[i]; cells[i] = cells[k]; cells[k] = tmp;
+      }
+      var slots = [];
+      for(var n = 0; n < total; n++){
+        var cell = cells[n];
+        slots.push({
+          x: Math.min(99, Math.max(1, (cell.c + starRand(0.1, 0.9)) / cols * 100)),
+          y: Math.min(99, Math.max(1, (cell.r + starRand(0.1, 0.9)) / rows * 100))
+        });
+      }
+      return slots;
+    };
 
-      var dustCount = Math.max(40, Math.min(130, Math.round(area / 7000)));
-      var bigCount = Math.max(10, Math.min(34, Math.round(area / 55000)));
+    var buildStarfield = function(){
+      var width = heroSection.offsetWidth;
+      var height = sizeStarfield();
+      var area = width * height;
+      if(!area) return;
+      lastStarfieldWidth = width;
+      lastStarfieldHeight = height;
+
+      var dustCount = Math.max(70, Math.min(150, Math.round(area / 6000)));
+      var bigCount = Math.max(16, Math.min(40, Math.round(area / 40000)));
+      var slots = makeStarSlots(dustCount + bigCount, width);
 
       heroStarfield.innerHTML = "";
 
@@ -4533,7 +4590,7 @@
         dust.style.width = dustSize + "px";
         dust.style.height = dustSize + "px";
         dust.style.setProperty("--dust", HERO_DUST_COLORS[Math.floor(Math.random() * HERO_DUST_COLORS.length)]);
-        randomizeStar(dust, false, true);
+        randomizeStar(dust, false, true, slots[i]);
         heroStarfield.appendChild(dust);
       }
 
@@ -4542,7 +4599,7 @@
         big.className = "hero-star hero-star-big";
         big.textContent = "\u2726"; // four-point star
         big.style.fontSize = starRand(9, 18) + "px";
-        randomizeStar(big, true, true);
+        randomizeStar(big, true, true, slots[dustCount + j]);
         heroStarfield.appendChild(big);
       }
     };
@@ -4552,28 +4609,41 @@
       var star = e.target;
       if(e.animationName !== "hero-star-twinkle" || !star.classList.contains("hero-star")) return;
       var isBig = star.classList.contains("hero-star-big");
-      randomizeStar(star, isBig, false);
       star.style.animation = "none";
       void star.offsetWidth; // restart the animation cleanly
       star.style.animation = "";
-      // re-apply the fresh random timing after the restart
+      // clearing the animation also clears its timing, so apply fresh random values
       randomizeStar(star, isBig, false);
     });
 
-    buildStarfield();
-    // fonts and images can change the height of the landing area, so
-    // rebuild once everything has loaded
-    window.addEventListener("load", buildStarfield);
-
-    // rebuild when the width changes (rotating a phone, resizing a window),
-    // but not on tiny height changes such as the mobile address bar hiding
+    // keeps the canvas matched to the landing area. The width changing
+    // (rotating a phone, resizing a window) or the height changing a lot
+    // (images and fonts finishing loading) rebuilds the sky; a small
+    // height change, like a mobile address bar sliding away, just resizes it.
     var starfieldResizeTimer = null;
-    window.addEventListener("resize", function(){
+    var refreshStarfield = function(){
       clearTimeout(starfieldResizeTimer);
       starfieldResizeTimer = setTimeout(function(){
-        if(heroSection.offsetWidth !== lastStarfieldWidth) buildStarfield();
-      }, 250);
-    });
+        var width = heroSection.offsetWidth;
+        var height = heroSection.offsetHeight;
+        if(width !== lastStarfieldWidth || Math.abs(height - lastStarfieldHeight) > 30){
+          buildStarfield();
+        } else {
+          sizeStarfield();
+        }
+      }, 200);
+    };
+
+    buildStarfield();
+    window.addEventListener("load", buildStarfield);
+    window.addEventListener("resize", refreshStarfield);
+    window.addEventListener("orientationchange", refreshStarfield);
+    if(window.ResizeObserver){
+      new ResizeObserver(refreshStarfield).observe(heroSection);
+    }
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(refreshStarfield);
+    }
   }
 
 })();
