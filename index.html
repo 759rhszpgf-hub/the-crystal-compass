@@ -129,6 +129,54 @@
   }
 
   /* ------------------------------------------------------------
+     UPPER-CANVAS STARFIELD — a randomized shower of large, brilliant
+     gold star bursts and tiny ultra-fine cosmic dust points, scattered
+     across the whole dark landing area behind the title, the Daily
+     Synchronicity box and the golden infinity emblem.
+
+     The layer sits at z-index -1 inside the hero's own stacking
+     context, so it paints behind every piece of hero content and can
+     never block a tap or click. Each star is built by JS with its own
+     random position, size, brightness, drift and fade speed, and is
+     re-randomized every time it finishes a twinkle, so the sky never
+     settles into a repeating pattern.
+     ------------------------------------------------------------ */
+  .hero-starfield{
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .hero-star{
+    position: absolute;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: hero-star-twinkle 5s ease-in-out infinite;
+  }
+  /* larger, brilliant gold four-point star bursts */
+  .hero-star-big{
+    color: #fff6e0;
+    line-height: 1;
+    text-shadow: 0 0 6px #fff, 0 0 14px rgba(234,200,120,0.95), 0 0 26px rgba(234,200,120,0.6);
+  }
+  /* tiny, ultra-fine cosmic dust points */
+  .hero-star-dust{
+    border-radius: 50%;
+    background: var(--dust, #fff6e0);
+    box-shadow: 0 0 4px var(--dust, #fff6e0);
+  }
+  @keyframes hero-star-twinkle{
+    0%{   opacity: 0;                              transform: translate(-50%, -50%) scale(0.25); }
+    18%{  opacity: var(--peak, 1);                 transform: translate(calc(-50% + var(--dx) * 0.3), calc(-50% + var(--dy) * 0.3)) scale(1.12); }
+    34%{  opacity: calc(var(--peak, 1) * 0.3);     transform: translate(calc(-50% + var(--dx) * 0.5), calc(-50% + var(--dy) * 0.5)) scale(0.85); }
+    52%{  opacity: calc(var(--peak, 1) * 0.9);     transform: translate(calc(-50% + var(--dx) * 0.7), calc(-50% + var(--dy) * 0.7)) scale(1); }
+    100%{ opacity: 0;                              transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3); }
+  }
+
+  /* ------------------------------------------------------------
      PULSING AURA GLOW — a soft deep-purple + gold radial glow
      that breathes behind the whole ring system. Sits first in the
      DOM (and thus behind every other child in hero-mark's normal
@@ -2031,6 +2079,13 @@
       transition-duration: 0.001ms !important;
       scroll-behavior: auto !important;
     }
+    /* starfield: no flashing for visitors who prefer reduced motion,
+       just a calm, static scatter of softly lit stars */
+    .hero-star{
+      animation: none !important;
+      opacity: 0.55;
+      transform: translate(-50%, -50%);
+    }
   }
 </style>
 </head>
@@ -2042,6 +2097,7 @@
      HERO
      ============================================================ -->
 <header class="hero">
+  <div class="hero-starfield" id="heroStarfield" aria-hidden="true"></div>
   <p class="eyebrow">A daily ritual for clarity &amp; calm</p>
   <h1>The Crystal Compass</h1>
   <p class="tagline">Check in with how you feel, meet the stone that matches your energy, and draw a card of daily guidance.</p>
@@ -4418,6 +4474,106 @@
     };
 
     setInterval(spawnWheelStar, 420);
+  }
+
+  /* ----------------------------------------------------------
+     10. UPPER-CANVAS STARFIELD — a randomized shower of large gold
+     star bursts and tiny cosmic dust points across the whole dark
+     landing area (behind the title, the Daily Synchronicity box and
+     the golden infinity emblem).
+
+     Every star gets its own random position, size, brightness, drift
+     and fade speed. When a star finishes a twinkle it is moved to a
+     brand-new random spot with a brand-new speed, so the sky keeps
+     changing at random and never settles into a repeating pattern.
+     The number of stars scales with the size of the landing area.
+     ---------------------------------------------------------- */
+  var heroSection = document.querySelector(".hero");
+  var heroStarfield = document.getElementById("heroStarfield");
+
+  if(heroSection && heroStarfield){
+    var HERO_DUST_COLORS = ["#FFF6E0", "#FFF6E0", "#EAC878", "#E3D4FF"];
+    var lastStarfieldWidth = 0;
+
+    var starRand = function(min, max){
+      return min + Math.random() * (max - min);
+    };
+
+    // gives a star a fresh random position, drift, brightness and speed
+    var randomizeStar = function(star, isBig, startMidCycle){
+      var duration = isBig ? starRand(3.5, 8) : starRand(2, 6);
+      var angle = Math.random() * Math.PI * 2;
+      var drift = isBig ? starRand(10, 26) : starRand(4, 14);
+
+      star.style.left = starRand(1, 99) + "%";
+      star.style.top = starRand(1, 99) + "%";
+      star.style.setProperty("--dx", (Math.cos(angle) * drift) + "px");
+      star.style.setProperty("--dy", (Math.sin(angle) * drift) + "px");
+      star.style.setProperty("--peak", isBig ? starRand(0.75, 1) : starRand(0.35, 0.95));
+      star.style.animationDuration = duration + "s";
+      // on first build, start each star part-way through its cycle so the
+      // sky is already twinkling the moment the page loads
+      star.style.animationDelay = startMidCycle ? "-" + starRand(0, duration) + "s" : starRand(0, 1.5) + "s";
+    };
+
+    var buildStarfield = function(){
+      var area = heroSection.offsetWidth * heroSection.offsetHeight;
+      if(!area) return;
+      lastStarfieldWidth = heroSection.offsetWidth;
+
+      var dustCount = Math.max(40, Math.min(130, Math.round(area / 7000)));
+      var bigCount = Math.max(10, Math.min(34, Math.round(area / 55000)));
+
+      heroStarfield.innerHTML = "";
+
+      for(var i = 0; i < dustCount; i++){
+        var dust = document.createElement("span");
+        dust.className = "hero-star hero-star-dust";
+        var dustSize = starRand(1, 2.6);
+        dust.style.width = dustSize + "px";
+        dust.style.height = dustSize + "px";
+        dust.style.setProperty("--dust", HERO_DUST_COLORS[Math.floor(Math.random() * HERO_DUST_COLORS.length)]);
+        randomizeStar(dust, false, true);
+        heroStarfield.appendChild(dust);
+      }
+
+      for(var j = 0; j < bigCount; j++){
+        var big = document.createElement("span");
+        big.className = "hero-star hero-star-big";
+        big.textContent = "\u2726"; // four-point star
+        big.style.fontSize = starRand(9, 18) + "px";
+        randomizeStar(big, true, true);
+        heroStarfield.appendChild(big);
+      }
+    };
+
+    // when a star finishes a twinkle, restart it somewhere new at a new speed
+    heroStarfield.addEventListener("animationiteration", function(e){
+      var star = e.target;
+      if(e.animationName !== "hero-star-twinkle" || !star.classList.contains("hero-star")) return;
+      var isBig = star.classList.contains("hero-star-big");
+      randomizeStar(star, isBig, false);
+      star.style.animation = "none";
+      void star.offsetWidth; // restart the animation cleanly
+      star.style.animation = "";
+      // re-apply the fresh random timing after the restart
+      randomizeStar(star, isBig, false);
+    });
+
+    buildStarfield();
+    // fonts and images can change the height of the landing area, so
+    // rebuild once everything has loaded
+    window.addEventListener("load", buildStarfield);
+
+    // rebuild when the width changes (rotating a phone, resizing a window),
+    // but not on tiny height changes such as the mobile address bar hiding
+    var starfieldResizeTimer = null;
+    window.addEventListener("resize", function(){
+      clearTimeout(starfieldResizeTimer);
+      starfieldResizeTimer = setTimeout(function(){
+        if(heroSection.offsetWidth !== lastStarfieldWidth) buildStarfield();
+      }, 250);
+    });
   }
 
 })();
