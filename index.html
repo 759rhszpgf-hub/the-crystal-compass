@@ -129,13 +129,14 @@
   }
 
   /* ------------------------------------------------------------
-     UPPER-CANVAS STARFIELD — an open, organic starry night sky
-     across the whole dark landing area, behind the title, the Daily
-     Synchronicity box and the golden infinity emblem. A delicate mix
-     of tiny 1px and 2px faint stardust points surrounds a handful of
-     large signature four-pointed diamond star bursts, cloned from the
-     sparkle artwork on the central compass, each at its own depth
-     (opacity) so the sky feels deep and three-dimensional.
+     UPPER-CANVAS STARFIELD — a rich, organic starry night sky across
+     the dark CENTER of the landing area, from the very top down to just
+     above "Step one". Stars stay inside a central band (clear of the
+     purple side crystals in the page border), and come in three sizes:
+     a dense layer of tiny 1px cosmic dust, a generous amount of 2px
+     glowing points, and a collection of large signature four-pointed
+     diamond star bursts cloned from the central compass. Every star has
+     its own depth (opacity) and its own soft twinkle.
 
           The layer sits at z-index -1 inside the hero's own stacking
      context, so it paints behind every piece of hero content and can
@@ -4501,34 +4502,41 @@
   }
 
   /* ----------------------------------------------------------
-     10. UPPER-CANVAS STARFIELD — an open, organic starry night sky
-     across the WHOLE dark landing area: from the very top, behind the
-     title and the Daily Synchronicity box, down past the golden
-     infinity emblem, stopping right above the "Step one" section.
+     10. UPPER-CANVAS STARFIELD — a rich, organic starry night sky
+     across the dark CENTER of the landing area: from the very top,
+     behind the title and the Daily Synchronicity box, down past the
+     golden infinity emblem, stopping right above the "Step one"
+     section.
 
-     The sky is made of two layers of stars:
+     Side margins: stars only appear inside a central band of the
+     landing area (SKY_SIDE_MARGIN of the width is kept clear on both
+     the left and the right). That keeps every star off the purple side
+     crystals that decorate the page border. To widen or narrow the
+     band, change SKY_SIDE_MARGIN (0.12 means a clear 12% each side,
+     so stars live in the middle 76%).
 
-       - Signature stars: 6 to 12 large four-pointed diamond star
-         bursts, cloned from the sparkle artwork inside the central
-         compass (same shape, same colours, same soft white-and-gold
-         glow). They are scattered widely and organically over the
-         whole canvas, kept a comfortable distance apart so they never
-         bunch up, and kept clear of the opaque Daily Synchronicity box
-         so none of them hide behind it.
+     Three sizes of star, scattered freely and organically:
 
-       - Stardust: a delicate, open mix of tiny 1px and 2px points at
-         soft random opacities from 0.2 up to 0.7. Mostly scattered
-         freely, with a little gentle clumping, so the dark space stays
-         clean and uncluttered.
+       - Cosmic dust: a dense, delicate layer of tiny 1px specs.
+       - Glowing points: a generous amount of 2px points.
+       - Signature stars: a collection of large four-pointed diamond
+         star bursts, cloned from the sparkle artwork inside the
+         central compass (same shape, colours and soft white-and-gold
+         glow). They are kept a comfortable distance apart, clear of
+         the opaque Daily Synchronicity box, and a good share of them
+         are placed around the main title text and the 6666 card.
 
-     Every star twinkles on its own random fade speed, drift and timing.
-     When a star finishes a twinkle it reappears somewhere new in the
-     sky, so the heavens keep changing.
+     Dust and glowing points have soft random opacities from 0.2 up to
+     0.7. Every star twinkles on its own random fade speed, drift and
+     timing, and when it finishes a twinkle it reappears somewhere new.
      ---------------------------------------------------------- */
   var heroSection = document.querySelector(".hero");
   var heroStarfield = document.getElementById("heroStarfield");
 
   if(heroSection && heroStarfield){
+    // fraction of the width kept clear on EACH side (away from side crystals)
+    var SKY_SIDE_MARGIN = 0.12;
+
     var STAR_DUST_COLORS = ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"];
     var STAR_MEDIUM_COLORS = ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"];
     // the same cream and soft lilac fills used by the compass sparkles
@@ -4539,8 +4547,11 @@
 
     var skyWidth = 0;
     var skyHeight = 0;
+    var skyLeft = 0;
+    var skyRight = 0;
     var skyClusters = [];
     var skyAvoidRects = [];
+    var skyFocusRects = [];
     var bigPositions = [];
     var bigMinDistance = 0;
     var lastStarfieldWidth = 0;
@@ -4565,15 +4576,15 @@
       return h;
     };
 
-    // a few wide, gentle clumps for the stardust, scattered freely
-    var makeSkyClusters = function(width, height){
-      var count = Math.max(3, Math.min(7, Math.round((width * height) / 160000)));
+    // a few wide, gentle clumps for the stardust, inside the center band
+    var makeSkyClusters = function(){
+      var count = Math.max(3, Math.min(8, Math.round((skyWidth * skyHeight) / 150000)));
       var list = [];
       for(var i = 0; i < count; i++){
         list.push({
-          x: starRand(0, width),
-          y: starRand(0, height),
-          spreadX: starRand(50, 120),
+          x: starRand(skyLeft, skyRight),
+          y: starRand(0, skyHeight),
+          spreadX: starRand(40, 100),
           spreadY: starRand(50, 120),
           weight: starRand(0.4, 1.6)
         });
@@ -4592,39 +4603,51 @@
       return skyClusters[skyClusters.length - 1];
     };
 
-    // stardust position: mostly free scatter anywhere, with a little
-    // gentle clumping (about 30%) around the wide cluster centres
-    var pickDustPosition = function(){
-      var x, y;
-      if(skyClusters.length && Math.random() < 0.3){
-        var cluster = pickSkyCluster();
-        x = cluster.x + starGaussian() * cluster.spreadX;
-        y = cluster.y + starGaussian() * cluster.spreadY;
-      } else {
-        x = Math.random() * skyWidth;
-        y = Math.random() * skyHeight;
-      }
-      return {
-        x: Math.min(skyWidth - 2, Math.max(2, x)),
-        y: Math.min(skyHeight - 2, Math.max(2, y))
-      };
-    };
-
-    // finds the opaque Daily Synchronicity box (as a rectangle measured
-    // from the top-left of the landing area) so big stars can avoid it
-    var measureAvoidRects = function(){
+    // measures the opaque Daily Synchronicity box (so stars avoid hiding
+    // behind it) and two "focus zones" where extra stars are gathered:
+    // a wide margin around the box, and a margin around the title block.
+    // All rectangles are measured from the top-left of the landing area.
+    var measureLayout = function(){
       skyAvoidRects = [];
-      var box = heroSection.querySelector(".sync-box");
-      if(!box) return;
+      skyFocusRects = [];
       var heroRect = heroSection.getBoundingClientRect();
-      var boxRect = box.getBoundingClientRect();
-      var pad = 12;
-      skyAvoidRects.push({
-        left: boxRect.left - heroRect.left - pad,
-        right: boxRect.right - heroRect.left + pad,
-        top: boxRect.top - heroRect.top - pad,
-        bottom: boxRect.bottom - heroRect.top + pad
-      });
+
+      var rectOf = function(el, pad){
+        var r = el.getBoundingClientRect();
+        return {
+          left: r.left - heroRect.left - pad,
+          right: r.right - heroRect.left + pad,
+          top: r.top - heroRect.top - pad,
+          bottom: r.bottom - heroRect.top + pad
+        };
+      };
+
+      var box = heroSection.querySelector(".sync-box");
+      if(box){
+        skyAvoidRects.push(rectOf(box, 12));
+        skyFocusRects.push(rectOf(box, 95));
+      }
+
+      var parts = heroSection.querySelectorAll(".eyebrow, h1, .tagline");
+      if(parts.length){
+        var union = null;
+        for(var i = 0; i < parts.length; i++){
+          var r = rectOf(parts[i], 0);
+          if(!union){
+            union = r;
+          } else {
+            union.left = Math.min(union.left, r.left);
+            union.right = Math.max(union.right, r.right);
+            union.top = Math.min(union.top, r.top);
+            union.bottom = Math.max(union.bottom, r.bottom);
+          }
+        }
+        union.left -= 70;
+        union.right += 70;
+        union.top -= 70;
+        union.bottom += 70;
+        skyFocusRects.push(union);
+      }
     };
 
     var insideAvoidRect = function(x, y){
@@ -4635,29 +4658,70 @@
       return false;
     };
 
-    // signature star position: anywhere on the canvas, but at a comfortable
-    // distance from the other signature stars (so they spread out widely
-    // instead of bunching) and clear of the opaque sync box. If the sky is
-    // crowded, the distance requirement relaxes a little after each try.
+    // a random point inside one of the focus zones, or null if the try
+    // lands outside the center band, off the canvas, or behind the box
+    var pickFocusPoint = function(){
+      if(!skyFocusRects.length) return null;
+      var zone = skyFocusRects[Math.floor(Math.random() * skyFocusRects.length)];
+      var x = starRand(zone.left, zone.right);
+      var y = starRand(zone.top, zone.bottom);
+      if(x < skyLeft || x > skyRight || y < 6 || y > skyHeight - 6) return null;
+      if(insideAvoidRect(x, y)) return null;
+      return { x: x, y: y };
+    };
+
+    // stardust position: free scatter inside the center band, a little
+    // gentle clumping, and some extra dust around the title and the card
+    var pickDustPosition = function(){
+      for(var attempt = 0; attempt < 8; attempt++){
+        var x, y, roll = Math.random();
+        if(roll < 0.2){
+          var focus = pickFocusPoint();
+          if(!focus) continue;
+          x = focus.x;
+          y = focus.y;
+        } else if(roll < 0.45 && skyClusters.length){
+          var cluster = pickSkyCluster();
+          x = cluster.x + starGaussian() * cluster.spreadX;
+          y = cluster.y + starGaussian() * cluster.spreadY;
+        } else {
+          x = starRand(skyLeft, skyRight);
+          y = starRand(0, skyHeight);
+        }
+        x = Math.min(skyRight, Math.max(skyLeft, x));
+        y = Math.min(skyHeight - 2, Math.max(2, y));
+        if(!insideAvoidRect(x, y)) return { x: x, y: y };
+      }
+      return { x: starRand(skyLeft, skyRight), y: starRand(2, skyHeight - 2) };
+    };
+
+    // signature star position: inside the center band, at a comfortable
+    // distance from the other signature stars (so they spread out instead
+    // of bunching), clear of the opaque sync box, and about 45% of the time
+    // drawn toward the title text and the 6666 card. If the sky is crowded,
+    // the distance requirement relaxes a little as the tries go on.
     var pickBigPosition = function(selfIndex){
       var minDist = bigMinDistance;
-      var candidate = { x: skyWidth / 2, y: skyHeight / 2 };
-      for(var attempt = 0; attempt < 60; attempt++){
-        if(attempt > 0 && attempt % 15 === 0) minDist *= 0.7;
-        var x = starRand(10, Math.max(11, skyWidth - 10));
-        var y = starRand(10, Math.max(11, skyHeight - 10));
-        if(insideAvoidRect(x, y)) continue;
-        candidate = { x: x, y: y };
+      var fallback = { x: (skyLeft + skyRight) / 2, y: skyHeight / 2 };
+      for(var attempt = 0; attempt < 80; attempt++){
+        if(attempt > 0 && attempt % 20 === 0) minDist *= 0.7;
+        var candidate = null;
+        if(Math.random() < 0.45) candidate = pickFocusPoint();
+        if(!candidate){
+          candidate = { x: starRand(skyLeft, skyRight), y: starRand(10, Math.max(11, skyHeight - 10)) };
+        }
+        if(insideAvoidRect(candidate.x, candidate.y)) continue;
+        fallback = candidate;
         var clear = true;
         for(var i = 0; i < bigPositions.length; i++){
           if(i === selfIndex || !bigPositions[i]) continue;
-          var dx = bigPositions[i].x - x;
-          var dy = bigPositions[i].y - y;
+          var dx = bigPositions[i].x - candidate.x;
+          var dy = bigPositions[i].y - candidate.y;
           if(Math.sqrt(dx * dx + dy * dy) < minDist){ clear = false; break; }
         }
         if(clear) return candidate;
       }
-      return candidate;
+      return fallback;
     };
 
     // gives a star a fresh random position, drift, depth and speed
@@ -4673,8 +4737,8 @@
         peak = starRand(0.75, 1);
       } else {
         pos = pickDustPosition();
-        // faint, delicate depth: soft opacities from 0.2 up to 0.7
-        peak = 0.2 + 0.5 * Math.pow(Math.random(), 1.2);
+        // soft, delicate depth: opacities from 0.2 up to 0.7
+        peak = 0.2 + 0.5 * Math.pow(Math.random(), 1.1);
       }
 
       star.style.left = pos.x + "px";
@@ -4691,24 +4755,25 @@
     var buildStarfield = function(){
       var width = heroSection.offsetWidth;
       var height = sizeStarfield();
-      var area = width * height;
-      if(!area) return;
+      if(!width || !height) return;
       lastStarfieldWidth = width;
       lastStarfieldHeight = height;
       skyWidth = width;
       skyHeight = height;
-      skyClusters = makeSkyClusters(width, height);
-      measureAvoidRects();
+      // the clear side margins (plus a few pixels for star drift)
+      skyLeft = width * SKY_SIDE_MARGIN + 8;
+      skyRight = width * (1 - SKY_SIDE_MARGIN) - 8;
+      skyClusters = makeSkyClusters();
+      measureLayout();
 
-      // 6 to 12 signature stars (fewer on phones, more on wide screens),
-      // surrounded by a delicate, open mix of tiny stardust
-      var bigCount = Math.max(6, Math.min(12, Math.round(area / 180000)));
-      var dustTotal = Math.max(45, Math.min(120, Math.round(area / 9000)));
-      var mediumCount = Math.round(dustTotal * 0.4);
-      var dustCount = dustTotal - mediumCount;
+      // star counts scale with the size of the center band
+      var centerArea = (skyRight - skyLeft) * height;
+      var dustCount = Math.max(90, Math.min(260, Math.round(centerArea / 2600)));
+      var mediumCount = Math.max(40, Math.min(110, Math.round(centerArea / 6500)));
+      var bigCount = Math.max(12, Math.min(24, Math.round(centerArea / 45000)));
 
       bigPositions = [];
-      bigMinDistance = 0.5 * Math.sqrt(area / bigCount);
+      bigMinDistance = 0.45 * Math.sqrt(centerArea / bigCount);
 
       heroStarfield.innerHTML = "";
 
@@ -4770,7 +4835,7 @@
           buildStarfield();
         } else {
           skyHeight = sizeStarfield();
-          measureAvoidRects();
+          measureLayout();
         }
       }, 200);
     };
