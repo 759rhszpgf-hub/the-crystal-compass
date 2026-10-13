@@ -129,19 +129,24 @@
   }
 
   /* ------------------------------------------------------------
-     UPPER-CANVAS STARFIELD — a natural, freely scattered starry night
-     sky across the dark CENTER of the landing area, from the very top
-     down to just above "Step one". Every star gets a completely random
-     position inside the center 76% of the width (12% is kept clear on
-     each side, away from the purple side crystals), so the sky flows
-     like an organic cosmic shower with no lanes, rows or columns.
+     UPPER-CANVAS STARFIELD — a rich, multi-layered starry night sky
+     across the dark CENTER of the landing area, from the very top down
+     to just above "Step one". Every star gets a free, random position
+     inside the center 76% of the width (12% is kept clear on each side,
+     away from the purple side crystals), written in PERCENT so the sky
+     always spreads across the full width on every screen.
 
-     Stars come in three sizes: tiny 1px cosmic dust, 2px glowing
-     points, and 12 to 18 large signature four-pointed diamond star
-     bursts cloned from the central compass. Positions are set in
-     PERCENT of the landing area, so they always spread across the
-     full sky on every screen size, and every star has its own depth
-     (opacity) and its own soft twinkle.
+     Four size layers create real depth:
+       1. Tiny Stardust       1px soft pinpricks (.hero-star-dust)
+       2. Medium Shimmer      1.5px and 2px crisp points
+                              (.hero-star-shimmer and .hero-star-medium)
+       3. Bright Jewels       2.5px glowing stars (.hero-star-jewel)
+       4. Signature Diamonds  6 to 12 rare four-pointed bursts cloned
+                              from the central compass (.hero-star-compass)
+
+     Compass exclusion zone: the script keeps every star out of a circle
+     around the central spinning compass and its rings, so the
+     centerpiece always stays perfectly clean.
 
      The layer sits at z-index -1 inside the hero's own stacking
      context, so it paints behind every piece of hero content and can
@@ -176,6 +181,14 @@
     background: var(--star-color, #fff6e0);
     box-shadow: 0 0 2px var(--star-color, #fff6e0);
   }
+  /* 1.5px crisp shimmer points, bridging dust and the 2px points */
+  .hero-star-shimmer{
+    width: 1.5px;
+    height: 1.5px;
+    border-radius: 50%;
+    background: var(--star-color, #fff6e0);
+    box-shadow: 0 0 3px var(--star-color, #fff6e0);
+  }
   /* 2px softly glowing stardust points */
   .hero-star-medium{
     width: 2px;
@@ -183,6 +196,14 @@
     border-radius: 50%;
     background: var(--star-color, #fff6e0);
     box-shadow: 0 0 4px var(--star-color, #fff6e0);
+  }
+  /* 2.5px bright jewel stars with a richer, two-layer glow */
+  .hero-star-jewel{
+    width: 2.5px;
+    height: 2.5px;
+    border-radius: 50%;
+    background: var(--star-color, #fff6e0);
+    box-shadow: 0 0 4px var(--star-color, #fff6e0), 0 0 9px rgba(234,200,120,0.55);
   }
   /* large signature four-pointed diamond star bursts. The shape is the
      exact sparkle path used inside the central compass (see the
@@ -4505,62 +4526,84 @@
   }
 
   /* ----------------------------------------------------------
-     10. UPPER-CANVAS STARFIELD — pure, organic random scattering.
+     10. UPPER-CANVAS STARFIELD — rich multi-layered random scattering
+     with a compass exclusion zone.
      A natural starry night sky across the dark CENTER of the landing
      area: from the very top, behind the title and the Daily
      Synchronicity box, down past the golden infinity emblem, stopping
      right above the "Step one" section.
 
-     HOW IT WORKS (deliberately simple)
-       - There are no lanes, rows or columns. Every star picks a fully
-         random spot: its X position is anywhere inside the center 76%
-         of the width (SKY_SIDE_MARGIN keeps 12% clear on each side,
-         away from the purple side crystals), and its Y position is
+     FOUR STAR LAYERS (counts set just below)
+       1. Tiny Stardust       1px soft pinpricks
+       2. Medium Shimmer      1.5px and 2px crisp points
+       3. Bright Jewels       2.5px glowing stars
+       4. Signature Diamonds  6 to 12 rare four-pointed compass bursts,
+                              kept a little further from the side
+                              crystals so they float in the deep center
+
+     HOW POSITIONS ARE CHOSEN
+       - Every star picks a completely random spot inside the center 76%
+         of the width (SKY_SIDE_MARGIN keeps 12% clear on each side) and
          anywhere from the top of the landing area to the bottom.
-       - Positions are written in PERCENT (for example left: 43.7%),
-         not in measured pixels. This means the stars can never all end
-         up squeezed onto one spot or one line, even if the page is
-         still loading or the screen is resized, because percentages
-         always stretch across the real width of the sky.
-       - 12 to 18 large four-pointed diamond star bursts are scattered
-         freely across the whole sky, including the deep dark center
-         behind the title, around the Daily Synchronicity box and down
-         past the gold infinity emblem. They only try to keep a little
-         breathing room from each other, so they don't bunch up.
-       - Around them sits a generous blend of tiny 1px dust and 2px
-         glowing points.
-       - Stars that would land hidden behind the solid Daily
-         Synchronicity box are simply re-rolled to a new random spot.
-       - Every star twinkles at its own speed and depth, and each time
-         a twinkle finishes it reappears at a fresh random spot.
+       - Positions are written in PERCENT, so the stars always spread
+         across the real width of the sky on every screen size.
+
+     SAFETY RULES (every star size obeys them)
+       - Compass exclusion zone: a circle around the central spinning
+         compass, sized to its outermost gold ring plus a safety gap
+         (COMPASS_CLEAR_GAP) that also covers each star's own size and
+         its gentle drift. Any spot inside the circle is re-rolled to
+         open sky, so the centerpiece and its rings stay perfectly clean.
+       - Spots hidden behind the solid Daily Synchronicity box are
+         re-rolled too.
+       - The zone is re-measured whenever the screen size changes, and
+         any star that would now sit inside it is moved straight away.
+
+     Every star twinkles at its own speed and depth, and each time a
+     twinkle finishes it reappears at a fresh random (safe) spot.
 
      TO ADJUST
-       SKY_SIDE_MARGIN   clear space on each side (0.12 = 12% each side)
-       BIG_STAR_MIN / BIG_STAR_MAX   how many large diamond stars
-       DUST_COUNT / GLOW_COUNT       how many 1px and 2px stars
+       SKY_SIDE_MARGIN     clear space on each side (0.12 = 12% each side)
+       DIAMOND_SIDE_MARGIN clear space on each side for the big diamonds
+       STAR_LAYERS         how many stars of each size
+       DIAMOND_MIN / MAX   how many signature diamonds
+       COMPASS_CLEAR_GAP   extra clear space around the compass rings (px)
      ---------------------------------------------------------- */
   var heroSection = document.querySelector(".hero");
   var heroStarfield = document.getElementById("heroStarfield");
+  var heroCompassMark = document.getElementById("heroMark");
 
   if(heroSection && heroStarfield){
-    var SKY_SIDE_MARGIN = 0.12;   // 12% clear on each side = stars live in the center 76%
-    var BIG_STAR_MIN = 12;
-    var BIG_STAR_MAX = 18;
-    var DUST_COUNT = 170;         // tiny 1px cosmic dust
-    var GLOW_COUNT = 75;          // 2px softly glowing points
+    var SKY_SIDE_MARGIN = 0.12;      // stars live in the center 76%
+    var DIAMOND_SIDE_MARGIN = 0.17;  // diamonds stay a little further from the side crystals
+    var DIAMOND_MIN = 6;
+    var DIAMOND_MAX = 12;
+    var COMPASS_CLEAR_GAP = 18;      // px of clear sky beyond the outermost gold ring
 
-    var STAR_DUST_COLORS = ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"];
-    var STAR_MEDIUM_COLORS = ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"];
+    // the small round star layers: CSS class, how many, and colours
+    var STAR_LAYERS = [
+      { type: "dust",    count: 150, colors: ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"] },
+      { type: "shimmer", count: 75,  colors: ["#FFF6E0", "#FFFFFF", "#F4E3B0", "#E3D4FF"] },
+      { type: "medium",  count: 55,  colors: ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"] },
+      { type: "jewel",   count: 32,  colors: ["#FFF6E0", "#FFFFFF", "#EAC878", "#F4E3B0", "#E3D4FF"] }
+    ];
+
+    // the half-size of each star type (px), so even a star's own glow
+    // and drift can never reach into the compass exclusion zone
+    var STAR_REACH = { dust: 4, shimmer: 5, medium: 6, jewel: 8, compass: 14 };
+    var MAX_DRIFT = 10;
+
     // the same cream and soft lilac fills used by the compass sparkles
     var STAR_COMPASS_COLORS = ["#FFF6E0", "#FFF6E0", "#FFF6E0", "#E3D4FF"];
     // the compass sparkle path, moved so it sits in an 8 x 8 box
     var COMPASS_STAR_PATH = "M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z";
     var SVG_NS = "http://www.w3.org/2000/svg";
 
-    // the solid Daily Synchronicity box, stored in percent of the sky
-    var syncBoxArea = null;
-    // current spots of the large diamond stars, in percent
-    var bigStarSpots = [];
+    // live measurements, in pixels, measured from the landing area's top-left
+    var sky = { width: 0, height: 0 };
+    var compassZone = null;   // { x, y, radius } around the centerpiece
+    var syncBoxArea = null;   // { left, right, top, bottom } of the solid box
+    var diamondSpots = [];    // current diamond spots, in percent
 
     var starRand = function(min, max){
       return min + Math.random() * (max - min);
@@ -4572,52 +4615,87 @@
       if(h) heroStarfield.style.height = h + "px";
     };
 
-    // measures where the solid Daily Synchronicity box sits, in percent
-    // of the landing area, so stars don't waste themselves hidden behind it
-    var measureSyncBox = function(){
+    // measures the landing area, the compass exclusion circle and the
+    // solid Daily Synchronicity box
+    var measureSky = function(){
+      var heroRect = heroSection.getBoundingClientRect();
+      sky.width = heroRect.width;
+      sky.height = heroRect.height;
+
+      compassZone = null;
+      if(heroCompassMark){
+        var m = heroCompassMark.getBoundingClientRect();
+        if(m.width){
+          compassZone = {
+            x: m.left - heroRect.left + m.width / 2,
+            y: m.top - heroRect.top + m.height / 2,
+            // the outermost gold ring is 108% of the compass box, so its
+            // radius is 54% of the box width; then add the safety gap
+            radius: m.width * 0.54 + COMPASS_CLEAR_GAP
+          };
+        }
+      }
+
       syncBoxArea = null;
       var box = heroSection.querySelector(".sync-box");
-      if(!box) return;
-      var heroRect = heroSection.getBoundingClientRect();
-      var r = box.getBoundingClientRect();
-      if(!heroRect.width || !heroRect.height || !r.width) return;
-      syncBoxArea = {
-        left:   (r.left   - heroRect.left) / heroRect.width  * 100,
-        right:  (r.right  - heroRect.left) / heroRect.width  * 100,
-        top:    (r.top    - heroRect.top)  / heroRect.height * 100,
-        bottom: (r.bottom - heroRect.top)  / heroRect.height * 100
-      };
-    };
-
-    var isBehindSyncBox = function(spot){
-      if(!syncBoxArea) return false;
-      return spot.x > syncBoxArea.left && spot.x < syncBoxArea.right &&
-             spot.y > syncBoxArea.top && spot.y < syncBoxArea.bottom;
-    };
-
-    // one completely free, random spot in the center 76% of the sky
-    var randomSkySpot = function(){
-      var minX = SKY_SIDE_MARGIN * 100;
-      var maxX = (1 - SKY_SIDE_MARGIN) * 100;
-      var spot = { x: starRand(minX, maxX), y: starRand(0.5, 99.5) };
-      for(var tries = 0; tries < 10 && isBehindSyncBox(spot); tries++){
-        spot = { x: starRand(minX, maxX), y: starRand(0.5, 99.5) };
+      if(box){
+        var r = box.getBoundingClientRect();
+        if(r.width){
+          syncBoxArea = {
+            left: r.left - heroRect.left,
+            right: r.right - heroRect.left,
+            top: r.top - heroRect.top,
+            bottom: r.bottom - heroRect.top
+          };
+        }
       }
-      return spot;
     };
 
-    // a random spot for a large diamond star, gently keeping a little
-    // breathing room from the other large stars so they don't bunch up
-    var randomBigStarSpot = function(index){
-      var best = randomSkySpot();
+    // true when a spot (in percent) is safe for a star of this type
+    var isSafeSpot = function(spot, type){
+      if(!sky.width || !sky.height) return true;
+      var px = spot.x / 100 * sky.width;
+      var py = spot.y / 100 * sky.height;
+      var reach = (STAR_REACH[type] || 6) + MAX_DRIFT;
+
+      if(compassZone){
+        var dx = px - compassZone.x;
+        var dy = py - compassZone.y;
+        if(Math.sqrt(dx * dx + dy * dy) < compassZone.radius + reach) return false;
+      }
+      if(syncBoxArea){
+        if(px > syncBoxArea.left - reach && px < syncBoxArea.right + reach &&
+           py > syncBoxArea.top - reach && py < syncBoxArea.bottom + reach) return false;
+      }
+      return true;
+    };
+
+    // one free, random spot in the sky, re-rolled until it is safe.
+    // If (very rarely) no safe spot turns up, the star sits out this
+    // twinkle hidden rather than ever landing on the compass.
+    var randomSafeSpot = function(type, sideMargin){
+      var minX = sideMargin * 100;
+      var maxX = (1 - sideMargin) * 100;
+      for(var tries = 0; tries < 40; tries++){
+        var spot = { x: starRand(minX, maxX), y: starRand(0.5, 99.5) };
+        if(isSafeSpot(spot, type)) return spot;
+      }
+      return null;
+    };
+
+    // a safe spot for a signature diamond that also keeps some breathing
+    // room from the other diamonds, so the rare ones never bunch up
+    var randomDiamondSpot = function(index){
+      var best = null;
       var bestGap = -1;
-      for(var tries = 0; tries < 12; tries++){
-        var spot = tries === 0 ? best : randomSkySpot();
+      for(var tries = 0; tries < 14; tries++){
+        var spot = randomSafeSpot("compass", DIAMOND_SIDE_MARGIN);
+        if(!spot) continue;
         var nearest = Infinity;
-        for(var i = 0; i < bigStarSpots.length; i++){
-          if(i === index || !bigStarSpots[i]) continue;
-          var dx = bigStarSpots[i].x - spot.x;
-          var dy = (bigStarSpots[i].y - spot.y) * 0.6;   // the sky is taller than it is wide
+        for(var i = 0; i < diamondSpots.length; i++){
+          if(i === index || !diamondSpots[i]) continue;
+          var dx = diamondSpots[i].x - spot.x;
+          var dy = (diamondSpots[i].y - spot.y) * 0.6;   // the sky is taller than it is wide
           var d = Math.sqrt(dx * dx + dy * dy);
           if(d < nearest) nearest = d;
         }
@@ -4625,27 +4703,39 @@
           best = spot;
           bestGap = nearest;
         }
-        if(nearest > 11) break;   // plenty of room, use it
+        if(nearest > 16) break;   // plenty of room, use it
       }
       return best;
     };
 
-    // gives a star a fresh random spot, drift, depth and speed
-    var randomizeStar = function(star, type, startMidCycle){
-      var duration = type === "dust" ? starRand(2, 6) : (type === "medium" ? starRand(3, 7.5) : starRand(4, 9));
+    // gives a star a fresh random safe spot, drift, depth and speed
+    var randomizeStar = function(star, startMidCycle){
+      var type = star.getAttribute("data-star-type");
+      var duration = type === "compass" ? starRand(4, 9) : (type === "dust" ? starRand(2, 6) : starRand(3, 7.5));
       var angle = Math.random() * Math.PI * 2;
-      var drift = type === "compass" ? starRand(4, 10) : starRand(3, 9);
+      var drift = type === "compass" ? starRand(4, MAX_DRIFT) : starRand(3, 9);
       var spot, peak;
 
       if(type === "compass"){
-        spot = randomBigStarSpot(star.bigIndex);
-        bigStarSpots[star.bigIndex] = spot;
-        peak = starRand(0.75, 1);
-        star.style.setProperty("--rot", starRand(-15, 15) + "deg");
+        var index = parseInt(star.getAttribute("data-diamond-index"), 10);
+        spot = randomDiamondSpot(index);
+        diamondSpots[index] = spot;
+        peak = starRand(0.8, 1);
+        star.style.setProperty("--rot", starRand(-15, 15).toFixed(1) + "deg");
       } else {
-        spot = randomSkySpot();
-        // soft, delicate depth: opacities from 0.2 up to 0.75
-        peak = 0.2 + 0.55 * Math.pow(Math.random(), 1.1);
+        spot = randomSafeSpot(type, SKY_SIDE_MARGIN);
+        // soft depth: bigger layers glow a little brighter on average
+        var base = type === "dust" ? 0.2 : (type === "jewel" ? 0.45 : 0.3);
+        var range = type === "dust" ? 0.45 : (type === "jewel" ? 0.5 : 0.5);
+        peak = base + range * Math.pow(Math.random(), 1.1);
+      }
+
+      if(!spot){
+        // nowhere safe this time: stay invisible until the next twinkle
+        star.style.visibility = "hidden";
+        spot = { x: 50, y: 0.5 };
+      } else {
+        star.style.visibility = "";
       }
 
       star.style.left = spot.x.toFixed(2) + "%";
@@ -4659,18 +4749,21 @@
       star.style.animationDelay = startMidCycle ? "-" + starRand(0, duration).toFixed(2) + "s" : starRand(0, 1.5).toFixed(2) + "s";
     };
 
-    var makeSmallStar = function(type, colors){
+    var makeRoundStar = function(layer){
       var star = document.createElement("span");
-      star.className = "hero-star hero-star-" + type;
-      star.style.setProperty("--star-color", colors[Math.floor(Math.random() * colors.length)]);
-      randomizeStar(star, type, true);
+      star.className = "hero-star hero-star-" + layer.type;
+      star.setAttribute("data-star-type", layer.type);
+      star.style.setProperty("--star-color", layer.colors[Math.floor(Math.random() * layer.colors.length)]);
+      randomizeStar(star, true);
       heroStarfield.appendChild(star);
     };
 
-    var makeBigStar = function(index){
-      var size = Math.round(starRand(16, 28));
+    var makeDiamond = function(index){
+      var size = Math.round(starRand(16, 26));
       var big = document.createElementNS(SVG_NS, "svg");
       big.setAttribute("class", "hero-star hero-star-compass");
+      big.setAttribute("data-star-type", "compass");
+      big.setAttribute("data-diamond-index", String(index));
       big.setAttribute("viewBox", "0 0 8 8");
       big.setAttribute("width", size);
       big.setAttribute("height", size);
@@ -4681,47 +4774,56 @@
       path.setAttribute("d", COMPASS_STAR_PATH);
       path.setAttribute("fill", STAR_COMPASS_COLORS[Math.floor(Math.random() * STAR_COMPASS_COLORS.length)]);
       big.appendChild(path);
-      big.bigIndex = index;
-      randomizeStar(big, "compass", true);
+      randomizeStar(big, true);
       heroStarfield.appendChild(big);
     };
 
     var buildStarfield = function(){
       sizeStarfield();
-      measureSyncBox();
+      measureSky();
       heroStarfield.innerHTML = "";
-      bigStarSpots = [];
+      diamondSpots = [];
 
-      var i;
-      for(i = 0; i < DUST_COUNT; i++) makeSmallStar("dust", STAR_DUST_COLORS);
-      for(i = 0; i < GLOW_COUNT; i++) makeSmallStar("medium", STAR_MEDIUM_COLORS);
+      STAR_LAYERS.forEach(function(layer){
+        for(var i = 0; i < layer.count; i++) makeRoundStar(layer);
+      });
 
-      var bigCount = BIG_STAR_MIN + Math.floor(Math.random() * (BIG_STAR_MAX - BIG_STAR_MIN + 1));
-      for(i = 0; i < bigCount; i++) makeBigStar(i);
+      var diamondCount = DIAMOND_MIN + Math.floor(Math.random() * (DIAMOND_MAX - DIAMOND_MIN + 1));
+      for(var d = 0; d < diamondCount; d++) makeDiamond(d);
     };
 
-    // when a star finishes a twinkle, it reappears at a fresh random spot
+    // when a star finishes a twinkle, it reappears at a fresh safe spot
     heroStarfield.addEventListener("animationiteration", function(e){
       var star = e.target;
       if(e.animationName !== "hero-star-twinkle" || !star.classList || !star.classList.contains("hero-star")) return;
-      var type = star.classList.contains("hero-star-compass") ? "compass" : (star.classList.contains("hero-star-medium") ? "medium" : "dust");
       star.style.animation = "none";
       star.getBoundingClientRect(); // restart the animation cleanly
       star.style.animation = "";
       // clearing the animation also clears its timing, so apply fresh random values
-      randomizeStar(star, type, false);
+      randomizeStar(star, false);
     });
 
-    // because every position is in percent, the stars stretch with the
-    // screen automatically. On resize we only re-fit the canvas height and
-    // re-measure the Daily Synchronicity box; nothing needs rebuilding.
+    // after the screen size changes, re-measure everything and move any
+    // star that now sits inside the compass zone or behind the box
+    var recheckAllStars = function(){
+      var stars = heroStarfield.querySelectorAll(".hero-star");
+      for(var i = 0; i < stars.length; i++){
+        var star = stars[i];
+        var spot = { x: parseFloat(star.style.left), y: parseFloat(star.style.top) };
+        if(isNaN(spot.x) || isNaN(spot.y) || !isSafeSpot(spot, star.getAttribute("data-star-type"))){
+          randomizeStar(star, true);
+        }
+      }
+    };
+
     var starfieldResizeTimer = null;
     var refreshStarfield = function(){
       clearTimeout(starfieldResizeTimer);
       starfieldResizeTimer = setTimeout(function(){
         sizeStarfield();
-        measureSyncBox();
-      }, 200);
+        measureSky();
+        recheckAllStars();
+      }, 150);
     };
 
     buildStarfield();
