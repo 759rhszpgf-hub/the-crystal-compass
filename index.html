@@ -129,27 +129,24 @@
   }
 
   /* ------------------------------------------------------------
-     UPPER-CANVAS STARFIELD — a balanced, symmetrical twin-cascade
-     starry night sky across the dark CENTER of the landing area, from
-     the very top down to just above "Step one". The sky is split into
-     two equal lanes, a Left Sky Lane and a Right Sky Lane, each with
-     exactly the same number of stars of every size. Stars stay inside
-     a central band (clear of the purple side crystals in the page
-     border), and come in three sizes: tiny 1px cosmic dust, 2px glowing
-     points, and large signature four-pointed diamond star bursts cloned
-     from the central compass.
+     UPPER-CANVAS STARFIELD — a natural, freely scattered starry night
+     sky across the dark CENTER of the landing area, from the very top
+     down to just above "Step one". Every star gets a completely random
+     position inside the center 76% of the width (12% is kept clear on
+     each side, away from the purple side crystals), so the sky flows
+     like an organic cosmic shower with no lanes, rows or columns.
 
-     Each lane has its own gently meandering "cascade path", and every
-     star is given a wide, random sideways wiggle away from that path,
-     so the stars never line up into stiff vertical rows. Every star has
-     its own depth (opacity) and its own soft twinkle.
+     Stars come in three sizes: tiny 1px cosmic dust, 2px glowing
+     points, and 12 to 18 large signature four-pointed diamond star
+     bursts cloned from the central compass. Positions are set in
+     PERCENT of the landing area, so they always spread across the
+     full sky on every screen size, and every star has its own depth
+     (opacity) and its own soft twinkle.
 
      The layer sits at z-index -1 inside the hero's own stacking
      context, so it paints behind every piece of hero content and can
-     never block a tap or click. Each star is built by JS with its own
-     random position, size, brightness, drift and fade speed, and is
-     re-randomized every time it finishes a twinkle, so the sky never
-     settles into a repeating pattern.
+     never block a tap or click. Each star is re-randomized every time
+     it finishes a twinkle, so the sky never settles into a pattern.
      ------------------------------------------------------------ */
   .hero-starfield{
     position: absolute;
@@ -4508,72 +4505,49 @@
   }
 
   /* ----------------------------------------------------------
-     10. UPPER-CANVAS STARFIELD — Balanced Symmetrical Twin-Cascade
+     10. UPPER-CANVAS STARFIELD — pure, organic random scattering.
      A natural starry night sky across the dark CENTER of the landing
      area: from the very top, behind the title and the Daily
      Synchronicity box, down past the golden infinity emblem, stopping
      right above the "Step one" section.
 
-     HOW THE SKY IS BUILT
-
-     1. Twin lanes. The clear center band (SKY_SIDE_MARGIN is kept empty
-        on each side, away from the purple side crystals) is divided at
-        its exact middle into two equal lanes: a Left Sky Lane and a
-        Right Sky Lane. Every star belongs to one lane and stays in it,
-        and both lanes always receive EXACTLY the same number of 1px
-        dust specks, 2px glowing points and large diamond star bursts.
-
-     2. Cascade paths. Each lane gets its own gently meandering
-        "cascade path": an invisible line that sways left and right as
-        it runs down the sky (two soft sine waves added together). The
-        right lane's path is a mirror of the left lane's, with its
-        waves shifted, so the two sides are balanced but never
-        identical twins.
-
-     3. Wiggle math. Every star is placed on its cascade path and then
-        pushed sideways by a wide, random "wiggle" (up to SKY_WIGGLE of
-        the lane's width in either direction). Half the time the wiggle
-        is spread evenly, half the time it follows a bell curve, which
-        gives the sky natural soft clumps and open gaps. If a wiggle
-        would push a star out of its lane, it bounces back off the lane
-        wall instead of piling up against it. This is what breaks up
-        the stiff vertical rows.
-
-     4. Dust and glowing points. Just over half of the small stars are
-        scattered completely freely across their lane; the rest follow
-        the wiggling cascade, so the small stars drift down the sky in
-        loose, shimmering streams.
-
-     5. Signature diamond stars. Each lane's height is split into equal
-        bands, with one big star per band. The left lane's stars sit
-        toward the top of their bands and the right lane's toward the
-        bottom, so the two sides cascade alternately at staggered
-        heights. Every big star keeps a comfortable distance from all
-        the others, and from the big star in the band above and below
-        it in its own lane it also keeps a clear sideways gap, so the
-        big stars can never stack up into a straight column.
-
-     6. The opaque Daily Synchronicity box is measured, and stars that
-        would hide behind it are simply placed somewhere else.
-
-     Every star twinkles on its own random speed, drift and depth, and
-     when it finishes a twinkle it reappears at a fresh spot in its own
-     lane, so the sky never settles into a repeating pattern.
+     HOW IT WORKS (deliberately simple)
+       - There are no lanes, rows or columns. Every star picks a fully
+         random spot: its X position is anywhere inside the center 76%
+         of the width (SKY_SIDE_MARGIN keeps 12% clear on each side,
+         away from the purple side crystals), and its Y position is
+         anywhere from the top of the landing area to the bottom.
+       - Positions are written in PERCENT (for example left: 43.7%),
+         not in measured pixels. This means the stars can never all end
+         up squeezed onto one spot or one line, even if the page is
+         still loading or the screen is resized, because percentages
+         always stretch across the real width of the sky.
+       - 12 to 18 large four-pointed diamond star bursts are scattered
+         freely across the whole sky, including the deep dark center
+         behind the title, around the Daily Synchronicity box and down
+         past the gold infinity emblem. They only try to keep a little
+         breathing room from each other, so they don't bunch up.
+       - Around them sits a generous blend of tiny 1px dust and 2px
+         glowing points.
+       - Stars that would land hidden behind the solid Daily
+         Synchronicity box are simply re-rolled to a new random spot.
+       - Every star twinkles at its own speed and depth, and each time
+         a twinkle finishes it reappears at a fresh random spot.
 
      TO ADJUST
-       SKY_SIDE_MARGIN  clear space on each side (0.12 = 12% each side)
-       SKY_WIGGLE       how far stars wiggle sideways (0.42 = up to 42%
-                        of a lane's width either way of the path)
+       SKY_SIDE_MARGIN   clear space on each side (0.12 = 12% each side)
+       BIG_STAR_MIN / BIG_STAR_MAX   how many large diamond stars
+       DUST_COUNT / GLOW_COUNT       how many 1px and 2px stars
      ---------------------------------------------------------- */
   var heroSection = document.querySelector(".hero");
   var heroStarfield = document.getElementById("heroStarfield");
 
   if(heroSection && heroStarfield){
-    // fraction of the width kept clear on EACH side (away from side crystals)
-    var SKY_SIDE_MARGIN = 0.12;
-    // how far a star may wiggle sideways from its lane's cascade path,
-    // as a fraction of that lane's width
-    var SKY_WIGGLE = 0.42;
+    var SKY_SIDE_MARGIN = 0.12;   // 12% clear on each side = stars live in the center 76%
+    var BIG_STAR_MIN = 12;
+    var BIG_STAR_MAX = 18;
+    var DUST_COUNT = 170;         // tiny 1px cosmic dust
+    var GLOW_COUNT = 75;          // 2px softly glowing points
 
     var STAR_DUST_COLORS = ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"];
     var STAR_MEDIUM_COLORS = ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"];
@@ -4583,313 +4557,150 @@
     var COMPASS_STAR_PATH = "M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z";
     var SVG_NS = "http://www.w3.org/2000/svg";
 
-    var skyWidth = 0;
-    var skyHeight = 0;
-    // lane 0 = Left Sky Lane, lane 1 = Right Sky Lane
-    var skyLanes = [
-      { min: 0, max: 0, center: 0, width: 0 },
-      { min: 0, max: 0, center: 0, width: 0 }
-    ];
-    var cascadePaths = [null, null];
-    var skyAvoidRects = [];
-    var bigPositions = [];
-    var bigPerLane = 6;
-    var bigMinDistance = 0;
-    var lastStarfieldWidth = 0;
-    var lastStarfieldHeight = 0;
+    // the solid Daily Synchronicity box, stored in percent of the sky
+    var syncBoxArea = null;
+    // current spots of the large diamond stars, in percent
+    var bigStarSpots = [];
 
     var starRand = function(min, max){
       return min + Math.random() * (max - min);
     };
 
-    // a bell-curve random number (most values near 0, a few further out)
-    var starGaussian = function(){
-      var u = 0, v = 0;
-      while(u === 0) u = Math.random();
-      while(v === 0) v = Math.random();
-      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-    };
-
     // makes the star canvas exactly as tall as the whole landing area
     var sizeStarfield = function(){
       var h = heroSection.offsetHeight;
-      heroStarfield.style.height = h + "px";
-      return h;
+      if(h) heroStarfield.style.height = h + "px";
     };
 
-    // builds the two meandering cascade paths. The left path is random;
-    // the right path mirrors it (same sway size and rhythm) but with its
-    // waves shifted, so the two sides balance without copying each other.
-    var makeCascadePaths = function(){
-      var left = {
-        amp1: starRand(0.18, 0.30),
-        freq1: starRand(1.1, 2.1),
-        phase1: starRand(0, Math.PI * 2),
-        amp2: starRand(0.06, 0.14),
-        freq2: starRand(3, 5.5),
-        phase2: starRand(0, Math.PI * 2),
-        mirror: 1
-      };
-      var right = {
-        amp1: left.amp1,
-        freq1: left.freq1,
-        phase1: left.phase1 + starRand(0.6, 1.6) * Math.PI / 2,
-        amp2: left.amp2,
-        freq2: left.freq2,
-        phase2: left.phase2 + starRand(0.6, 1.6) * Math.PI / 2,
-        mirror: -1
-      };
-      return [left, right];
-    };
-
-    // where a lane's cascade path sits (sideways) at a given height
-    var cascadeX = function(lane, y){
-      var p = cascadePaths[lane];
-      var area = skyLanes[lane];
-      if(!p) return area.center;
-      var t = y / Math.max(1, skyHeight);
-      var sway = p.amp1 * Math.sin(2 * Math.PI * p.freq1 * t + p.phase1) +
-                 p.amp2 * Math.sin(2 * Math.PI * p.freq2 * t + p.phase2);
-      return area.center + p.mirror * sway * area.width;
-    };
-
-    // a wide, organic sideways wiggle: half the time spread evenly,
-    // half the time following a bell curve
-    var wiggle = function(lane){
-      var w = skyLanes[lane].width;
-      if(Math.random() < 0.5){
-        return starRand(-SKY_WIGGLE, SKY_WIGGLE) * w;
-      }
-      return starGaussian() * SKY_WIGGLE * 0.6 * w;
-    };
-
-    // keeps a sideways position inside its lane by bouncing it back off
-    // the lane walls, so stars never pile up against the edges
-    var keepInLane = function(lane, x){
-      var area = skyLanes[lane];
-      var span = area.max - area.min;
-      if(span <= 0) return area.center;
-      var r = (x - area.min) % (2 * span);
-      if(r < 0) r += 2 * span;
-      return area.min + (r > span ? 2 * span - r : r);
-    };
-
-    // measures the opaque Daily Synchronicity box (as a rectangle measured
-    // from the top-left of the landing area) so stars avoid hiding behind it
-    var measureLayout = function(){
-      skyAvoidRects = [];
+    // measures where the solid Daily Synchronicity box sits, in percent
+    // of the landing area, so stars don't waste themselves hidden behind it
+    var measureSyncBox = function(){
+      syncBoxArea = null;
       var box = heroSection.querySelector(".sync-box");
       if(!box) return;
       var heroRect = heroSection.getBoundingClientRect();
       var r = box.getBoundingClientRect();
-      var pad = 10;
-      skyAvoidRects.push({
-        left: r.left - heroRect.left - pad,
-        right: r.right - heroRect.left + pad,
-        top: r.top - heroRect.top - pad,
-        bottom: r.bottom - heroRect.top + pad
-      });
+      if(!heroRect.width || !heroRect.height || !r.width) return;
+      syncBoxArea = {
+        left:   (r.left   - heroRect.left) / heroRect.width  * 100,
+        right:  (r.right  - heroRect.left) / heroRect.width  * 100,
+        top:    (r.top    - heroRect.top)  / heroRect.height * 100,
+        bottom: (r.bottom - heroRect.top)  / heroRect.height * 100
+      };
     };
 
-    var isBehindBox = function(pos){
-      for(var i = 0; i < skyAvoidRects.length; i++){
-        var r = skyAvoidRects[i];
-        if(pos.x > r.left && pos.x < r.right && pos.y > r.top && pos.y < r.bottom) return true;
+    var isBehindSyncBox = function(spot){
+      if(!syncBoxArea) return false;
+      return spot.x > syncBoxArea.left && spot.x < syncBoxArea.right &&
+             spot.y > syncBoxArea.top && spot.y < syncBoxArea.bottom;
+    };
+
+    // one completely free, random spot in the center 76% of the sky
+    var randomSkySpot = function(){
+      var minX = SKY_SIDE_MARGIN * 100;
+      var maxX = (1 - SKY_SIDE_MARGIN) * 100;
+      var spot = { x: starRand(minX, maxX), y: starRand(0.5, 99.5) };
+      for(var tries = 0; tries < 10 && isBehindSyncBox(spot); tries++){
+        spot = { x: starRand(minX, maxX), y: starRand(0.5, 99.5) };
       }
-      return false;
+      return spot;
     };
 
-    // last-resort fallback: slide a spot straight above or below the box
-    var nudgeOutOfBox = function(pos){
-      for(var i = 0; i < skyAvoidRects.length; i++){
-        var r = skyAvoidRects[i];
-        if(pos.x > r.left && pos.x < r.right && pos.y > r.top && pos.y < r.bottom){
-          if(pos.y - r.top < r.bottom - pos.y){
-            pos.y = r.top - starRand(4, 60);
-          } else {
-            pos.y = r.bottom + starRand(4, 60);
-          }
-        }
-      }
-      pos.y = Math.min(skyHeight - 4, Math.max(4, pos.y));
-      return pos;
-    };
-
-    // dust and glowing point position inside one lane: just over half are
-    // free scatter across the whole lane, the rest follow the wiggling
-    // cascade path. Spots behind the opaque box are re-picked.
-    var pickDustPosition = function(lane){
-      var area = skyLanes[lane];
-      var pos = null;
+    // a random spot for a large diamond star, gently keeping a little
+    // breathing room from the other large stars so they don't bunch up
+    var randomBigStarSpot = function(index){
+      var best = randomSkySpot();
+      var bestGap = -1;
       for(var tries = 0; tries < 12; tries++){
-        var y = starRand(2, skyHeight - 2);
-        var x;
-        if(Math.random() < 0.55){
-          x = starRand(area.min, area.max);
-        } else {
-          x = keepInLane(lane, cascadeX(lane, y) + wiggle(lane));
+        var spot = tries === 0 ? best : randomSkySpot();
+        var nearest = Infinity;
+        for(var i = 0; i < bigStarSpots.length; i++){
+          if(i === index || !bigStarSpots[i]) continue;
+          var dx = bigStarSpots[i].x - spot.x;
+          var dy = (bigStarSpots[i].y - spot.y) * 0.6;   // the sky is taller than it is wide
+          var d = Math.sqrt(dx * dx + dy * dy);
+          if(d < nearest) nearest = d;
         }
-        pos = { x: x, y: y };
-        if(!isBehindBox(pos)) return pos;
+        if(nearest > bestGap){
+          best = spot;
+          bestGap = nearest;
+        }
+        if(nearest > 11) break;   // plenty of room, use it
       }
-      return nudgeOutOfBox(pos);
+      return best;
     };
 
-    // signature diamond star position. Each star owns one height band in
-    // its lane; the left lane's stars lean toward the top of their bands
-    // and the right lane's toward the bottom, so the two sides cascade
-    // alternately. The sideways spot comes from the cascade path plus a
-    // wide wiggle. The star must keep its distance from every other big
-    // star, and a clear sideways gap from its band neighbours in its own
-    // lane (this is what stops big stars lining up in a column). If the
-    // sky is crowded, those rules relax a little as the tries go on.
-    var pickBigPosition = function(star){
-      var area = skyLanes[star.lane];
-      var bandHeight = skyHeight / bigPerLane;
-      var bandAnchor = (star.slot + (star.lane === 0 ? 0.32 : 0.68)) * bandHeight;
-      var minDist = bigMinDistance;
-      var minSideGap = area.width * 0.18;
-      var fallback = null;
-
-      for(var attempt = 0; attempt < 50; attempt++){
-        if(attempt > 0 && attempt % 10 === 0){
-          minDist *= 0.75;
-          minSideGap *= 0.6;
-        }
-        var y = bandAnchor + starRand(-0.34, 0.34) * bandHeight;
-        y = Math.min(skyHeight - 8, Math.max(8, y));
-        var x = keepInLane(star.lane, cascadeX(star.lane, y) + wiggle(star.lane));
-        var candidate = { x: x, y: y };
-        if(isBehindBox(candidate)) continue;
-        fallback = candidate;
-
-        var clear = true;
-        for(var i = 0; i < bigPositions.length; i++){
-          var other = bigPositions[i];
-          if(i === star.starIndex || !other) continue;
-          var dx = other.x - candidate.x;
-          var dy = other.y - candidate.y;
-          if(Math.sqrt(dx * dx + dy * dy) < minDist){ clear = false; break; }
-          if(other.lane === star.lane && Math.abs(other.slot - star.slot) === 1 && Math.abs(dx) < minSideGap){
-            clear = false;
-            break;
-          }
-        }
-        if(clear) return candidate;
-      }
-      if(fallback) return fallback;
-      return nudgeOutOfBox({ x: keepInLane(star.lane, area.center + wiggle(star.lane)), y: bandAnchor });
-    };
-
-    // gives a star a fresh random position, drift, depth and speed
+    // gives a star a fresh random spot, drift, depth and speed
     var randomizeStar = function(star, type, startMidCycle){
       var duration = type === "dust" ? starRand(2, 6) : (type === "medium" ? starRand(3, 7.5) : starRand(4, 9));
       var angle = Math.random() * Math.PI * 2;
       var drift = type === "compass" ? starRand(4, 10) : starRand(3, 9);
-      var pos, peak;
+      var spot, peak;
 
       if(type === "compass"){
-        pos = pickBigPosition(star);
-        bigPositions[star.starIndex] = { x: pos.x, y: pos.y, lane: star.lane, slot: star.slot };
+        spot = randomBigStarSpot(star.bigIndex);
+        bigStarSpots[star.bigIndex] = spot;
         peak = starRand(0.75, 1);
-        star.style.setProperty("--rot", starRand(-12, 12) + "deg");
+        star.style.setProperty("--rot", starRand(-15, 15) + "deg");
       } else {
-        pos = pickDustPosition(star.lane);
-        // soft, delicate depth: opacities from 0.2 up to 0.7
-        peak = 0.2 + 0.5 * Math.pow(Math.random(), 1.1);
+        spot = randomSkySpot();
+        // soft, delicate depth: opacities from 0.2 up to 0.75
+        peak = 0.2 + 0.55 * Math.pow(Math.random(), 1.1);
       }
 
-      star.style.left = pos.x + "px";
-      star.style.top = pos.y + "px";
-      star.style.setProperty("--dx", (Math.cos(angle) * drift) + "px");
-      star.style.setProperty("--dy", (Math.sin(angle) * drift) + "px");
-      star.style.setProperty("--peak", peak);
-      star.style.animationDuration = duration + "s";
+      star.style.left = spot.x.toFixed(2) + "%";
+      star.style.top = spot.y.toFixed(2) + "%";
+      star.style.setProperty("--dx", (Math.cos(angle) * drift).toFixed(1) + "px");
+      star.style.setProperty("--dy", (Math.sin(angle) * drift).toFixed(1) + "px");
+      star.style.setProperty("--peak", peak.toFixed(2));
+      star.style.animationDuration = duration.toFixed(2) + "s";
       // on first build, start each star part-way through its cycle so the
       // sky is already twinkling the moment the page loads
-      star.style.animationDelay = startMidCycle ? "-" + starRand(0, duration) + "s" : starRand(0, 1.5) + "s";
+      star.style.animationDelay = startMidCycle ? "-" + starRand(0, duration).toFixed(2) + "s" : starRand(0, 1.5).toFixed(2) + "s";
+    };
+
+    var makeSmallStar = function(type, colors){
+      var star = document.createElement("span");
+      star.className = "hero-star hero-star-" + type;
+      star.style.setProperty("--star-color", colors[Math.floor(Math.random() * colors.length)]);
+      randomizeStar(star, type, true);
+      heroStarfield.appendChild(star);
+    };
+
+    var makeBigStar = function(index){
+      var size = Math.round(starRand(16, 28));
+      var big = document.createElementNS(SVG_NS, "svg");
+      big.setAttribute("class", "hero-star hero-star-compass");
+      big.setAttribute("viewBox", "0 0 8 8");
+      big.setAttribute("width", size);
+      big.setAttribute("height", size);
+      big.setAttribute("aria-hidden", "true");
+      big.style.width = size + "px";
+      big.style.height = size + "px";
+      var path = document.createElementNS(SVG_NS, "path");
+      path.setAttribute("d", COMPASS_STAR_PATH);
+      path.setAttribute("fill", STAR_COMPASS_COLORS[Math.floor(Math.random() * STAR_COMPASS_COLORS.length)]);
+      big.appendChild(path);
+      big.bigIndex = index;
+      randomizeStar(big, "compass", true);
+      heroStarfield.appendChild(big);
     };
 
     var buildStarfield = function(){
-      var width = heroSection.clientWidth || heroSection.offsetWidth;
-      var height = sizeStarfield();
-      if(!width || !height) return;
-      lastStarfieldWidth = width;
-      lastStarfieldHeight = height;
-      skyWidth = width;
-      skyHeight = height;
-
-      // the clear side margins (plus a few pixels for star drift), and the
-      // exact middle of the sky, which splits it into two equal lanes
-      var bandLeft = width * SKY_SIDE_MARGIN + 8;
-      var bandRight = width * (1 - SKY_SIDE_MARGIN) - 8;
-      var middle = width / 2;
-      skyLanes = [
-        { min: bandLeft, max: middle - 6 },
-        { min: middle + 6, max: bandRight }
-      ];
-      skyLanes.forEach(function(area){
-        area.width = Math.max(1, area.max - area.min);
-        area.center = (area.min + area.max) / 2;
-      });
-      cascadePaths = makeCascadePaths();
-      measureLayout();
-
-      // every count below is PER LANE, so both sides always match exactly
-      var laneArea = skyLanes[0].width * height;
-      var dustPerLane = Math.max(70, Math.min(130, Math.round(laneArea / 3000)));
-      var mediumPerLane = Math.max(30, Math.min(55, Math.round(laneArea / 8000)));
-      bigPerLane = Math.max(6, Math.min(12, Math.round(laneArea / 90000)));
-
-      bigPositions = [];
-      bigMinDistance = 0.45 * Math.sqrt(laneArea / bigPerLane);
-
+      sizeStarfield();
+      measureSyncBox();
       heroStarfield.innerHTML = "";
+      bigStarSpots = [];
 
-      var addSmallStars = function(count, type, colors){
-        for(var lane = 0; lane < 2; lane++){
-          for(var i = 0; i < count; i++){
-            var star = document.createElement("span");
-            star.className = "hero-star hero-star-" + type;
-            star.style.setProperty("--star-color", colors[Math.floor(Math.random() * colors.length)]);
-            star.lane = lane;
-            randomizeStar(star, type, true);
-            heroStarfield.appendChild(star);
-          }
-        }
-      };
+      var i;
+      for(i = 0; i < DUST_COUNT; i++) makeSmallStar("dust", STAR_DUST_COLORS);
+      for(i = 0; i < GLOW_COUNT; i++) makeSmallStar("medium", STAR_MEDIUM_COLORS);
 
-      addSmallStars(dustPerLane, "dust", STAR_DUST_COLORS);
-      addSmallStars(mediumPerLane, "medium", STAR_MEDIUM_COLORS);
-
-      // the large four-pointed diamond star bursts: exactly the same number
-      // in each lane, one per height band. They are placed alternately
-      // (left band 1, right band 1, left band 2, ...) so neither side gets
-      // first pick of the open sky.
-      for(var j = 0; j < bigPerLane; j++){
-        for(var lane = 0; lane < 2; lane++){
-          var big = document.createElementNS(SVG_NS, "svg");
-          big.setAttribute("class", "hero-star hero-star-compass");
-          big.setAttribute("viewBox", "0 0 8 8");
-          big.setAttribute("aria-hidden", "true");
-          var bigSize = starRand(14, 26);
-          big.style.width = bigSize + "px";
-          big.style.height = bigSize + "px";
-          var bigPath = document.createElementNS(SVG_NS, "path");
-          bigPath.setAttribute("d", COMPASS_STAR_PATH);
-          bigPath.setAttribute("fill", STAR_COMPASS_COLORS[Math.floor(Math.random() * STAR_COMPASS_COLORS.length)]);
-          big.appendChild(bigPath);
-          big.lane = lane;
-          big.slot = j;
-          big.starIndex = lane * bigPerLane + j;
-          randomizeStar(big, "compass", true);
-          heroStarfield.appendChild(big);
-        }
-      }
+      var bigCount = BIG_STAR_MIN + Math.floor(Math.random() * (BIG_STAR_MAX - BIG_STAR_MIN + 1));
+      for(i = 0; i < bigCount; i++) makeBigStar(i);
     };
 
-    // when a star finishes a twinkle, restart it somewhere new in its own
-    // lane at a new speed
+    // when a star finishes a twinkle, it reappears at a fresh random spot
     heroStarfield.addEventListener("animationiteration", function(e){
       var star = e.target;
       if(e.animationName !== "hero-star-twinkle" || !star.classList || !star.classList.contains("hero-star")) return;
@@ -4901,27 +4712,20 @@
       randomizeStar(star, type, false);
     });
 
-    // keeps the canvas matched to the landing area. The width changing
-    // (rotating a phone, resizing a window) or the height changing a lot
-    // (images and fonts finishing loading) rebuilds the sky; a small
-    // height change, like a mobile address bar sliding away, just resizes it.
+    // because every position is in percent, the stars stretch with the
+    // screen automatically. On resize we only re-fit the canvas height and
+    // re-measure the Daily Synchronicity box; nothing needs rebuilding.
     var starfieldResizeTimer = null;
     var refreshStarfield = function(){
       clearTimeout(starfieldResizeTimer);
       starfieldResizeTimer = setTimeout(function(){
-        var width = heroSection.clientWidth || heroSection.offsetWidth;
-        var height = heroSection.offsetHeight;
-        if(width !== lastStarfieldWidth || Math.abs(height - lastStarfieldHeight) > 30){
-          buildStarfield();
-        } else {
-          skyHeight = sizeStarfield();
-          measureLayout();
-        }
+        sizeStarfield();
+        measureSyncBox();
       }, 200);
     };
 
     buildStarfield();
-    window.addEventListener("load", buildStarfield);
+    window.addEventListener("load", refreshStarfield);
     window.addEventListener("resize", refreshStarfield);
     window.addEventListener("orientationchange", refreshStarfield);
     if(window.ResizeObserver){
