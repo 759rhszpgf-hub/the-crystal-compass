@@ -214,11 +214,11 @@
     filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 8px rgba(234,200,120,0.95)) drop-shadow(0 0 14px rgba(234,200,120,0.6));
   }
   @keyframes hero-star-twinkle{
-    0%{   opacity: 0;                              transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(0.25); }
-    18%{  opacity: var(--peak, 0.8);               transform: translate(calc(-50% + var(--dx) * 0.3), calc(-50% + var(--dy) * 0.3)) rotate(var(--rot, 0deg)) scale(1.12); }
-    34%{  opacity: calc(var(--peak, 0.8) * 0.3);   transform: translate(calc(-50% + var(--dx) * 0.5), calc(-50% + var(--dy) * 0.5)) rotate(var(--rot, 0deg)) scale(0.85); }
-    52%{  opacity: calc(var(--peak, 0.8) * 0.9);   transform: translate(calc(-50% + var(--dx) * 0.7), calc(-50% + var(--dy) * 0.7)) rotate(var(--rot, 0deg)) scale(1); }
-    100%{ opacity: 0;                              transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot, 0deg)) scale(0.3); }
+    0%{   opacity: 0;                              transform: translate(-50%, -50%) scale(0.25); }
+    18%{  opacity: var(--peak, 0.8);               transform: translate(calc(-50% + var(--dx) * 0.3), calc(-50% + var(--dy) * 0.3)) scale(1.12); }
+    34%{  opacity: calc(var(--peak, 0.8) * 0.3);   transform: translate(calc(-50% + var(--dx) * 0.5), calc(-50% + var(--dy) * 0.5)) scale(0.85); }
+    52%{  opacity: calc(var(--peak, 0.8) * 0.9);   transform: translate(calc(-50% + var(--dx) * 0.7), calc(-50% + var(--dy) * 0.7)) scale(1); }
+    100%{ opacity: 0;                              transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.3); }
   }
 
   /* ------------------------------------------------------------
@@ -2133,7 +2133,7 @@
     .hero-star{
       animation: none !important;
       opacity: var(--peak, 0.55);
-      transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+      transform: translate(-50%, -50%);
     }
   }
 </style>
@@ -4721,7 +4721,8 @@
         spot = randomDiamondSpot(index);
         diamondSpots[index] = spot;
         peak = starRand(0.8, 1);
-        star.style.setProperty("--rot", starRand(-15, 15).toFixed(1) + "deg");
+        // diamonds always stand perfectly upright (points straight up,
+        // down, left and right), exactly like the compass artwork
       } else {
         spot = randomSafeSpot(type, SKY_SIDE_MARGIN);
         // soft depth: bigger layers glow a little brighter on average
