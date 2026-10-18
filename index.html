@@ -1952,6 +1952,9 @@
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0s linear 0.3s;
   }
+  /* a closed pop-up is fully removed from the page, so its full-screen
+     frosted-glass blur doesn't sit invisibly in phone memory */
+  .legal-modal-overlay[hidden]{ display: none; }
   .legal-modal-overlay.is-open{
     opacity: 1;
     visibility: visible;
@@ -2131,6 +2134,37 @@
     .mood-panel{ padding: 18px; }
     .mood-grid{ gap: 12px; }
     .mood-point{ min-height: 80px; padding: 14px 8px; font-size: 12.5px; }
+  }
+
+  /* ============================================================
+     OFFSCREEN ANIMATION SAVER
+     The script marks areas the visitor has scrolled well away from
+     with .is-offscreen (see section 11 of the script). Their
+     animations pause, and the heaviest purely decorative layers are
+     switched off completely, so a phone only ever spends graphics
+     memory on what is actually on screen. Everything switches back
+     on just before it scrolls into view, so nothing looks different.
+     ============================================================ */
+  .is-offscreen,
+  .is-offscreen *,
+  .is-offscreen *::before,
+  .is-offscreen *::after{
+    animation-play-state: paused !important;
+  }
+  /* the hero's starfield, aura, rings, compass and bursts. The compass
+     box has a fixed size, so hiding what is inside it never moves the page */
+  .hero.is-offscreen .hero-starfield,
+  .hero.is-offscreen .hero-mark > *{
+    display: none !important;
+  }
+  /* the mood panel's frosted glass, only while it is far off screen */
+  #checkin.is-offscreen .mood-panel{
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /* the wheel's twinkling star shower, while the wheel is off screen */
+  .wheel-stage.is-offscreen .wheel-stars-layer{
+    display: none !important;
   }
 
   /* ============================================================
@@ -3276,6 +3310,7 @@
     if(!modal) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
+    void modal.offsetWidth; // let the browser see it before the fade begins
     // next frame, so the opacity/transform transition actually animates
     requestAnimationFrame(function(){
       modal.classList.add("is-open");
@@ -4125,8 +4160,13 @@
   // rings rather than floating at a fixed, unrelated distance
   var RING_RADIUS_FRACTIONS = [0.54, 0.48, 0.425];
 
+  // switched off by the offscreen saver (section 11) while the visitor
+  // is scrolled far away from the compass, so no bursts are made unseen
+  var heroOnScreen = true;
+
   if(starsLayer && heroMark){
     var spawnStar = function(){
+      if(document.hidden || !heroOnScreen) return;
       var size = heroMark.offsetWidth || 360;
       var frac = RING_RADIUS_FRACTIONS[Math.floor(Math.random() * RING_RADIUS_FRACTIONS.length)];
       var radius = size * frac;
@@ -4513,10 +4553,13 @@
   var wheelStarsLayer = document.getElementById("wheelStarsLayer");
   var wheelBox = document.getElementById("manifestWheel");
   var wheelPrefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // switched on by the offscreen saver (section 11) only while the wheel
+  // is near the screen; before that, no stars are made at all
+  var wheelOnScreen = false;
 
   if(wheelStage && wheelStarsLayer && wheelBox && !wheelPrefersReducedMotion){
     var spawnWheelStar = function(){
-      if(document.hidden) return;
+      if(document.hidden || !wheelOnScreen) return;
       var w = wheelStage.offsetWidth;
       var h = wheelStage.offsetHeight;
       if(!w || !h) return;                              // premium zone is still locked
@@ -4824,15 +4867,38 @@
       for(var d = 0; d < diamondCount; d++) makeDiamond(d);
     };
 
-    // when a star finishes a twinkle, it reappears at a fresh safe spot
+    // when a star finishes a twinkle, it hops to a fresh safe spot.
+    // At that exact moment the star is fully faded out, so it can simply
+    // move while its animation keeps running. (The old way stopped and
+    // restarted every animation, which made the phone re-measure the
+    // whole page many times a second once the long premium area was open.)
+    var moveStar = function(star){
+      var type = star.getAttribute("data-star-type");
+      var angle = Math.random() * Math.PI * 2;
+      var drift = type === "compass" ? starRand(4, MAX_DRIFT) : starRand(3, 9);
+      var spot;
+      if(type === "compass"){
+        var index = parseInt(star.getAttribute("data-diamond-index"), 10);
+        spot = randomDiamondSpot(index);
+        diamondSpots[index] = spot;
+      } else {
+        spot = randomSafeSpot(type, SKY_SIDE_MARGIN);
+      }
+      if(!spot){
+        star.style.visibility = "hidden";
+        return;
+      }
+      star.style.visibility = "";
+      star.style.left = spot.x.toFixed(2) + "%";
+      star.style.top = spot.y.toFixed(2) + "%";
+      star.style.setProperty("--dx", (Math.cos(angle) * drift).toFixed(1) + "px");
+      star.style.setProperty("--dy", (Math.sin(angle) * drift).toFixed(1) + "px");
+    };
+
     heroStarfield.addEventListener("animationiteration", function(e){
       var star = e.target;
       if(e.animationName !== "hero-star-twinkle" || !star.classList || !star.classList.contains("hero-star")) return;
-      star.style.animation = "none";
-      star.getBoundingClientRect(); // restart the animation cleanly
-      star.style.animation = "";
-      // clearing the animation also clears its timing, so apply fresh random values
-      randomizeStar(star, false);
+      moveStar(star);
     });
 
     // after the screen size changes, re-measure everything and move any
@@ -4868,6 +4934,48 @@
     if(document.fonts && document.fonts.ready){
       document.fonts.ready.then(refreshStarfield);
     }
+  }
+
+  /* ----------------------------------------------------------
+     11. OFFSCREEN ANIMATION SAVER — keeps iPhones and iPads calm.
+     Phones only have a small amount of graphics memory. Before this,
+     every animation on the page (the starfield, the spinning compass
+     and rings, the glowing aura, the ring bursts and the wheel's star
+     shower) kept running the whole time, even while the visitor was
+     far down in the premium area and couldn't see any of it. Over a
+     minute or so that could fill the phone's memory and crash the page.
+
+     Now each area is watched. When the visitor scrolls well away from
+     an area, it is marked .is-offscreen: its animations pause and its
+     heaviest decorations switch off (see the OFFSCREEN ANIMATION SAVER
+     CSS). The margin of 300px means everything switches back on just
+     before it scrolls into view, so it never looks any different.
+     ---------------------------------------------------------- */
+  if("IntersectionObserver" in window){
+    var offscreenAreas = [
+      { el: document.querySelector(".hero"), onChange: function(onScreen){ heroOnScreen = onScreen; } },
+      { el: document.getElementById("checkin") },
+      { el: document.getElementById("guidance") },
+      { el: document.getElementById("wheelStage"), onChange: function(onScreen){ wheelOnScreen = onScreen; } }
+    ];
+    var offscreenObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var onScreen = entry.isIntersecting;
+        entry.target.classList.toggle("is-offscreen", !onScreen);
+        for(var i = 0; i < offscreenAreas.length; i++){
+          if(offscreenAreas[i].el === entry.target && offscreenAreas[i].onChange){
+            offscreenAreas[i].onChange(onScreen);
+          }
+        }
+      });
+    }, { rootMargin: "300px 0px 300px 0px" });
+    offscreenAreas.forEach(function(area){
+      if(area.el) offscreenObserver.observe(area.el);
+    });
+  } else {
+    // very old browsers: everything simply keeps running as before
+    heroOnScreen = true;
+    wheelOnScreen = true;
   }
 
 })();
