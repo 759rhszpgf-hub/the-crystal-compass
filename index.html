@@ -1125,6 +1125,20 @@
     animation: reveal-in 0.6s ease;
   }
   .premium-features[hidden]{ display:none; }
+  /* buttery-smooth unlock on phones: while the premium area is sliding
+     into view, the graphics processor gets it ready as one smooth layer.
+     The JS adds .is-revealing at unlock and removes it the moment the
+     reveal animation finishes, so this extra graphics memory is only
+     borrowed for under a second and never kept (keeping it permanently
+     on such a large area could bring back the iPhone memory crashes) */
+  @media (max-width: 560px){
+    .premium-features.is-revealing{
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+  }
   .premium-features h3{
     text-align:center;
     font-size: 21px;
@@ -3627,6 +3641,20 @@
       //    and reveal the 3-Card Spread, Premium Manifestation Rituals
       //    (and the rest of the premium dashboards) together, at once
       paymentCta.hidden = true;
+
+      // borrow hardware acceleration just for the slide-in (see the
+      // .is-revealing CSS), then hand the memory back straight afterwards
+      premiumFeatures.classList.add("is-revealing");
+      var revealDone = false;
+      var finishReveal = function(e){
+        if(e && e.target !== premiumFeatures) return; // ignore animations inside the cards
+        if(revealDone) return;
+        revealDone = true;
+        premiumFeatures.classList.remove("is-revealing");
+        premiumFeatures.removeEventListener("animationend", finishReveal);
+      };
+      premiumFeatures.addEventListener("animationend", finishReveal);
+      setTimeout(finishReveal, 1200); // safety net if the browser skips the event
 
       premiumFeatures.hidden = false;
       premiumFeatures.style.animation = "none";
