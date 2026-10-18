@@ -141,7 +141,7 @@
        2. Medium Shimmer      1.5px and 2px crisp points
                               (.hero-star-shimmer and .hero-star-medium)
        3. Bright Jewels       2.5px glowing stars (.hero-star-jewel)
-       4. Signature Diamonds  6 to 12 rare four-pointed bursts cloned
+       4. Signature Diamonds  6 to 8 rare four-pointed bursts cloned
                               from the central compass (.hero-star-compass)
 
      Compass exclusion zone: the script keeps every star out of a circle
@@ -170,7 +170,8 @@
     display: block;
     opacity: 0;
     pointer-events: none;
-    will-change: transform, opacity;
+    /* no will-change here on purpose: on iPhones and iPads it makes the
+       browser keep a separate memory layer for every single star */
     animation: hero-star-twinkle 5s ease-in-out infinite;
   }
   /* tiny 1px faint stardust points */
@@ -4537,7 +4538,7 @@
        1. Tiny Stardust       1px soft pinpricks
        2. Medium Shimmer      1.5px and 2px crisp points
        3. Bright Jewels       2.5px glowing stars
-       4. Signature Diamonds  6 to 12 rare four-pointed compass bursts,
+       4. Signature Diamonds  6 to 8 rare four-pointed compass bursts,
                               kept a little further from the side
                               crystals so they float in the deep center
 
@@ -4577,15 +4578,17 @@
     var SKY_SIDE_MARGIN = 0.12;      // stars live in the center 76%
     var DIAMOND_SIDE_MARGIN = 0.17;  // diamonds stay a little further from the side crystals
     var DIAMOND_MIN = 6;
-    var DIAMOND_MAX = 12;
+    var DIAMOND_MAX = 8;
     var COMPASS_CLEAR_GAP = 18;      // px of clear sky beyond the outermost gold ring
 
-    // the small round star layers: CSS class, how many, and colours
+    // the small round star layers: CSS class, how many, and colours.
+    // These counts are kept deliberately low so the page stays light and
+    // smooth on iPhones and iPads (about 85 small stars in total).
     var STAR_LAYERS = [
-      { type: "dust",    count: 150, colors: ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"] },
-      { type: "shimmer", count: 75,  colors: ["#FFF6E0", "#FFFFFF", "#F4E3B0", "#E3D4FF"] },
-      { type: "medium",  count: 55,  colors: ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"] },
-      { type: "jewel",   count: 32,  colors: ["#FFF6E0", "#FFFFFF", "#EAC878", "#F4E3B0", "#E3D4FF"] }
+      { type: "dust",    count: 45, colors: ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"] },
+      { type: "shimmer", count: 10,  colors: ["#FFF6E0", "#FFFFFF", "#F4E3B0", "#E3D4FF"] },
+      { type: "medium",  count: 8,   colors: ["#FFF6E0", "#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"] },
+      { type: "jewel",   count: 10,  colors: ["#FFF6E0", "#FFFFFF", "#EAC878", "#F4E3B0", "#E3D4FF"] }
     ];
 
     // the half-size of each star type (px), so even a star's own glow
