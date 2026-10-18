@@ -4450,10 +4450,11 @@
   /* ----------------------------------------------------------
      8. AFFIRMATION MANIFESTATION WHEEL
      Twelve themed segments, each holding eight mantras: 96 mantras
-     in all. Today's mantra is picked from the calendar date, so the
-     wheel always lands on the same alignment mantra for the whole
-     day, and a different one arrives every midnight. All 96 mantras
-     are used once before any repeats (a 96-day cycle).
+     in all. Every tap is a true random spin: the wheel picks a random
+     segment and a random mantra inside it, turns 5 to 8 full times,
+     then slows down and settles on that segment. Every segment has the
+     same chance, except that the wheel never lands on the exact same
+     segment twice in a row, so it always feels fresh.
      ---------------------------------------------------------- */
   var WHEEL_THEMES = ["Abundance", "Clarity", "Courage", "Love", "Peace", "Joy", "Healing", "Focus", "Gratitude", "Confidence", "Protection", "Renewal"];
 
@@ -4480,17 +4481,19 @@
   var wheelNoteEl = document.getElementById("wheelNote");
   var wheelAngle = 0;
   var wheelSpinning = false;
+  var lastWheelSegment = -1;                           // the segment the previous spin landed on
 
-  // today's segment and mantra, based on the visitor's own calendar date
-  function todaysWheelPick(){
-    var now = new Date();
-    var dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
-    var cycle = dayNumber % 96;                        // 12 segments x 8 mantras
-    var a = cycle % 12;
-    var b = Math.floor(cycle / 12) % 8;
+  // a fresh random segment and mantra on every single tap. The segment
+  // is re-drawn if it matches the previous spin, so it never repeats twice in a row
+  function randomWheelPick(){
+    var segment = Math.floor(Math.random() * WHEEL_THEMES.length);
+    if(segment === lastWheelSegment){
+      segment = (segment + 1 + Math.floor(Math.random() * (WHEEL_THEMES.length - 1))) % WHEEL_THEMES.length;
+    }
+    lastWheelSegment = segment;
     return {
-      segment: (a * 5) % 12,                           // 5 and 12 share no factors: visits every segment
-      mantra: (b * 3) % 8                              // 3 and 8 share no factors: visits every mantra
+      segment: segment,
+      mantra: Math.floor(Math.random() * WHEEL_MANTRAS[segment].length)
     };
   }
 
@@ -4501,7 +4504,7 @@
     wheelSpinBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Spinning\u2026';
     wheelResult.hidden = true;
 
-    var pick = todaysWheelPick();
+    var pick = randomWheelPick();
     // each segment is 30 degrees wide; aim for the middle of today's
     // segment (with a small natural wobble) under the pointer at the top
     var segmentCenter = pick.segment * 30 + 15;
@@ -4509,7 +4512,8 @@
     var targetMod = (((360 - segmentCenter - wobble) % 360) + 360) % 360;
     var currentMod = ((wheelAngle % 360) + 360) % 360;
     var delta = (targetMod - currentMod + 360) % 360;
-    wheelAngle = wheelAngle + 360 * 5 + delta;         // five full turns, then settle
+    var fullTurns = 5 + Math.floor(Math.random() * 4); // 5, 6, 7 or 8 full turns, then settle
+    wheelAngle = wheelAngle + 360 * fullTurns + delta;
     wheelRotor.style.transform = "rotate(" + wheelAngle + "deg)";
 
     var finished = false;
@@ -4518,10 +4522,9 @@
       finished = true;
       wheelRotor.removeEventListener("transitionend", onEnd);
 
-      var dateLabel = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
       wheelThemeEl.textContent = "Alignment Mantra \u00B7 " + WHEEL_THEMES[pick.segment];
       wheelMantraEl.textContent = "\u201C" + WHEEL_MANTRAS[pick.segment][pick.mantra] + "\u201D";
-      wheelNoteEl.textContent = "Your mantra for " + dateLabel + ". Say it aloud three times. Spin again any time, and a brand-new mantra arrives at midnight.";
+      wheelNoteEl.textContent = "Say it aloud three times and let it settle into your day. Spin again whenever you would like a fresh alignment mantra.";
       wheelResult.hidden = false;
       wheelResult.style.animation = "none";
       void wheelResult.offsetWidth; // restart the reveal animation
