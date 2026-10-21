@@ -1271,26 +1271,9 @@
     color: var(--gold);
     margin-bottom: 10px;
   }
-  /* the card backs show their position (Past, Present, Path
-     Ahead) with a gold star, and the full reading opens in the roomy
-     panel underneath the row (see .spread-reading). The reading text
-     still lives inside each card, hidden, because the script copies it
-     from there into the panel. */
-  .mini-flip-back{
-    justify-content: center;
-  }
-  .mini-flip-back .mini-position::after{
-    content: '\2726';
-    display: block;
-    margin-top: 8px;
-    font-size: 16px;
-    letter-spacing: 0;
-    color: var(--gold-bright);
-    text-shadow: 0 0 12px rgba(234,200,120,0.6);
-  }
-  .mini-flip-back .mini-affirmation{
-    display: none;
-  }
+  /* the reading text on the back of each card: fills the space under the
+     position label, and if a reading is longer than the card, it scrolls
+     gently inside the card instead of being cut off by the border */
   .mini-flip-back p{
     flex: 1 1 auto;
     min-height: 0;
@@ -1313,14 +1296,11 @@
     border-radius: 999px;
   }
 
-  /* -- reading panel under the 3-card row: tapping a card opens its
-     full reading here, in a roomy box that grows with the text
-     (height: auto, overflow: visible), so no word is ever clipped.
-     Tapping the same card again closes it; tapping another card swaps
-     in that card's reading. -- */
+  /* -- reading block under the 3-card row: not used, because the
+     readings show on the backs of the cards themselves. It stays
+     hidden everywhere. -- */
   .spread-reading{
-    display: block;
-    overflow: visible;
+    display: none;
     height: auto;
     max-width: 480px;
     margin: 18px auto 0;
@@ -1332,7 +1312,6 @@
     box-shadow: 0 0 40px rgba(155,127,212,0.22), 0 20px 40px -20px var(--shadow);
     animation: reveal-in 0.5s ease;
   }
-  .spread-reading[hidden]{ display: none; }
   .spread-reading-pos{
     font-size: 11px;
     letter-spacing: 0.22em;
@@ -2131,11 +2110,12 @@
        big Daily Guidance card, so the full-bleed cover artwork shows
        the whole "The Crystal Compass" title with room to spare.
 
-       Tapping a card turns it to show its position with a gold star,
-       and its full reading opens in the roomy panel underneath the
-       row, where every word has space to breathe. The bottom labels on
-       the front have padding to stay clear of the rounded corners and
-       wrap neatly if needed.
+       Tapping a card turns it over to show its reading on the back, at
+       a crisp 13px in its own soft scrolling area: if a reading is
+       longer than the card, a gentle swipe inside the card reveals the
+       rest, so every word is readable and nothing is cut off by the
+       border. The bottom labels on the front have padding to stay
+       clear of the rounded corners and wrap neatly if needed.
        ------------------------------------------------------------ */
     .spread-grid{
       gap: 8px;
@@ -3894,8 +3874,8 @@
     return timelinePool.openings[o] + " " + timelinePool.messages[m] + " " + timelinePool.blessings[b];
   }
 
-  // the tapped card's reading opens in one spacious block directly
-  // under the row, on every screen size. Tapping the same card again closes it, and
+  // on phones, the tapped card's reading opens in one spacious block
+  // directly under the row. Tapping the same card again closes it, and
   // tapping a different card swaps in that card's reading.
   var spreadReadingBox = document.getElementById("spreadReading");
   var spreadReadingPos = document.getElementById("spreadReadingPos");
@@ -3918,7 +3898,9 @@
     spreadReadingBox.style.animation = "none";
     void spreadReadingBox.offsetWidth; // restart the reveal animation
     spreadReadingBox.style.animation = "";
-    spreadReadingBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if(window.innerWidth <= 560){
+      spreadReadingBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   }
 
   document.querySelectorAll(".mini-flip-card").forEach(function(card){
