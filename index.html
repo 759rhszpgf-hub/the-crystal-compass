@@ -796,14 +796,17 @@
   /* ============================================================
      DAILY GUIDANCE CARD (3D flip)
      ============================================================ */
-  /* the large Daily Guidance card is a perfect square, exactly matching
-     Sam's square cover artwork, so the full-bleed art shows completely,
-     with every letter of "The Crystal Compass" and every corner intact */
+  /* the large Daily Guidance card. Its 4:5 shape is chosen to suit the
+     square cover artwork: with full-bleed cover, a 4:5 card shows the
+     middle 80% of the picture's width, so the whole "The Crystal Compass"
+     title (which spans about 74% of the artwork) always fits inside the
+     frame with breathing room on both sides. It is a touch wider than
+     before, so the message on the back keeps the same comfortable room. */
   .flip-container{
     -webkit-perspective: 1600px;
     perspective: 1600px;
     width: min(320px, 82vw);
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
     margin: 0 auto;
   }
   .flip-card{
@@ -910,27 +913,7 @@
   .flip-back::before{
     border-color: rgba(201,162,78,0.35);
   }
-  /* the square card's back: the emblem and message are centered, but if a
-     message is ever taller than the card on a very small phone, the back
-     scrolls gently instead of cutting any words off. (The auto margins
-     center the content while still letting the top stay reachable.) */
-  .flip-back{
-    justify-content: flex-start;
-    overflow-y: auto;
-    padding: 22px 22px;
-    scrollbar-width: none;
-  }
-  .flip-back::-webkit-scrollbar{ display: none; }
-  .flip-back .card-emblem-wrap{
-    flex: none;
-    width: 58px;
-    height: 58px;
-    margin: auto auto 14px;
-  }
-  .flip-back #affirmationText{
-    margin-bottom: auto;
-    font-size: 16px;
-  }
+
   /* shared golden Triquetra emblem — used on both faces of the daily
      guidance card (and, smaller, on the 3-card spread) so every card
      drawn always shows the same spiritual emblem, never photo art */
@@ -1202,7 +1185,7 @@
     width: 100%;
     max-width: 150px;
     margin: 0 auto;
-    aspect-ratio: 1 / 1;   /* square, exactly matching the square cover artwork */
+    aspect-ratio: 4 / 5;   /* same 4:5 shape as the big guidance card, so the full title fits */
   }
   .mini-flip-card{
     position: relative;
@@ -1288,7 +1271,7 @@
     color: var(--gold);
     margin-bottom: 10px;
   }
-  /* the square card backs show their position (Past, Present, Path
+  /* the card backs show their position (Past, Present, Path
      Ahead) with a gold star, and the full reading opens in the roomy
      panel underneath the row (see .spread-reading). The reading text
      still lives inside each card, hidden, because the script copies it
@@ -2144,10 +2127,10 @@
     /* ------------------------------------------------------------
        3-CARD SPREAD ON PHONES — uniform, luxurious, symmetrical.
        The three cards (Past, Present, Path Ahead) sit side by side
-       in one row, and every card keeps the same neat square shape,
-       so the cover artwork fills each frame beautifully.
+       in one row, and every card keeps the same neat 4:5 shape as the
+       big Daily Guidance card, so the full-bleed cover artwork shows
+       the whole "The Crystal Compass" title with room to spare.
 
-       Each card is a perfect square, matching the square cover art.
        Tapping a card turns it to show its position with a gold star,
        and its full reading opens in the roomy panel underneath the
        row, where every word has space to breathe. The bottom labels on
@@ -2165,7 +2148,7 @@
       width: 100%;
       max-width: none;
       margin: 0;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 4 / 5;
     }
     .mini-flip-card{
       width: 100%;
