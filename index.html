@@ -861,9 +861,12 @@
     z-index: 2;
     border-color: rgba(201,162,78,0.4);
   }
-  /* the front face's cosmic cat fills the whole card, edge to edge,
-     clipped to the card's rounded corners by .flip-front's
-     overflow:hidden above */
+  /* the front face's card artwork. object-fit: contain always shows the
+     WHOLE picture, so the "The Crystal Compass" lettering is never cut
+     off. If the card frame is a slightly different shape from the
+     artwork, the spare space shows the deep cosmic navy behind it
+     (see .flip-front's background just below), which blends with the
+     night sky in the art */
   .cat-full-bleed{
     position: absolute;
     inset: 0;
@@ -872,8 +875,11 @@
     width: 100%;
     height: 100%;
     max-width: none;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
+  }
+  .flip-front{
+    background: linear-gradient(180deg, #1a1648 0%, #120f33 55%, #0c0a22 100%);
   }
   .flip-front .card-hint-static{
     position: absolute;
@@ -1219,17 +1225,20 @@
     opacity: 1;
     visibility: visible;
   }
-  /* the front face's cosmic cat fills the whole mini card, edge to
-     edge, clipped to the card's rounded corners by the overflow:hidden
-     above — same treatment as the main daily guidance card */
+  /* the mini card artwork: the WHOLE picture always shows, never
+     cropped, with deep cosmic navy filling any spare space above and
+     below on tall phone cards — same treatment as the main guidance card */
   .mini-flip-face .mini-back-img{
     position:absolute; inset:0;
     display:block;
     width:100%; height:100%;
     max-width:none;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     z-index:0;
+  }
+  .mini-flip-front{
+    background: linear-gradient(180deg, #1a1648 0%, #120f33 55%, #0c0a22 100%);
   }
   .mini-flip-face .mini-label{
     position: relative;
