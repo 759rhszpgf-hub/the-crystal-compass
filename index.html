@@ -796,11 +796,17 @@
   /* ============================================================
      DAILY GUIDANCE CARD (3D flip)
      ============================================================ */
+  /* the large Daily Guidance card. Its 4:5 shape is chosen to suit the
+     square cover artwork: with full-bleed cover, a 4:5 card shows the
+     middle 80% of the picture's width, so the whole "The Crystal Compass"
+     title (which spans about 74% of the artwork) always fits inside the
+     frame with breathing room on both sides. It is a touch wider than
+     before, so the message on the back keeps the same comfortable room. */
   .flip-container{
     -webkit-perspective: 1600px;
     perspective: 1600px;
-    width: min(300px, 78vw);
-    aspect-ratio: 2 / 3;
+    width: min(320px, 82vw);
+    aspect-ratio: 4 / 5;
     margin: 0 auto;
   }
   .flip-card{
