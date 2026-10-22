@@ -794,19 +794,24 @@
   .modal-box .btn-premium{ width: 100%; }
 
   /* ============================================================
-     DAILY GUIDANCE CARD (3D flip)
+     DAILY GUIDANCE CARD (3D flip) — TAROT CARD STYLE
      ============================================================ */
-  /* the large Daily Guidance card. Its 4:5 shape is chosen to suit the
-     square cover artwork: with full-bleed cover, a 4:5 card shows the
-     middle 80% of the picture's width, so the whole "The Crystal Compass"
-     title (which spans about 74% of the artwork) always fits inside the
-     frame with breathing room on both sides. It is a touch wider than
-     before, so the message on the back keeps the same comfortable room. */
+  /* Every card in the app (the big Daily Guidance card and the three
+     3-Card Spread cards) is now built like a real tarot card:
+       - a tall tarot shape (7 wide by 12 high, the same proportions
+         as a classic tarot deck)
+       - a gold outer border with a fine inner frame
+       - a little symbol at the top (like a tarot card's number)
+       - a picture window in the middle, filled edge to edge by the
+         artwork with object-fit: cover, so there are no empty gaps
+       - a name plate at the bottom (like "The Star" on a tarot card)
+     The picture window is 4:5, so the whole "The Crystal Compass"
+     title in the artwork always fits inside it. */
   .flip-container{
     -webkit-perspective: 1600px;
     perspective: 1600px;
-    width: min(320px, 82vw);
-    aspect-ratio: 4 / 5;
+    width: min(300px, 78vw);
+    aspect-ratio: 7 / 12;
     margin: 0 auto;
   }
   .flip-card{
@@ -825,7 +830,7 @@
     inset:0;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border-radius: var(--radius-lg);
+    border-radius: 16px;
     border: 1px solid var(--border);
     display:flex;
     flex-direction:column;
@@ -833,23 +838,27 @@
     justify-content:center;
     text-align:center;
     padding: 24px;
+    overflow: hidden;
     background: var(--panel);
     box-shadow: 0 30px 60px -20px var(--shadow);
   }
+  /* the fine inner tarot frame */
   .flip-face::before{
     content:'';
     position:absolute;
-    inset: 10px;
+    inset: 9px;
     border: 1px solid var(--border-soft);
-    border-radius: calc(var(--radius-lg) - 6px);
+    border-radius: 11px;
     pointer-events:none;
+    z-index: 2;
   }
   .flip-front{
-    padding: 0;
-    overflow: hidden;
+    padding: 7%;
+    justify-content: flex-start;
+    align-items: stretch;
     background:
-      radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
-      var(--panel);
+      radial-gradient(circle at 50% 12%, rgba(201,162,78,0.16), transparent 55%),
+      linear-gradient(165deg, #221a36, #0c0a1f);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
     /* failsafe hiding, independent of backface-visibility support:
@@ -864,15 +873,64 @@
     visibility: hidden;
   }
   .flip-front::before{
-    z-index: 2;
     border-color: rgba(201,162,78,0.4);
   }
-  /* the front face's card artwork fills the whole card, edge to edge,
-     clipped to the card's rounded corners by .flip-front's
-     overflow:hidden above. object-fit: cover scales the artwork until
-     it fills the frame completely on every screen size, so no dark
-     panel colour can ever show around it. min-width / min-height are
-     an extra safety net for older Safari rounding gaps. */
+
+  /* -- shared tarot pieces, used by the big card AND the spread cards -- */
+  /* the little symbol at the top of the card */
+  .tarot-numeral{
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    color: var(--gold-bright);
+    text-shadow: 0 0 10px rgba(234,200,120,0.45);
+  }
+  /* the picture window. The script measures the artwork's own true
+     shape and makes the window exactly that shape (as large as the card
+     allows), so the WHOLE picture shows, nothing is cropped off, and
+     the picture still fills the window edge to edge with no gaps.
+     4:5 is only the starting shape while the picture is loading. */
+  .tarot-art{
+    position: relative;
+    flex: 0 0 auto;
+    align-self: center;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid rgba(201,162,78,0.7);
+    border-radius: 6px;
+    box-shadow: 0 0 14px rgba(201,162,78,0.22);
+  }
+  /* the name plate at the bottom of the card */
+  .tarot-name{
+    flex: 1.4 1 0;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--serif);
+    font-size: 13px;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+  }
+
+  /* the artwork fills the whole picture window, edge to edge.
+     object-fit: cover scales it until it fills the window completely
+     on every screen size, so no dark panel colour can ever show around
+     it. min-width / min-height are an extra safety net for older
+     Safari rounding gaps. */
   .cat-full-bleed{
     position: absolute;
     inset: 0;
@@ -886,25 +944,13 @@
     object-fit: cover;
     object-position: center;
   }
-  .flip-front .card-hint-static{
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 20px 14px 16px;
-    background: linear-gradient(to top, rgba(11,9,18,0.75), transparent);
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-bright);
-  }
   .flip-back{
     -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
+    padding: 12% 10%;
     background:
       radial-gradient(circle at 50% 22%, rgba(201,162,78,0.14), transparent 60%),
-      var(--panel);
+      linear-gradient(165deg, #221a36, #0c0a1f);
     border: 1px solid var(--gold);
     box-shadow: 0 0 55px rgba(201,162,78,0.35), 0 30px 60px -20px var(--shadow);
     opacity: 0;
@@ -923,6 +969,7 @@
      guidance card (and, smaller, on the 3-card spread) so every card
      drawn always shows the same spiritual emblem, never photo art */
   .card-emblem-wrap{
+    flex: none;
     width: 78px;
     height: 78px;
     margin: 0 auto 18px;
@@ -953,7 +1000,14 @@
     0%, 100%{ filter: drop-shadow(0 0 8px rgba(234,200,120,0.3)) brightness(1.15) contrast(1.05); }
     50%{ filter: drop-shadow(0 0 20px rgba(234,200,120,0.75)) brightness(1.15) contrast(1.05); }
   }
+  /* the message never scrolls: it sits inside the card, and if a
+     message is ever too long for the space, the script gently shrinks
+     the text until every word fits (see "CARD TEXT FITTING") */
   #affirmationText{
+    flex: 0 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow: hidden;
     font-family: var(--serif);
     font-size: 17px;
     line-height: 1.5;
@@ -1176,7 +1230,12 @@
     margin-bottom: 16px;
   }
 
-  /* -- 3-card spread -- */
+  /* -- 3-card spread: three matching tarot cards --
+     Past, Present and Path Ahead are built from exactly the same
+     pieces and sizes, so all three look identical. The readings on the
+     backs never scroll: they always fit inside the card (the script
+     shrinks the text slightly if needed, and keeps all three cards at
+     the same text size so they still match). */
   .spread-grid{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1190,7 +1249,7 @@
     width: 100%;
     max-width: 150px;
     margin: 0 auto;
-    aspect-ratio: 4 / 5;   /* same 4:5 shape as the big guidance card, so the full title fits */
+    aspect-ratio: 7 / 12;   /* the same tarot shape as the big guidance card */
   }
   .mini-flip-card{
     position: relative;
@@ -1207,21 +1266,31 @@
     inset:0;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     border: 1px solid var(--gold);
     overflow: hidden;
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-end;
+    justify-content:flex-start;
     text-align:center;
-    background: var(--panel);
-    box-shadow: 0 16px 30px -14px var(--shadow);
+    background: linear-gradient(165deg, #221a36, #0c0a1f);
+    box-shadow: 0 0 22px rgba(201,162,78,0.22), 0 16px 30px -14px var(--shadow);
     /* failsafe hiding, independent of backface-visibility support:
        swaps instantly at the halfway point of the 0.8s flip */
     opacity: 1;
     visibility: visible;
     transition: opacity 0s linear 0.4s, visibility 0s linear 0.4s;
+  }
+  /* the fine inner tarot frame, the same on every spread card */
+  .mini-flip-face::before{
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgba(201,162,78,0.35);
+    border-radius: 7px;
+    pointer-events: none;
+    z-index: 2;
   }
   .mini-flip-card.flipped .mini-flip-front{
     opacity: 0;
@@ -1231,10 +1300,24 @@
     opacity: 1;
     visibility: visible;
   }
-  /* the front face's card artwork fills the whole mini card, edge to
-     edge, clipped to the card's rounded corners by the overflow:hidden
-     above — same object-fit: cover treatment as the main daily
-     guidance card, with the same min-width / min-height safety net */
+  .mini-flip-face.mini-flip-front{
+    padding: 9% 8% 6%;
+    align-items: stretch;
+    background:
+      radial-gradient(circle at 50% 10%, rgba(201,162,78,0.16), transparent 55%),
+      linear-gradient(165deg, #221a36, #0c0a1f);
+  }
+  .mini-flip-front .tarot-numeral{
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .mini-flip-front .tarot-name{
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+  }
+  /* the artwork fills the whole picture window of each spread card,
+     edge to edge, with the same object-fit: cover treatment and safety
+     net as the big guidance card */
   .mini-flip-face .mini-back-img{
     position:absolute; inset:0;
     display:block;
@@ -1245,62 +1328,54 @@
     object-position: center;
     z-index:0;
   }
-  .mini-flip-face .mini-label{
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    padding: 10px 8px 12px;          /* clear of the rounded bottom corners */
-    line-height: 1.3;
-    white-space: normal;             /* wraps neatly rather than being clipped */
-    overflow-wrap: break-word;
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold-bright);
-    background: linear-gradient(to top, rgba(11,9,18,0.8), transparent);
-  }
   .mini-flip-back{
     -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
-    justify-content: flex-start;   /* anchor to the top, not centered — prevents clipping */
-    padding: 22px 10px 16px;       /* generous top padding so the label always has room */
+    justify-content: flex-start;
+    padding: 13% 9% 10%;
     opacity: 0;
     visibility: hidden;
     background:
       radial-gradient(circle at 50% 20%, rgba(201,162,78,0.14), transparent 60%),
-      var(--panel);
+      linear-gradient(165deg, #221a36, #0c0a1f);
   }
+  /* the card's title on the back: always one neat line */
   .mini-flip-back .mini-position{
     flex: none;
-    font-size: 10px;
-    letter-spacing: 0.16em;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--serif);
+    font-size: 11px;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
+    color: var(--gold-bright);
   }
-  /* the reading text on the back of each card: fills the space under the
-     position label, and if a reading is longer than the card, it scrolls
-     gently inside the card instead of being cut off by the border */
+  .mini-flip-back .tarot-divider{
+    flex: none;
+    display: block;
+    margin: 6px 0 8px;
+    font-size: 9px;
+    line-height: 1;
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(234,200,120,0.5);
+  }
+  /* the reading on the back of each card: no scrolling, ever. It sits
+     centred in the space under the title and always fits inside the
+     card's golden frame */
   .mini-flip-back p{
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     min-height: 0;
     width: 100%;
-    height: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 4px 6px;
+    margin: auto 0;
+    overflow: hidden;
+    overflow-wrap: break-word;
     font-family: var(--serif);
-    font-size: 11.5px;
-    line-height: 1.4;
+    font-size: 12px;
+    line-height: 1.35;
     color: var(--ink);
-    scrollbar-width: thin;
-    scrollbar-color: rgba(201,162,78,0.55) transparent;
-  }
-  .mini-flip-back p::-webkit-scrollbar{ width: 3px; }
-  .mini-flip-back p::-webkit-scrollbar-track{ background: transparent; }
-  .mini-flip-back p::-webkit-scrollbar-thumb{
-    background: rgba(201,162,78,0.55);
-    border-radius: 999px;
   }
 
   /* -- reading block under the 3-card row: not used, because the
@@ -2111,18 +2186,11 @@
     .sync-number{ font-size: 32px; }
 
     /* ------------------------------------------------------------
-       3-CARD SPREAD ON PHONES — uniform, luxurious, symmetrical.
-       The three cards (Past, Present, Path Ahead) sit side by side
-       in one row, and every card keeps the same neat 4:5 shape as the
-       big Daily Guidance card, so the full-bleed cover artwork shows
-       the whole "The Crystal Compass" title with room to spare.
-
-       Tapping a card turns it over to show its reading on the back, in
-       its own soft scrolling area: if a reading is longer than the
-       card, a gentle swipe inside the card reveals the rest, so every
-       word is readable and nothing is cut off by the border. The bottom
-       labels on the front have padding to stay clear of the rounded
-       corners and wrap neatly if needed.
+       3-CARD SPREAD ON PHONES — three matching tarot cards side by
+       side in one row. Every card has the same tarot shape, the same
+       frame, the same title size and the same reading size. Nothing
+       scrolls: tapping a card turns it over to show its whole reading
+       inside the golden frame.
        ------------------------------------------------------------ */
     .spread-grid{
       gap: 8px;
@@ -2135,30 +2203,11 @@
       width: 100%;
       max-width: none;
       margin: 0;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 7 / 12;
     }
     .mini-flip-card{
       width: 100%;
       height: 100%;
-    }
-    .mini-flip-back{
-      padding: 14px 6px 10px;
-    }
-    .mini-flip-back .mini-position{
-      font-size: 9.5px;
-      letter-spacing: 0.12em;
-      margin-bottom: 8px;
-    }
-    .mini-flip-back p{
-      font-size: 13px;
-      line-height: 1.45;
-      overflow-wrap: break-word;
-      padding: 0 4px 8px;
-    }
-    .mini-flip-face .mini-label{
-      font-size: 9.5px;
-      letter-spacing: 0.08em;
-      padding: 10px 6px 12px;
     }
     .mini-flip-card.is-selected .mini-flip-back{
       box-shadow: 0 0 22px rgba(201,162,78,0.55), 0 16px 30px -14px var(--shadow);
@@ -2171,54 +2220,73 @@
 
   /* ============================================================
      CARD TEXT ON NARROW PHONES (480px and below)
-     All the writing that sits directly ON the flipping cards (the
-     Daily Guidance message, the "Tap to Reveal" hint, and the 3-Card
-     Spread labels, positions and readings) scales down to a crisp,
-     elegant 11px with a 1.3 line-height and tight, neat padding, so it
-     always fits inside the golden borders without touching the edges.
-     This block sits AFTER the 560px block on purpose, so on the
-     narrowest screens these values win.
+     The writing on the tarot cards is set at a crisp size with neat,
+     tight padding. The three spread cards get a little extra width
+     here (the premium panel's side padding is trimmed on narrow
+     phones only), so their readings have as much room as possible.
+     Readings never scroll: if one is still too long, the script
+     shrinks the text just enough to fit, and keeps Past, Present and
+     Path Ahead at exactly the same size. This block sits AFTER the
+     560px block on purpose, so on the narrowest screens it wins.
      ============================================================ */
   @media (max-width: 480px){
-    /* main Daily Guidance card */
+    /* a little more room for the spread cards */
+    #premium{
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    #premium .premium-panel{
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+    .spread-grid{
+      gap: 6px;
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+
+    /* big Daily Guidance card */
     .flip-back{
-      padding: 18px 16px;
+      padding: 14% 10%;
     }
     #affirmationText{
-      font-size: 11px;
-      line-height: 1.3;
-      padding: 0 4px;
+      font-size: 15px;
+      line-height: 1.45;
     }
-    .flip-front .card-hint-static{
+    .flip-front .tarot-name{
       font-size: 11px;
-      line-height: 1.3;
       letter-spacing: 0.16em;
-      padding: 14px 10px 12px;
+    }
+    .card-emblem-wrap{
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
     }
 
-    /* 3-Card Spread: front labels */
-    .mini-flip-face .mini-label{
-      font-size: 11px;
-      line-height: 1.3;
-      letter-spacing: 0.05em;
-      padding: 8px 5px 10px;
+    /* 3-Card Spread fronts: number and name plate */
+    .mini-flip-front .tarot-numeral{
+      font-size: 10px;
+    }
+    .mini-flip-front .tarot-name{
+      font-size: 9.5px;
+      letter-spacing: 0.07em;
     }
 
-    /* 3-Card Spread: backs (position title + reading) */
+    /* 3-Card Spread backs: title and reading */
     .mini-flip-back{
-      padding: 10px 6px 8px;
+      padding: 13% 8% 9%;
     }
     .mini-flip-back .mini-position{
-      font-size: 11px;
-      line-height: 1.3;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
+      font-size: 9.5px;
+      letter-spacing: 0.07em;
+    }
+    .mini-flip-back .tarot-divider{
+      margin: 4px 0 5px;
+      font-size: 8px;
     }
     .mini-flip-back p{
       font-size: 11px;
       line-height: 1.3;
-      overflow-wrap: break-word;
-      padding: 0 3px 6px;
     }
   }
 
@@ -2607,8 +2675,11 @@
     <div class="flip-container" id="flipContainer">
       <div class="flip-card" id="flipCard" role="button" tabindex="0" aria-label="Tap to reveal your daily guidance card">
         <div class="flip-face flip-front">
-          <img class="cat-full-bleed" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="The Crystal Compass — tap to reveal your card">
-          <span class="card-hint-static">Tap to Reveal</span>
+          <span class="tarot-numeral" aria-hidden="true">&#10022;</span>
+          <div class="tarot-art">
+            <img class="cat-full-bleed" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="The Crystal Compass — tap to reveal your card">
+          </div>
+          <span class="tarot-name">Tap to Reveal</span>
         </div>
         <div class="flip-face flip-back">
           <div class="card-emblem-wrap">
@@ -2689,11 +2760,15 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Past card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
-                  <span class="mini-label">Past</span>
+                  <span class="tarot-numeral" aria-hidden="true">I</span>
+                  <div class="tarot-art">
+                    <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
+                  </div>
+                  <span class="tarot-name">Past</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
                   <span class="mini-position">Past</span>
+                  <span class="tarot-divider" aria-hidden="true">&#10022;</span>
                   <p class="mini-affirmation">&mdash;</p>
                 </div>
               </div>
@@ -2701,11 +2776,15 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Present card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
-                  <span class="mini-label">Present</span>
+                  <span class="tarot-numeral" aria-hidden="true">II</span>
+                  <div class="tarot-art">
+                    <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
+                  </div>
+                  <span class="tarot-name">Present</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
                   <span class="mini-position">Present</span>
+                  <span class="tarot-divider" aria-hidden="true">&#10022;</span>
                   <p class="mini-affirmation">&mdash;</p>
                 </div>
               </div>
@@ -2713,11 +2792,15 @@
             <div class="mini-flip-container">
               <div class="mini-flip-card" role="button" tabindex="0" aria-label="Tap to reveal your Path Ahead card">
                 <div class="mini-flip-face mini-flip-front">
-                  <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
-                  <span class="mini-label">Path Ahead</span>
+                  <span class="tarot-numeral" aria-hidden="true">III</span>
+                  <div class="tarot-art">
+                    <img class="mini-back-img" src="https://i.postimg.cc/13fbD785/(Upload-from-mobile-1792594743)AC905B94-78CC-4EFC-A651-63A6D132071A.png" alt="">
+                  </div>
+                  <span class="tarot-name">Path Ahead</span>
                 </div>
                 <div class="mini-flip-face mini-flip-back">
                   <span class="mini-position">Path Ahead</span>
+                  <span class="tarot-divider" aria-hidden="true">&#10022;</span>
                   <p class="mini-affirmation">&mdash;</p>
                 </div>
               </div>
@@ -3091,6 +3174,98 @@
 <script>
 (function(){
   "use strict";
+
+  /* ----------------------------------------------------------
+     CARD TEXT FITTING — no scrolling on any tarot card.
+     Each piece of writing on a card starts at its normal size (set in
+     the CSS). If it doesn't fit inside the card's golden frame, it is
+     shrunk a tiny step at a time until every word fits. For the three
+     spread cards, all three are then set to the same size, so Past,
+     Present and Path Ahead always match each other.
+     ---------------------------------------------------------- */
+  function fitTextToBox(el, minPx){
+    if(!el) return 0;
+    el.style.fontSize = "";
+    if(!el.clientWidth) return 0;                 // not on the page yet (e.g. premium still locked)
+    var size = parseFloat(window.getComputedStyle(el).fontSize) || 12;
+    var guard = 0;
+    while((el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && size > minPx && guard < 80){
+      size -= 0.25;
+      el.style.fontSize = size + "px";
+      guard++;
+    }
+    return size;
+  }
+
+  function fitTextGroup(list, minPx){
+    var els = Array.prototype.slice.call(list);
+    var smallest = Infinity;
+    els.forEach(function(el){
+      var size = fitTextToBox(el, minPx);
+      if(size && size < smallest) smallest = size;
+    });
+    if(smallest === Infinity) return;
+    els.forEach(function(el){ el.style.fontSize = smallest + "px"; });
+  }
+
+  /* PICTURE FITTING — every tarot card's picture window is set to the
+     artwork's own shape, so the full picture always fits the card:
+     never cropped, never squashed, never surrounded by empty gaps.
+     The window is as wide as the card allows, and never taller than
+     74% of the card's inside, so the symbol at the top and the name
+     plate at the bottom always keep their room. */
+  function sizeArtWindows(){
+    var windows = document.querySelectorAll(".tarot-art");
+    for(var i = 0; i < windows.length; i++){
+      var win = windows[i];
+      var img = win.querySelector("img");
+      var face = win.parentElement;
+      if(!img || !img.naturalWidth || !img.naturalHeight || !face || !face.clientWidth) continue;
+      var ratio = img.naturalWidth / img.naturalHeight;
+      var cs = window.getComputedStyle(face);
+      var innerW = face.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      var innerH = face.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      var maxH = innerH * 0.74;
+      var w = innerW;
+      var h = w / ratio;
+      if(h > maxH){
+        h = maxH;
+        w = h * ratio;
+      }
+      win.style.aspectRatio = "auto";
+      win.style.width = w.toFixed(2) + "px";
+      win.style.height = h.toFixed(2) + "px";
+    }
+  }
+
+  function fitAllCardText(){
+    sizeArtWindows();
+    fitTextToBox(document.getElementById("affirmationText"), 11);
+    fitTextGroup(document.querySelectorAll(".flip-front .tarot-name"), 8);
+    fitTextGroup(document.querySelectorAll(".mini-flip-front .tarot-name"), 7);
+    fitTextGroup(document.querySelectorAll(".mini-flip-back .mini-position"), 7);
+    fitTextGroup(document.querySelectorAll(".mini-flip-back .mini-affirmation"), 7.5);
+  }
+
+  var cardFitTimer = null;
+  function refitCardTextSoon(){
+    clearTimeout(cardFitTimer);
+    cardFitTimer = setTimeout(fitAllCardText, 150);
+  }
+  window.addEventListener("resize", refitCardTextSoon);
+  window.addEventListener("orientationchange", refitCardTextSoon);
+  window.addEventListener("load", refitCardTextSoon);
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(refitCardTextSoon);
+  }
+  // re-fit each card the moment its picture finishes loading
+  Array.prototype.forEach.call(document.querySelectorAll(".tarot-art img"), function(img){
+    if(img.complete && img.naturalWidth){
+      refitCardTextSoon();
+    } else {
+      img.addEventListener("load", refitCardTextSoon);
+    }
+  });
 
   /* ----------------------------------------------------------
      0. DAILY SYNCHRONICITY — angel number rotates by day of month.
@@ -3699,6 +3874,7 @@
   function revealCard(){
     if(!flipCard.classList.contains("flipped")){
       affirmationText.textContent = buildGuidanceCard(pendingGuidance);
+      fitTextToBox(affirmationText, 11);
       flipCard.classList.add("flipped");
     }
   }
@@ -3717,6 +3893,7 @@
       pendingGuidance = randomGuidanceParts();
       setTimeout(function(){
         affirmationText.textContent = buildGuidanceCard(pendingGuidance);
+        fitTextToBox(affirmationText, 11);
       }, 480);
     } else {
       revealCard();
@@ -4067,9 +4244,18 @@
   var premiumFeaturesObserver = new MutationObserver(function(){
     if(!premiumFeatures.hidden){
       fillSpreadOnce();
+      fitAllCardText();
+      // once more on the next frame, after the reveal has settled
+      requestAnimationFrame(fitAllCardText);
     }
   });
   premiumFeaturesObserver.observe(premiumFeatures, { attributes: true, attributeFilter: ["hidden"] });
+  // if the premium area is already open when the page loads (the dev
+  // testing toggle), fill and fit the spread straight away too
+  if(!premiumFeatures.hidden){
+    fillSpreadOnce();
+    requestAnimationFrame(fitAllCardText);
+  }
 
   /* ----------------------------------------------------------
      4. CRYSTAL ENCYCLOPEDIA — compact data-driven grid + search
