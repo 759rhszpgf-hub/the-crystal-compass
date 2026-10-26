@@ -1873,7 +1873,220 @@
   }
 
   /* ============================================================
-     PREMIUM MANIFESTATION RITUALS — luxury scrolling guide
+     CHAKRA CRYSTAL GUIDE (premium)
+     The seven chakras sit down a softly glowing rainbow thread, from
+     Crown at the top to Root at the bottom. Tapping one opens its card
+     with where it sits, its theme, an affirmation and its crystals
+     (each crystal links to Etsy, like the Birth Chart).
+     Each chakra's colour comes from the script as --chakra-color, with
+     a matching soft glow as --chakra-glow.
+     ============================================================ */
+  .chakra-column{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  /* the glowing rainbow thread joining the seven chakras */
+  .chakra-column::before{
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom, #A970E8, #5B6BE0, #4FB3E8, #5CCB7A, #F2CF4A, #F29A3E, #E04848);
+    opacity: 0.6;
+    box-shadow: 0 0 10px rgba(201,162,78,0.35);
+    z-index: 0;
+  }
+  .chakra-point{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(23,22,26,0.82);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    color: var(--ink-muted);
+    text-align: left;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease, background 0.25s ease;
+  }
+  .chakra-point:hover,
+  .chakra-point:focus-visible{
+    border-color: var(--chakra-color);
+    box-shadow: 0 0 16px var(--chakra-glow);
+    transform: translateX(2px);
+  }
+  .chakra-point.active{
+    border-color: var(--chakra-color);
+    background: rgba(30,29,34,0.95);
+    box-shadow: 0 0 22px var(--chakra-glow);
+  }
+  .chakra-orb{
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, var(--chakra-color) 45%, rgba(0,0,0,0.35) 100%);
+    box-shadow: 0 0 12px var(--chakra-color);
+    animation: chakra-pulse 3.4s ease-in-out infinite;
+  }
+  @keyframes chakra-pulse{
+    0%, 100%{ box-shadow: 0 0 8px var(--chakra-color); }
+    50%{      box-shadow: 0 0 18px var(--chakra-color); }
+  }
+  .chakra-text{ min-width: 0; }
+  .chakra-text strong{
+    display: block;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .chakra-text span{
+    display: block;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--ink-muted);
+  }
+  .chakra-point.active .chakra-text strong{ color: var(--gold-bright); }
+
+  /* the chakra's card, opened by tapping a chakra */
+  .chakra-detail{
+    margin-top: 18px;
+    padding: 22px 20px 18px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--chakra-color, var(--gold));
+    background: linear-gradient(165deg, #201a34, #0c0a1f);
+    box-shadow: 0 0 40px var(--chakra-glow, rgba(155,127,212,0.2)), 0 20px 50px -20px var(--shadow);
+    animation: reveal-in 0.5s ease;
+  }
+  .chakra-detail[hidden]{ display: none; }
+  .chakra-detail-head{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .chakra-detail-head .chakra-orb{
+    width: 44px;
+    height: 44px;
+  }
+  .chakra-detail-name{
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.2;
+    color: var(--gold-bright);
+  }
+  .chakra-detail-meta{
+    margin-top: 3px;
+    font-size: 10.5px;
+    line-height: 1.4;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .chakra-detail-theme{
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .chakra-detail-desc{
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+  }
+  .chakra-affirmation{
+    margin: 16px 0 18px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-soft);
+    background: rgba(11,9,18,0.45);
+    text-align: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--gold-bright);
+  }
+  .chakra-crystals-label{
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .chakra-crystals{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (min-width: 768px){
+    .chakra-crystals{ grid-template-columns: repeat(3, 1fr); }
+  }
+  .chakra-crystal{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 9px 10px;
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .chakra-crystal:hover,
+  .chakra-crystal:focus-visible{
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(201,162,78,0.3);
+  }
+  .chakra-gem{
+    flex: none;
+    width: 16px;
+    height: 20px;
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    background: linear-gradient(160deg, var(--gem-light), var(--gem-dark));
+    box-shadow: 0 0 8px var(--gem-light);
+  }
+  .chakra-crystal-name{
+    min-width: 0;
+    flex: 1;
+    font-family: var(--serif);
+    font-size: 12.5px;
+    line-height: 1.25;
+    color: var(--ink);
+    overflow-wrap: break-word;
+  }
+  .chakra-crystal-link{
+    flex: none;
+    font-size: 11px;
+    color: var(--gold-bright);
+  }
+  /* on narrow phones the little arrow is hidden, so even the longest
+     crystal names (like Rhodochrosite) fit on one line without breaking */
+  @media (max-width: 480px){
+    .chakra-crystal{ gap: 8px; padding: 9px 9px; }
+    .chakra-crystal-link{ display: none; }
+  }
+  .chakra-note{
+    margin-top: 14px;
+    text-align: center;
+    font-size: 11.5px;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  /* ============================================================
+     MANIFESTATION RITUALS (free) — luxury scrolling guide
      ============================================================ */
   .ritual-scroll{
     max-height: 360px;
@@ -2602,7 +2815,7 @@
 
         <button type="button" class="premium-tip-btn" id="journalUpsellBtn">
           <span class="amethyst-icon" aria-hidden="true"></span>
-          Unlock Premium Manifestation Rituals
+          Unlock Your Chakra Crystal Guide
           <span class="lock-glyph" aria-hidden="true">&#128274;</span>
         </button>
       </div>
@@ -2639,7 +2852,70 @@
   </section>
 
   <!-- ============================================================
-       3. PREMIUM UPSELL
+       3. MANIFESTATION RITUALS (free for everyone)
+       ============================================================ -->
+  <section class="section" id="rituals">
+    <div class="section-head">
+      <p class="eyebrow">Step three</p>
+      <h2>Manifestation Rituals</h2>
+      <p class="section-sub">Seven crystal practices to turn your intentions into ritual. Scroll to explore.</p>
+    </div>
+    <div class="ritual-scroll" tabindex="0" role="region" aria-label="Manifestation Rituals guide">
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">I</span>
+        <div class="ritual-body">
+          <h4>Cleanse &amp; Centre</h4>
+          <p>Begin by clearing your space and your stone. Pass your crystal through gentle smoke, moonlight or a soft sweep of selenite, then sit quietly and take five slow breaths until your thoughts settle.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">II</span>
+        <div class="ritual-body">
+          <h4>Choose Your Stone with Intention</h4>
+          <p>Let your crystal match your purpose: citrine for abundance, rose quartz for love, amethyst for peace, tiger's eye for courage. Hold it in both hands and ask which quality you most wish to invite in.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">III</span>
+        <div class="ritual-body">
+          <h4>Write Your Intention in the Present Tense</h4>
+          <p>Phrase your intention as though it is already unfolding. Say &ldquo;I am calm and clear&rdquo; rather than &ldquo;I want to be calm.&rdquo; Keep it short, warm and specific, and speak it aloud while holding your stone.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">IV</span>
+        <div class="ritual-body">
+          <h4>The Golden Light Visualisation</h4>
+          <p>Close your eyes and picture a soft golden light gathering inside your crystal. See it rise through your hands and fill your heart, with your intention glowing at its centre. Linger for two or three minutes, letting yourself feel it as already true.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">V</span>
+        <div class="ritual-body">
+          <h4>Crystal Meditation</h4>
+          <p>Rest your stone over your heart or in your open palm. Breathe in for four counts and out for six, silently repeating your intention on each exhale. When your mind wanders, return gently to the weight and warmth of the crystal.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">VI</span>
+        <div class="ritual-body">
+          <h4>The Gratitude Seal</h4>
+          <p>Close your ritual with thanks. Name three things you are grateful for as if they were already here, then touch the crystal to your heart and say &ldquo;thank you&rdquo; to seal your intention with appreciation.</p>
+        </div>
+      </div>
+      <div class="ritual-item">
+        <span class="ritual-num" aria-hidden="true">VII</span>
+        <div class="ritual-body">
+          <h4>Keep It Close &amp; Return Daily</h4>
+          <p>Carry your stone in a pocket, or place it where you will see it each morning. Touch it whenever you need a reminder, and revisit your intention for a few quiet breaths each day, letting your ritual deepen with repetition.</p>
+        </div>
+      </div>
+      <p class="ritual-note">Offered for reflection and relaxation.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. PREMIUM UPSELL
        ============================================================ -->
   <section class="section premium-block" id="premium">
     <div class="premium-panel">
@@ -2658,7 +2934,7 @@
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
-          <span><strong>Premium Manifestation Rituals</strong>Guided crystal visualisation, intention-setting and meditation practices for your daily ritual.</span>
+          <span><strong>Chakra Crystal Guide</strong>Explore your seven chakras, their meanings and affirmations, and the crystals that support each one.</span>
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
@@ -2939,60 +3215,10 @@
         </div>
 
         <div class="premium-feature-block">
-          <h3>Premium Manifestation Rituals</h3>
-          <p class="feature-sub">Seven crystal practices to turn your intentions into ritual. Scroll to explore.</p>
-          <div class="ritual-scroll" tabindex="0" role="region" aria-label="Premium Manifestation Rituals guide">
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">I</span>
-              <div class="ritual-body">
-                <h4>Cleanse &amp; Centre</h4>
-                <p>Begin by clearing your space and your stone. Pass your crystal through gentle smoke, moonlight or a soft sweep of selenite, then sit quietly and take five slow breaths until your thoughts settle.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">II</span>
-              <div class="ritual-body">
-                <h4>Choose Your Stone with Intention</h4>
-                <p>Let your crystal match your purpose: citrine for abundance, rose quartz for love, amethyst for peace, tiger's eye for courage. Hold it in both hands and ask which quality you most wish to invite in.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">III</span>
-              <div class="ritual-body">
-                <h4>Write Your Intention in the Present Tense</h4>
-                <p>Phrase your intention as though it is already unfolding. Say &ldquo;I am calm and clear&rdquo; rather than &ldquo;I want to be calm.&rdquo; Keep it short, warm and specific, and speak it aloud while holding your stone.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">IV</span>
-              <div class="ritual-body">
-                <h4>The Golden Light Visualisation</h4>
-                <p>Close your eyes and picture a soft golden light gathering inside your crystal. See it rise through your hands and fill your heart, with your intention glowing at its centre. Linger for two or three minutes, letting yourself feel it as already true.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">V</span>
-              <div class="ritual-body">
-                <h4>Crystal Meditation</h4>
-                <p>Rest your stone over your heart or in your open palm. Breathe in for four counts and out for six, silently repeating your intention on each exhale. When your mind wanders, return gently to the weight and warmth of the crystal.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">VI</span>
-              <div class="ritual-body">
-                <h4>The Gratitude Seal</h4>
-                <p>Close your ritual with thanks. Name three things you are grateful for as if they were already here, then touch the crystal to your heart and say &ldquo;thank you&rdquo; to seal your intention with appreciation.</p>
-              </div>
-            </div>
-            <div class="ritual-item">
-              <span class="ritual-num" aria-hidden="true">VII</span>
-              <div class="ritual-body">
-                <h4>Keep It Close &amp; Return Daily</h4>
-                <p>Carry your stone in a pocket, or place it where you will see it each morning. Touch it whenever you need a reminder, and revisit your intention for a few quiet breaths each day, letting your ritual deepen with repetition.</p>
-              </div>
-            </div>
-            <p class="ritual-note">Offered for reflection and relaxation.</p>
-          </div>
+          <h3>Chakra Crystal Guide</h3>
+          <p class="feature-sub">Tap a chakra to explore its meaning, its affirmation and the crystals that support it.</p>
+          <div class="chakra-column" id="chakraColumn" role="group" aria-label="The seven chakras"></div>
+          <div class="chakra-detail" id="chakraDetail" aria-live="polite" hidden></div>
         </div>
       </div>
 
@@ -3106,7 +3332,7 @@
     <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">&#10005;</button>
     <div class="modal-icon" aria-hidden="true"></div>
     <h3 id="upgradeModalTitle">This is a Premium Feature</h3>
-    <p>Your Premium Manifestation Rituals &mdash; guided crystal visualisation and meditation practices &mdash; unlock with The Full Reading membership.</p>
+    <p>Your Chakra Crystal Guide &mdash; the seven chakras, their affirmations and the crystals that support each one &mdash; unlocks with The Full Reading membership.</p>
     <button type="button" class="btn-premium" id="modalUpgradeCta">See Premium Plans</button>
   </div>
 </div>
@@ -3853,7 +4079,7 @@
       isUnlocked = true;
 
       // 3. the instant the timer ends: hide the spinner/paywall block,
-      //    and reveal the 3-Card Spread, Premium Manifestation Rituals
+      //    and reveal the 3-Card Spread, Chakra Crystal Guide
       //    (and the rest of the premium dashboards) together, at once
       paymentCta.hidden = true;
 
@@ -4753,6 +4979,163 @@
   if(astroSelect && astroResult){
     astroSelect.addEventListener("change", function(){
       renderAstroChart(astroSelect.value);
+    });
+  }
+
+  /* ----------------------------------------------------------
+     7b. CHAKRA CRYSTAL GUIDE (premium)
+     The seven chakras from Crown to Root. Each one has its colour,
+     traditional Sanskrit name, where it sits in the body, its theme, a
+     short description, an affirmation, and its crystals. The crystal
+     names come straight from the crystal database above, so each one
+     shows its own gem colour and links to Etsy. To change a chakra's
+     crystals, just edit the names in its "crystals" list (they must
+     match a name in the crystal database exactly).
+     ---------------------------------------------------------- */
+  var CHAKRAS = [
+    {
+      name: "Crown Chakra", sanskrit: "Sahasrara", location: "Top of the head", color: "#A970E8",
+      theme: "Spiritual connection & peace",
+      desc: "The Crown is linked with your sense of connection to something greater than yourself. When it feels open, life can feel meaningful, peaceful and quietly guided.",
+      affirmation: "I am connected to something greater, and I am at peace.",
+      crystals: ["Amethyst", "Selenite", "Clear Quartz", "Moonstone", "Labradorite", "Danburite"]
+    },
+    {
+      name: "Third Eye Chakra", sanskrit: "Ajna", location: "Between the brows", color: "#5B6BE0",
+      theme: "Intuition & insight",
+      desc: "The Third Eye is linked with intuition, imagination and inner vision. When it feels clear, you can trust your inner knowing and see your path more easily.",
+      affirmation: "I trust my intuition and see my path clearly.",
+      crystals: ["Lapis Lazuli", "Sodalite", "Iolite", "Sapphire", "Azurite", "Tanzanite"]
+    },
+    {
+      name: "Throat Chakra", sanskrit: "Vishuddha", location: "Throat", color: "#4FB3E8",
+      theme: "Truth & expression",
+      desc: "The Throat is linked with communication and honest self-expression. When it feels balanced, your words flow with ease, clarity and kindness.",
+      affirmation: "I speak my truth with ease and kindness.",
+      crystals: ["Blue Lace Agate", "Angelite", "Turquoise", "Amazonite", "Kyanite", "Aquamarine"]
+    },
+    {
+      name: "Heart Chakra", sanskrit: "Anahata", location: "Centre of the chest", color: "#5CCB7A",
+      theme: "Love & compassion",
+      desc: "The Heart is linked with love, compassion and forgiveness, for others and for yourself. When it feels open, giving and receiving love comes naturally.",
+      affirmation: "I give and receive love freely.",
+      crystals: ["Rose Quartz", "Green Aventurine", "Rhodochrosite", "Rhodonite", "Malachite", "Unakite"]
+    },
+    {
+      name: "Solar Plexus Chakra", sanskrit: "Manipura", location: "Upper abdomen", color: "#F2CF4A",
+      theme: "Confidence & personal power",
+      desc: "The Solar Plexus is linked with confidence, willpower and purpose. When it feels strong, you act with courage and follow through on what matters to you.",
+      affirmation: "I am confident, capable and standing in my power.",
+      crystals: ["Citrine", "Tiger's Eye", "Amber", "Honey Calcite", "Imperial Topaz", "Pyrite"]
+    },
+    {
+      name: "Sacral Chakra", sanskrit: "Svadhisthana", location: "Lower abdomen, below the navel", color: "#F29A3E",
+      theme: "Creativity & emotion",
+      desc: "The Sacral is linked with creativity, emotion and joy. When it flows freely, you feel playful, inspired and at home in your feelings.",
+      affirmation: "I welcome joy, creativity and pleasure into my life.",
+      crystals: ["Carnelian", "Orange Calcite", "Sunstone", "Tangerine Quartz", "Fire Agate"]
+    },
+    {
+      name: "Root Chakra", sanskrit: "Muladhara", location: "Base of the spine", color: "#E04848",
+      theme: "Safety & grounding",
+      desc: "The Root is linked with safety, stability and feeling grounded. When it feels steady, you feel secure, supported and calm in your body.",
+      affirmation: "I am safe, grounded and supported.",
+      crystals: ["Smoky Quartz", "Red Jasper", "Black Tourmaline", "Obsidian", "Jet", "Hematite"]
+    }
+  ];
+
+  var chakraColumn = document.getElementById("chakraColumn");
+  var chakraDetail = document.getElementById("chakraDetail");
+
+  function setChakraColours(el, chakra){
+    el.style.setProperty("--chakra-color", chakra.color);
+    el.style.setProperty("--chakra-glow", hexToRgba(chakra.color, 0.45));
+  }
+
+  function makeChakraOrb(chakra, delay){
+    var orb = makeAstroEl("span", "chakra-orb");
+    orb.setAttribute("aria-hidden", "true");
+    setChakraColours(orb, chakra);
+    if(delay) orb.style.animationDelay = delay;
+    return orb;
+  }
+
+  function showChakra(index){
+    var chakra = CHAKRAS[index];
+    if(!chakra || !chakraDetail) return;
+
+    var points = chakraColumn.querySelectorAll(".chakra-point");
+    for(var i = 0; i < points.length; i++){
+      var on = (i === index);
+      points[i].classList.toggle("active", on);
+      points[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+
+    chakraDetail.innerHTML = "";
+    setChakraColours(chakraDetail, chakra);
+
+    var head = makeAstroEl("div", "chakra-detail-head");
+    head.appendChild(makeChakraOrb(chakra));
+    var headText = makeAstroEl("div");
+    headText.appendChild(makeAstroEl("p", "chakra-detail-name", chakra.name));
+    headText.appendChild(makeAstroEl("p", "chakra-detail-meta", chakra.sanskrit + " \u00B7 " + chakra.location));
+    head.appendChild(headText);
+    chakraDetail.appendChild(head);
+
+    chakraDetail.appendChild(makeAstroEl("p", "chakra-detail-theme", chakra.theme));
+    chakraDetail.appendChild(makeAstroEl("p", "chakra-detail-desc", chakra.desc));
+    chakraDetail.appendChild(makeAstroEl("p", "chakra-affirmation", "\u201C" + chakra.affirmation + "\u201D"));
+    chakraDetail.appendChild(makeAstroEl("p", "chakra-crystals-label", "Crystals for this chakra"));
+
+    var grid = makeAstroEl("div", "chakra-crystals");
+    chakra.crystals.forEach(function(crystalName){
+      var crystal = findCrystalByName(crystalName);
+      if(!crystal) return;
+      var link = makeAstroEl("a", "chakra-crystal");
+      link.href = buildEtsyLink(crystal);
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", "Find " + crystal.name + " on Etsy");
+      var gem = makeAstroEl("span", "chakra-gem");
+      gem.setAttribute("aria-hidden", "true");
+      gem.style.setProperty("--gem-light", crystal.light);
+      gem.style.setProperty("--gem-dark", crystal.dark);
+      link.appendChild(gem);
+      link.appendChild(makeAstroEl("span", "chakra-crystal-name", crystal.name));
+      var arrow = makeAstroEl("span", "chakra-crystal-link", "\u2197");
+      arrow.setAttribute("aria-hidden", "true");
+      link.appendChild(arrow);
+      grid.appendChild(link);
+    });
+    chakraDetail.appendChild(grid);
+
+    chakraDetail.appendChild(makeAstroEl("p", "chakra-note", "Tap a crystal to find it on Etsy. Offered for reflection and relaxation."));
+
+    chakraDetail.hidden = false;
+    chakraDetail.style.animation = "none";
+    void chakraDetail.offsetWidth; // restart the reveal animation
+    chakraDetail.style.animation = "";
+
+    if(window.innerWidth <= 560){
+      setTimeout(function(){
+        chakraDetail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 120);
+    }
+  }
+
+  if(chakraColumn && chakraDetail){
+    CHAKRAS.forEach(function(chakra, index){
+      var btn = makeAstroEl("button", "chakra-point");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", "false");
+      setChakraColours(btn, chakra);
+      btn.appendChild(makeChakraOrb(chakra, (index * 0.35).toFixed(2) + "s"));
+      var text = makeAstroEl("span", "chakra-text");
+      text.appendChild(makeAstroEl("strong", null, chakra.name.replace(" Chakra", "")));
+      text.appendChild(makeAstroEl("span", null, chakra.theme));
+      btn.appendChild(text);
+      btn.addEventListener("click", function(){ showChakra(index); });
+      chakraColumn.appendChild(btn);
     });
   }
 
