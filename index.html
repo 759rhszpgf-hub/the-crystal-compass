@@ -1615,6 +1615,12 @@
     font-size: 11px;
   }
   .moon-date-row span:first-child{ color: var(--ink-muted); }
+  /* the Mercury row glows softly while Mercury is retrograde */
+  .moon-date-row.is-active{
+    border-color: rgba(201,162,78,0.6);
+    box-shadow: 0 0 14px rgba(201,162,78,0.3);
+  }
+  .moon-date-row.is-active span:first-child{ color: var(--ink); }
   .moon-date-row span:last-child{ color: var(--gold-bright); font-family: var(--serif); white-space: nowrap; }
 
   /* ============================================================
@@ -2777,7 +2783,7 @@
               <div class="moon-dates">
                 <div class="moon-date-row"><span>Next Full Moon</span><span id="moonNextFull">&hellip;</span></div>
                 <div class="moon-date-row"><span>Next New Moon</span><span id="moonNextNew">&hellip;</span></div>
-                <div class="moon-date-row"><span>Mercury Retrograde</span><span>Coming soon</span></div>
+                <div class="moon-date-row" id="mercuryRow"><span id="mercuryLabel">Mercury Retrograde</span><span id="mercuryStatus">&hellip;</span></div>
               </div>
             </div>
           </div>
@@ -4533,9 +4539,67 @@
     if(moonNextNewEl)  moonNextNewEl.textContent  = formatMoonDate(nextMoonPhaseDate(now, false));
   }
 
+  /* -- Mercury Retrograde tracker --
+     The published Mercury retrograde dates for 2026 to 2028. Each line
+     is [start, end] as year, month, day (both days included). While
+     today falls inside a period, the row shows "Retrograde now" with
+     the end date and glows softly; otherwise it shows when the next
+     one begins. To keep it going after 2028, simply add more lines in
+     the same format. */
+  var MERCURY_RETROGRADES = [
+    [[2026, 2, 26], [2026, 3, 20]],
+    [[2026, 6, 29], [2026, 7, 23]],
+    [[2026, 10, 24], [2026, 11, 13]],
+    [[2027, 2, 9], [2027, 3, 3]],
+    [[2027, 6, 10], [2027, 7, 4]],
+    [[2027, 10, 7], [2027, 10, 28]],
+    [[2028, 1, 24], [2028, 2, 14]],
+    [[2028, 5, 21], [2028, 6, 13]],
+    [[2028, 9, 19], [2028, 10, 11]]
+  ];
+
+  var mercuryRowEl = document.getElementById("mercuryRow");
+  var mercuryLabelEl = document.getElementById("mercuryLabel");
+  var mercuryStatusEl = document.getElementById("mercuryStatus");
+
+  function mercuryDate(parts){
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function updateMercuryTracker(){
+    if(!mercuryRowEl || !mercuryLabelEl || !mercuryStatusEl) return;
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    for(var i = 0; i < MERCURY_RETROGRADES.length; i++){
+      var start = mercuryDate(MERCURY_RETROGRADES[i][0]);
+      var end = mercuryDate(MERCURY_RETROGRADES[i][1]);
+      if(today >= start && today <= end){
+        mercuryLabelEl.textContent = "Mercury Retrograde";
+        mercuryStatusEl.textContent = "Now \u00B7 until " + formatMoonDate(end);
+        mercuryRowEl.classList.add("is-active");
+        return;
+      }
+      if(today < start){
+        mercuryLabelEl.textContent = "Next Mercury Retrograde";
+        mercuryStatusEl.textContent = formatMoonDate(start);
+        mercuryRowEl.classList.remove("is-active");
+        return;
+      }
+    }
+    // after the last date in the list
+    mercuryLabelEl.textContent = "Mercury Retrograde";
+    mercuryStatusEl.textContent = "Dates coming soon";
+    mercuryRowEl.classList.remove("is-active");
+  }
+
   updateMoonTracker();
-  // keep the readout fresh if the page is left open
-  setInterval(updateMoonTracker, 10 * 60 * 1000);
+  updateMercuryTracker();
+  // keep the readouts fresh if the page is left open
+  setInterval(function(){
+    updateMoonTracker();
+    updateMercuryTracker();
+  }, 10 * 60 * 1000);
 
 
   /* ----------------------------------------------------------
