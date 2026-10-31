@@ -110,6 +110,29 @@
   .page-starfield:not(.is-visible) .hero-star{
     animation-play-state: paused;
   }
+  /* BRIGHTER PAGE STARS — slightly bigger points with a stronger glow,
+     for the page sky only (the landing area's stars are unchanged).
+     Delete this block to go back to the original, softer stars. */
+  .page-starfield .hero-star-dust{
+    width: 1.5px;
+    height: 1.5px;
+    box-shadow: 0 0 3px var(--star-color, #fff6e0);
+  }
+  .page-starfield .hero-star-shimmer{
+    width: 2px;
+    height: 2px;
+    box-shadow: 0 0 5px var(--star-color, #fff6e0);
+  }
+  .page-starfield .hero-star-medium{
+    width: 2.5px;
+    height: 2.5px;
+    box-shadow: 0 0 6px var(--star-color, #fff6e0);
+  }
+  .page-starfield .hero-star-jewel{
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 5px var(--star-color, #fff6e0), 0 0 12px rgba(234,200,120,0.7);
+  }
 
   /* ============================================================
      LAYOUT SHELL
@@ -5676,16 +5699,23 @@
        PAGE_SKY_SIDE_MARGIN  clear space on each side (0.12 = 12%)
        PAGE_STAR_LAYERS      how many stars of each size
        PAGE_DIAMONDS         how many signature compass diamonds
+       PAGE_STAR_BRIGHTNESS  how bright the stars are (1 = normal)
+
+     TO GO BACK TO THE ORIGINAL, SOFTER SKY
+       set the counts to dust 40, shimmer 10, medium 8, jewel 8,
+       PAGE_DIAMONDS to 4 and PAGE_STAR_BRIGHTNESS to 1, and delete the
+       "brighter page stars" CSS block (search for "BRIGHTER PAGE STARS").
      ---------------------------------------------------------- */
   var pageStarfield = document.getElementById("pageStarfield");
   if(pageStarfield){
     var PAGE_SKY_SIDE_MARGIN = 0.12;
-    var PAGE_DIAMONDS = 4;
+    var PAGE_DIAMONDS = 6;          // was 4
+    var PAGE_STAR_BRIGHTNESS = 1.35; // was 1 (each star's twinkle is capped at fully bright)
     var PAGE_STAR_LAYERS = [
-      { type: "dust",    count: 40, colors: ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"] },
-      { type: "shimmer", count: 10, colors: ["#FFF6E0", "#FFFFFF", "#F4E3B0", "#E3D4FF"] },
-      { type: "medium",  count: 8,  colors: ["#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"] },
-      { type: "jewel",   count: 8,  colors: ["#FFF6E0", "#FFFFFF", "#EAC878", "#E3D4FF"] }
+      { type: "dust",    count: 70, colors: ["#FFF6E0", "#FFF6E0", "#FFFFFF", "#E3D4FF", "#EAC878"] },   // was 40
+      { type: "shimmer", count: 18, colors: ["#FFF6E0", "#FFFFFF", "#F4E3B0", "#E3D4FF"] },              // was 10
+      { type: "medium",  count: 14, colors: ["#FFF6E0", "#EAC878", "#F4E3B0", "#E3D4FF"] },              // was 8
+      { type: "jewel",   count: 16, colors: ["#FFF6E0", "#FFFFFF", "#EAC878", "#E3D4FF"] }               // was 8
     ];
     var PAGE_DIAMOND_PATH = "M4,0 L5,3 L8,4 L5,5 L4,8 L3,5 L0,4 L3,3 Z";
     var PAGE_DIAMOND_COLORS = ["#FFF6E0", "#FFF6E0", "#E3D4FF"];
@@ -5711,6 +5741,7 @@
         else if(type === "dust") peak = 0.2 + 0.45 * Math.random();
         else if(type === "jewel") peak = 0.45 + 0.5 * Math.random();
         else peak = 0.3 + 0.5 * Math.random();
+        peak = Math.min(1, peak * PAGE_STAR_BRIGHTNESS);
         star.style.setProperty("--peak", peak.toFixed(2));
         star.style.animationDuration = duration.toFixed(2) + "s";
         // start part-way through, so the sky is already twinkling
