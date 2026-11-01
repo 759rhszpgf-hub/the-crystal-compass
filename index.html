@@ -2286,6 +2286,18 @@
   /* a closed pop-up is fully removed from the page, so its full-screen
      frosted-glass blur doesn't sit invisibly in phone memory */
   .legal-modal-overlay[hidden]{ display: none; }
+  /* on phones and tablets, the pop-ups use a deeper solid shade
+     instead of a live frosted-glass blur. A full-screen blur is one of
+     the heaviest things an iPhone can be asked to draw, and dropping
+     it helps stop the phone needing to reload the page */
+  @media (max-width: 1024px), (hover: none){
+    .modal-overlay,
+    .legal-modal-overlay{
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      background: rgba(8,6,14,0.9);
+    }
+  }
   .legal-modal-overlay.is-open{
     opacity: 1;
     visibility: visible;
@@ -3326,6 +3338,7 @@
 
       <h4>4. Cookies and Tracking</h4>
       <p>We do not use advertising cookies or trackers to follow you around the web. Third-party services you choose to use, such as our payment provider, or Etsy when you follow a crystal link, may use their own cookies under their own privacy policies.</p>
+      <p>To keep The Full Reading open while you explore, the App places a small note in your browser's own temporary storage on your device saying that your premium area is unlocked. This note is never sent to us and is cleared when you close the tab.</p>
 
       <h4>5. Your Rights (UK &amp; GDPR compliance)</h4>
       <p>You have full control over your information. Because we hold no personal data about you beyond any messages you send us, there is usually nothing to access or delete. At any time, you have the right to:</p>
@@ -4113,7 +4126,25 @@
   // Change back to false before this goes live for real users!
   // ================================================================
   var DEV_START_UNLOCKED = false;
-  if(DEV_START_UNLOCKED){
+
+  /* REMEMBER THE UNLOCK FOR THIS VISIT
+     iPhones and iPads sometimes quietly reload a long, animated page in
+     the background to free up memory (most often when the visitor
+     taps around, opens a pop-up, or comes back from another tab). The
+     unlock used to live only in the page's short-term memory, so a
+     quiet reload locked The Full Reading again. Now the unlock is also
+     noted in the browser's own temporary storage for this tab, so if
+     the page reloads, premium stays open. Nothing is sent anywhere,
+     and the note is cleared when the tab is closed. */
+  var UNLOCK_KEY = "crystalCompassUnlocked";
+  function rememberUnlock(){
+    try{ window.sessionStorage.setItem(UNLOCK_KEY, "1"); }catch(e){ /* storage blocked: carry on */ }
+  }
+  function wasUnlockedThisVisit(){
+    try{ return window.sessionStorage.getItem(UNLOCK_KEY) === "1"; }catch(e){ return false; }
+  }
+
+  if(DEV_START_UNLOCKED || wasUnlockedThisVisit()){
     isUnlocked = true;
     premiumBtn.textContent = "\u2713 Full Reading Unlocked";
     premiumBtn.disabled = true;
@@ -4130,8 +4161,10 @@
     premiumNote.textContent = "";
 
     setTimeout(function(){
-      // 2. mock payment success — flip the central state
+      // 2. mock payment success — flip the central state, and remember
+      //    it for this visit in case the phone quietly reloads the page
       isUnlocked = true;
+      rememberUnlock();
 
       // 3. the instant the timer ends: hide the spinner/paywall block,
       //    and reveal the 3-Card Spread, Chakra Crystal Guide
