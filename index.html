@@ -2590,23 +2590,13 @@
   .sg-turn{
     transform-box: view-box;
     transform-origin: 50% 50%;
-    animation: sg-turn 120s linear 3s infinite;   /* starts once the drawing has finished */
+    /* one full turn every 30 seconds (was 120), starting once the
+       drawing has finished. Change 30s to make it faster or slower */
+    animation: sg-turn 30s linear 3s infinite;
   }
   @keyframes sg-turn{
     from{ transform: rotate(0deg); }
     to{   transform: rotate(360deg); }
-  }
-  /* the Vesica Piscis and Golden Spiral are not round in shape, so
-     turning made them look as if they were slowly tipping over.
-     Instead, they stay upright and gently breathe with a soft glow */
-  .sg-breathe{
-    transform-box: view-box;
-    transform-origin: 50% 50%;
-    animation: sg-breathe 6s ease-in-out 3s infinite;
-  }
-  @keyframes sg-breathe{
-    0%, 100%{ transform: scale(1);     opacity: 0.88; }
-    50%{      transform: scale(1.035); opacity: 1;    }
   }
   /* each line fades in, one after another, so the symbol
      appears to draw itself in gold */
@@ -5916,7 +5906,7 @@
 
   var SACRED_SYMBOLS = [
     {
-      key: "vesica", still: true, name: "Vesica Piscis", aka: "The womb of creation",
+      key: "vesica", name: "Vesica Piscis", aka: "The womb of creation",
       meaning: "Two circles, each passing through the other's centre. The almond shape where they overlap has long symbolised union, birth and the meeting place of two worlds, the point where something new begins.",
       practice: "Rest your gaze on the shared centre and hold an intention for a relationship or a creative project you wish to bring to life.",
       crystals: ["Rose Quartz", "Moonstone", "Labradorite"]
@@ -5952,7 +5942,7 @@
       crystals: ["Herkimer Diamond", "Selenite", "Danburite"]
     },
     {
-      key: "spiral", still: true, name: "Golden Spiral", aka: "Natural flow",
+      key: "spiral", name: "Golden Spiral", aka: "Natural flow",
       meaning: "Built from the golden ratio, about 1.618, this spiral grows outward in perfect proportion. Its graceful curve is echoed in shells, unfurling ferns and sunflower heads, and it symbolises growth that flows naturally.",
       practice: "Lay crystals along a spiral path from the outside in, walking your thoughts slowly toward your centre with each stone.",
       crystals: ["Ammolite", "Carnelian", "Emerald"]
@@ -5969,7 +5959,7 @@
       });
     }
     return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-             '<g' + (animate ? ' class="' + (symbol.still ? 'sg-breathe' : 'sg-turn') + ' sg-draw"' : '') + ' fill="none" stroke="' + SG_GOLD + '" stroke-width="' + strokeWidth + '" stroke-linecap="round">' +
+             '<g' + (animate ? ' class="sg-turn sg-draw"' : '') + ' fill="none" stroke="' + SG_GOLD + '" stroke-width="' + strokeWidth + '" stroke-linecap="round">' +
                parts.join("") +
              '</g>' +
            '</svg>';
