@@ -2596,6 +2596,18 @@
     from{ transform: rotate(0deg); }
     to{   transform: rotate(360deg); }
   }
+  /* the Vesica Piscis and Golden Spiral are not round in shape, so
+     turning made them look as if they were slowly tipping over.
+     Instead, they stay upright and gently breathe with a soft glow */
+  .sg-breathe{
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: sg-breathe 6s ease-in-out 3s infinite;
+  }
+  @keyframes sg-breathe{
+    0%, 100%{ transform: scale(1);     opacity: 0.88; }
+    50%{      transform: scale(1.035); opacity: 1;    }
+  }
   /* each line fades in, one after another, so the symbol
      appears to draw itself in gold */
   .sg-draw .sg-part{
@@ -5895,14 +5907,16 @@
         if(i === 0) path += "M" + from[0].toFixed(2) + "," + from[1].toFixed(2);
         path += " A" + sq.toFixed(2) + "," + sq.toFixed(2) + " 0 0 1 " + to[0].toFixed(2) + "," + to[1].toFixed(2);
       }
-      parts.push('<path class="sg-part" d="' + path + '" stroke-width="1.6"/>');
+      // the spiral itself is drawn straight after the outer rectangle,
+      // so it appears early on rather than last
+      parts.splice(1, 0, '<path class="sg-part" d="' + path + '" stroke-width="1.6"/>');
       return parts;
     }
   };
 
   var SACRED_SYMBOLS = [
     {
-      key: "vesica", name: "Vesica Piscis", aka: "The womb of creation",
+      key: "vesica", still: true, name: "Vesica Piscis", aka: "The womb of creation",
       meaning: "Two circles, each passing through the other's centre. The almond shape where they overlap has long symbolised union, birth and the meeting place of two worlds, the point where something new begins.",
       practice: "Rest your gaze on the shared centre and hold an intention for a relationship or a creative project you wish to bring to life.",
       crystals: ["Rose Quartz", "Moonstone", "Labradorite"]
@@ -5938,7 +5952,7 @@
       crystals: ["Herkimer Diamond", "Selenite", "Danburite"]
     },
     {
-      key: "spiral", name: "Golden Spiral", aka: "Natural flow",
+      key: "spiral", still: true, name: "Golden Spiral", aka: "Natural flow",
       meaning: "Built from the golden ratio, about 1.618, this spiral grows outward in perfect proportion. Its graceful curve is echoed in shells, unfurling ferns and sunflower heads, and it symbolises growth that flows naturally.",
       practice: "Lay crystals along a spiral path from the outside in, walking your thoughts slowly toward your centre with each stone.",
       crystals: ["Ammolite", "Carnelian", "Emerald"]
@@ -5955,7 +5969,7 @@
       });
     }
     return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-             '<g' + (animate ? ' class="sg-turn sg-draw"' : '') + ' fill="none" stroke="' + SG_GOLD + '" stroke-width="' + strokeWidth + '" stroke-linecap="round">' +
+             '<g' + (animate ? ' class="' + (symbol.still ? 'sg-breathe' : 'sg-turn') + ' sg-draw"' : '') + ' fill="none" stroke="' + SG_GOLD + '" stroke-width="' + strokeWidth + '" stroke-linecap="round">' +
                parts.join("") +
              '</g>' +
            '</svg>';
