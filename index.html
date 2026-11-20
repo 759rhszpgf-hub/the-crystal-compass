@@ -1164,6 +1164,326 @@
   }
 
   /* ============================================================
+     THE MAGICAL DOORWAY (premium entrance)
+     An arched doorway framed in gold and crystals, opening onto a deep
+     midnight sky sprinkled with tiny stars and soft silver and violet
+     light. Two dark doors stand slightly ajar, with light glowing
+     through the gap, and a gentle golden shimmer breathes around the
+     arch. The crystal frame, stars and sparkles are drawn by the
+     script (see "THE MAGICAL DOORWAY" in the script), so they fit any
+     screen size. When Sam's arch artwork is ready, it can replace the
+     drawn crystal frame without changing anything else.
+     ============================================================ */
+  .doorway{
+    position: relative;
+    max-width: 560px;          /* a graceful doorway shape on big screens */
+    padding: 34px 26px 10px;
+    margin: -14px auto 0;
+  }
+  .doorway-opening{
+    position: relative;
+    overflow: hidden;
+    /* a huge corner radius on the top corners makes a perfect
+       semicircular arch at any width */
+    border-radius: 9999px 9999px 0 0;
+    background: #070b24;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+  }
+  /* the midnight sky: deep blue, a violet haze, silver light rising
+     from below, and a scatter of tiny stars added by the script */
+  .doorway-sky{
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 100%, rgba(210,205,255,0.32), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 50% 28%, rgba(155,127,212,0.30), transparent 70%),
+      linear-gradient(180deg, #0a1033 0%, #120f3a 55%, #1a1446 100%);
+    background-size: cover;
+  }
+  /* the light glowing through the gap between the doors */
+  .doorway-beam{
+    position: absolute;
+    top: 2%;
+    bottom: 0;
+    /* visible in the gap at the top and spilling under the doors at the
+       bottom, but faded away behind the writing so it stays easy to read */
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 70px, transparent 140px, transparent calc(100% - 120px), #000 calc(100% - 30px));
+            mask-image: linear-gradient(to bottom, #000 0, #000 70px, transparent 140px, transparent calc(100% - 120px), #000 calc(100% - 30px));
+    left: 50%;
+    width: 18px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom,
+      rgba(225,215,255,0) 0%,
+      rgba(225,215,255,0.85) 18%,
+      rgba(255,248,232,0.95) 55%,
+      rgba(215,200,255,0.75) 100%);
+    filter: blur(6px);
+    opacity: 0.85;
+    z-index: 1;
+    animation: door-beam-breathe 4.5s ease-in-out infinite;
+    transition: opacity 0.9s ease;
+  }
+  .doorway-beam::after{
+    content: '';
+    position: absolute;
+    top: 10%;
+    bottom: 0;
+    left: 50%;
+    width: 90px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(200,182,255,0.5), transparent 70%);
+  }
+  @keyframes door-beam-breathe{
+    0%, 100%{ opacity: 0.65; }
+    50%{      opacity: 1; }
+  }
+  /* the burst of light when the doors open */
+  .doorway-flood{
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255,250,235,0.85), rgba(200,185,255,0.35) 45%, transparent 75%);
+  }
+  /* the two doors */
+  .door{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(50% - 3px);
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 100%, rgba(155,127,212,0.16), transparent 70%),
+      linear-gradient(180deg, rgba(14,16,48,0.94), rgba(10,9,30,0.97));
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transition: transform 1.4s cubic-bezier(.55,.05,.25,1), opacity 1.4s ease;
+  }
+  .door-left{
+    left: 0;
+    border-radius: 9999px 0 0 0;
+    transform-origin: left center;
+    box-shadow: inset -1px 0 0 rgba(234,200,120,0.55);
+  }
+  .door-right{
+    right: 0;
+    border-radius: 0 9999px 0 0;
+    transform-origin: right center;
+    box-shadow: inset 1px 0 0 rgba(234,200,120,0.55);
+  }
+  /* fine gold inlay panels on each door */
+  .door::before{
+    content: '';
+    position: absolute;
+    inset: 14px 12px 16px;
+    border: 1px solid rgba(234,200,120,0.32);
+    pointer-events: none;
+  }
+  .door-left::before{ border-radius: 9999px 0 0 0; }
+  .door-right::before{ border-radius: 0 9999px 0 0; }
+  /* a small crystal handle on each door, beside the gap */
+  .door-handle{
+    position: absolute;
+    bottom: 34px;
+    width: 7px;
+    height: 20px;
+    clip-path: polygon(50% 0%, 100% 30%, 100% 70%, 50% 100%, 0% 70%, 0% 30%);
+    background: linear-gradient(160deg, #f3e7ff, #9b7fd4 55%, #553a86);
+    box-shadow: 0 0 10px rgba(201,174,240,0.8);
+  }
+  .door-left .door-handle{ right: 9px; }
+  .door-right .door-handle{ left: 9px; }
+
+  /* the words, price and button, sitting in the doorway */
+  .doorway-content{
+    position: relative;
+    z-index: 2;
+    padding: 21% 24px 76px;
+    text-align: center;
+  }
+  /* a soft midnight glow behind the writing, so the line where the
+     two doors meet never runs through the words */
+  .doorway-content::before{
+    content: '';
+    position: absolute;
+    top: 14%;
+    bottom: 56px;
+    left: 2%;
+    right: 2%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 58% 54% at 50% 50%, rgba(9,10,34,0.96) 0%, rgba(9,10,34,0.85) 55%, rgba(9,10,34,0) 100%);
+  }
+  .doorway.is-open .doorway-content::before{
+    opacity: 0.45;
+  }
+  .doorway-content h2,
+  .doorway-content .price-line{
+    text-shadow: 0 2px 14px rgba(5,4,20,0.95), 0 0 2px rgba(5,4,20,0.9);
+  }
+  .doorway-content .section-sub,
+  .doorway-content .price-breakdown,
+  .doorway-content .consent-text,
+  .doorway-content .fine-print,
+  .doorway-content .secure-note{
+    color: #C9BFDD;
+    text-shadow: 0 1px 8px rgba(5,4,20,0.95), 0 0 2px rgba(5,4,20,0.9);
+  }
+  .doorway-content .section-sub{ margin-bottom: 26px; }
+  .doorway-content .seal{
+    background: rgba(10,9,30,0.7);
+    box-shadow: 0 0 22px rgba(234,200,120,0.35);
+  }
+  .doorway-content .btn-premium{
+    max-width: 100%;
+    padding: 15px 30px;
+  }
+  /* the welcome message, shown once the door is open */
+  .door-welcome{
+    display: none;
+  }
+  .door-welcome-eyebrow{
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-bottom: 8px;
+    text-shadow: 0 1px 8px rgba(5,4,20,0.95);
+  }
+  .door-step-btn{
+    margin-top: 4px;
+    background: rgba(10,9,30,0.55);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  /* the golden shimmer breathing around the arch */
+  .doorway-glow{
+    position: absolute;
+    top: 34px;
+    left: 26px;
+    right: 26px;
+    bottom: 10px;
+    border-radius: 9999px 9999px 0 0;
+    pointer-events: none;
+    box-shadow: 0 0 22px rgba(234,200,120,0.55), inset 0 0 26px rgba(234,200,120,0.28);
+    opacity: 0.55;
+    animation: door-shimmer 5s ease-in-out infinite;
+  }
+  @keyframes door-shimmer{
+    0%, 100%{ opacity: 0.4; }
+    50%{      opacity: 1; }
+  }
+  /* the crystal arch frame, drawn by the script */
+  .doorway-frame{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 3;
+  }
+  /* little sparkles twinkling on the crystals */
+  .doorway-sparkles{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .door-sparkle{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    opacity: 0;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255,246,224,0.9) 18%, rgba(234,200,120,0.4) 40%, transparent 65%);
+    clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+    animation: door-sparkle 3.6s ease-in-out infinite;
+  }
+  @keyframes door-sparkle{
+    0%, 100%{ opacity: 0;   transform: scale(0.4); }
+    45%{      opacity: 1;   transform: scale(1.15); }
+    60%{      opacity: 0.8; transform: scale(0.9); }
+  }
+
+  /* -- the doors open -- */
+  .doorway.is-open .door-left{
+    transform: rotateY(-105deg);
+    opacity: 0;
+  }
+  .doorway.is-open .door-right{
+    transform: rotateY(105deg);
+    opacity: 0;
+  }
+  .doorway.is-open .doorway-beam{
+    opacity: 0;
+    animation: none;
+  }
+  .doorway.is-opening .doorway-flood{
+    animation: door-flood 2s ease forwards;
+  }
+  .doorway.is-open:not(.is-opening) .doorway-flood{
+    opacity: 0.3;
+  }
+  @keyframes door-flood{
+    0%{   opacity: 0; }
+    35%{  opacity: 1; }
+    100%{ opacity: 0.3; }
+  }
+  .doorway.is-open .door-locked-sub{ display: none; }
+  .doorway.is-open .door-welcome{
+    display: block;
+    animation: reveal-in 0.8s ease 0.5s both;
+  }
+  /* when the page reloads already unlocked, open without the animation */
+  .doorway.is-instant .door,
+  .doorway.is-instant .doorway-beam{
+    transition: none;
+  }
+  .doorway.is-instant .door-welcome{ animation: none; }
+
+  /* once unlocked, the "waiting beyond the door" list is no longer
+     needed, because the features themselves appear */
+  .beyond-title{
+    margin: 30px 0 14px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .premium-panel.is-unlocked .beyond-title,
+  .premium-panel.is-unlocked #beyondList{
+    display: none;
+  }
+  .premium-panel.is-unlocked .premium-features{
+    margin-top: 30px;
+  }
+
+  @media (max-width: 480px){
+    .doorway{
+      padding: 30px 20px 10px;
+      margin: -14px -8px 0;
+    }
+    .doorway-glow{
+      top: 30px;
+      left: 20px;
+      right: 20px;
+    }
+    .doorway-content{
+      padding: 22% 16px 72px;
+    }
+    .doorway-content .btn-premium{
+      padding: 14px 22px;
+      font-size: 14.5px;
+    }
+  }
+
+  /* ============================================================
      PREMIUM FEATURES (revealed after mock unlock, for live preview)
      ============================================================ */
   .premium-features{
@@ -3107,12 +3427,48 @@
        4. PREMIUM UPSELL
        ============================================================ -->
   <section class="section premium-block" id="premium">
-    <div class="premium-panel">
-      <div class="seal" aria-hidden="true">&#10022;</div>
-      <h2>The Full Reading</h2>
-      <p class="section-sub">Go deeper with a yearly membership built around your energy.</p>
+    <div class="premium-panel" id="premiumPanel">
 
-      <ul class="feature-list">
+      <!-- THE MAGICAL DOORWAY: a crystal arch with two doors left
+           slightly ajar, and violet and silver light spilling through
+           the gap. The price and button sit inside the doorway. When
+           The Full Reading is unlocked, the doors swing open, light
+           floods out, and the premium features appear below. -->
+      <div class="doorway" id="doorway">
+        <div class="doorway-opening" id="doorwayOpening">
+          <div class="doorway-sky" id="doorwaySky" aria-hidden="true"></div>
+          <div class="doorway-beam" aria-hidden="true"></div>
+          <div class="doorway-flood" aria-hidden="true"></div>
+          <div class="door door-left" aria-hidden="true"><span class="door-handle"></span></div>
+          <div class="door door-right" aria-hidden="true"><span class="door-handle"></span></div>
+
+          <div class="doorway-content">
+            <div class="seal" aria-hidden="true">&#10022;</div>
+            <h2>The Full Reading</h2>
+            <p class="section-sub door-locked-sub">Step through the doorway and go deeper, with a yearly membership built around your energy.</p>
+            <div class="door-welcome" id="doorWelcome">
+              <p class="door-welcome-eyebrow">The door is open</p>
+              <p class="section-sub">Welcome inside. Your premium features are waiting for you below.</p>
+              <button type="button" class="btn-secondary door-step-btn" id="doorStepBtn">Step inside &#8595;</button>
+            </div>
+            <div class="payment-cta" id="paymentCta">
+              <p class="price-line">&pound;11.11<span>/year</span></p>
+              <p class="price-breakdown">(Just 93p a month / less than 22p a week!)</p>
+              <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
+              <p class="consent-text">By completing your purchase, you agree to our <button type="button" class="inline-link" data-legal-open="privacyModal">Privacy Policy</button> and <button type="button" class="inline-link" data-legal-open="termsModal">Terms of Service</button>.</p>
+              <p class="fine-print">One payment. No auto-renewal.</p>
+              <p class="secure-note">&#128274; Secure annual processing. Your card details are never stored or saved by this application.</p>
+              <p class="premium-note" id="premiumNote" aria-live="polite"></p>
+            </div>
+          </div>
+        </div>
+        <div class="doorway-glow" aria-hidden="true"></div>
+        <svg class="doorway-frame" id="doorwayFrame" aria-hidden="true"></svg>
+        <div class="doorway-sparkles" id="doorwaySparkles" aria-hidden="true"></div>
+      </div>
+
+      <p class="beyond-title">Waiting beyond the door</p>
+      <ul class="feature-list" id="beyondList">
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
           <span><strong>3-Card Spread</strong>See your past, present, and the path ahead in a single reading.</span>
@@ -3151,19 +3507,7 @@
         </li>
       </ul>
 
-      <div class="payment-cta" id="paymentCta">
-        <p class="price-line">&pound;11.11<span>/year</span></p>
-        <p class="price-breakdown">(Just 93p a month / less than 22p a week!)</p>
-        <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
-        <p class="consent-text">By completing your purchase, you agree to our <button type="button" class="inline-link" data-legal-open="privacyModal">Privacy Policy</button> and <button type="button" class="inline-link" data-legal-open="termsModal">Terms of Service</button>.</p>
-        <p class="fine-print">One payment. No auto-renewal.</p>
-        <p class="secure-note">&#128274; Secure annual processing. Your card details are never stored or saved by this application.</p>
-        <p class="premium-note" id="premiumNote" aria-live="polite"></p>
-      </div>
-
       <div class="premium-features" id="premiumFeatures" hidden>
-        <h3>Welcome to The Full Reading</h3>
-        <p class="feature-sub">Your premium features are unlocked below.</p>
 
         <div class="premium-feature-block">
           <h3>3-Card Spread</h3>
@@ -4277,12 +4621,26 @@
     try{ return window.sessionStorage.getItem(UNLOCK_KEY) === "1"; }catch(e){ return false; }
   }
 
+  var doorway = document.getElementById("doorway");
+  var premiumPanel = document.getElementById("premiumPanel");
+
   if(DEV_START_UNLOCKED || wasUnlockedThisVisit()){
     isUnlocked = true;
     premiumBtn.textContent = "\u2713 Full Reading Unlocked";
     premiumBtn.disabled = true;
     paymentCta.hidden = true;
     premiumFeatures.hidden = false;
+    // already unlocked: the doors are simply open, with no animation
+    if(doorway) doorway.classList.add("is-open", "is-instant");
+    if(premiumPanel) premiumPanel.classList.add("is-unlocked");
+  }
+
+  // "Step inside" scrolls down to the premium features
+  var doorStepBtn = document.getElementById("doorStepBtn");
+  if(doorStepBtn){
+    doorStepBtn.addEventListener("click", function(){
+      premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   premiumBtn.addEventListener("click", function(){
@@ -4299,35 +4657,43 @@
       isUnlocked = true;
       rememberUnlock();
 
-      // 3. the instant the timer ends: hide the spinner/paywall block,
-      //    and reveal the 3-Card Spread, Chakra Crystal Guide
-      //    (and the rest of the premium dashboards) together, at once
+      // 3. the doors swing open and light floods out of the doorway.
+      //    The price and button make way for a welcome message.
       paymentCta.hidden = true;
+      if(doorway) doorway.classList.add("is-open", "is-opening");
+      if(premiumPanel) premiumPanel.classList.add("is-unlocked");
 
-      // borrow hardware acceleration just for the slide-in (see the
-      // .is-revealing CSS), then hand the memory back straight afterwards
-      premiumFeatures.classList.add("is-revealing");
-      var revealDone = false;
-      var finishReveal = function(e){
-        if(e && e.target !== premiumFeatures) return; // ignore animations inside the cards
-        if(revealDone) return;
-        revealDone = true;
-        premiumFeatures.classList.remove("is-revealing");
-        premiumFeatures.removeEventListener("animationend", finishReveal);
-      };
-      premiumFeatures.addEventListener("animationend", finishReveal);
-      setTimeout(finishReveal, 1200); // safety net if the browser skips the event
-
-      premiumFeatures.hidden = false;
-      premiumFeatures.style.animation = "none";
-      void premiumFeatures.offsetWidth; // restart the reveal-in animation
-      premiumFeatures.style.animation = "";
-
-      setTimeout(function(){
-        premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
+      // 4. as the doors finish opening, reveal the 3-Card Spread,
+      //    Chakra Crystal Guide, Sacred Geometry and the rest of the
+      //    premium dashboards together
+      setTimeout(revealPremiumFeatures, 1300);
     }, 1500);
   });
+
+  function revealPremiumFeatures(){
+    // borrow hardware acceleration just for the slide-in (see the
+    // .is-revealing CSS), then hand the memory back straight afterwards
+    premiumFeatures.classList.add("is-revealing");
+    var revealDone = false;
+    var finishReveal = function(e){
+      if(e && e.target !== premiumFeatures) return; // ignore animations inside the cards
+      if(revealDone) return;
+      revealDone = true;
+      premiumFeatures.classList.remove("is-revealing");
+      premiumFeatures.removeEventListener("animationend", finishReveal);
+    };
+    premiumFeatures.addEventListener("animationend", finishReveal);
+    setTimeout(finishReveal, 1200); // safety net if the browser skips the event
+
+    premiumFeatures.hidden = false;
+    premiumFeatures.style.animation = "none";
+    void premiumFeatures.offsetWidth; // restart the reveal-in animation
+    premiumFeatures.style.animation = "";
+
+    setTimeout(function(){
+      premiumFeatures.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  }
 
   /* -- 3-card spread: timeline combination engine --
      Each position (Past, Present, Path Ahead) has its own pool of
@@ -6361,6 +6727,188 @@
   }
 
   /* ----------------------------------------------------------
+     THE MAGICAL DOORWAY — draws the crystal arch frame, the tiny
+     stars in the doorway's sky and the twinkling sparkles. The frame
+     is measured from the doorway itself, so it always fits the arch
+     exactly on every screen, and it is redrawn if the size changes.
+     ---------------------------------------------------------- */
+  (function(){
+    var doorwayEl = document.getElementById("doorway");
+    var openingEl = document.getElementById("doorwayOpening");
+    var frameEl = document.getElementById("doorwayFrame");
+    var skyEl = document.getElementById("doorwaySky");
+    var sparklesEl = document.getElementById("doorwaySparkles");
+    if(!doorwayEl || !openingEl || !frameEl) return;
+
+    // the tiny stars: a still picture (no animation), so it costs the
+    // phone almost nothing. "slice" keeps every star perfectly round.
+    if(skyEl){
+      var dots = "";
+      for(var i = 0; i < 90; i++){
+        var big = Math.random() < 0.12;
+        var colours = ["#FFFFFF", "#FFF6E0", "#E3D4FF", "#D6E4FF", "#EAC878"];
+        dots += '<circle cx="' + (Math.random() * 300).toFixed(1) + '" cy="' + (Math.random() * 520).toFixed(1) +
+                '" r="' + (big ? 1.7 : 0.6 + Math.random() * 0.6).toFixed(2) +
+                '" fill="' + colours[Math.floor(Math.random() * colours.length)] +
+                '" fill-opacity="' + (0.35 + Math.random() * 0.6).toFixed(2) + '"/>';
+      }
+      var starSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 520" preserveAspectRatio="xMidYMid slice">' + dots + '</svg>';
+      var starUrl = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(starSvg) + '")';
+      skyEl.style.backgroundImage = starUrl + ", " + window.getComputedStyle(skyEl).backgroundImage;
+    }
+
+    var CRYSTAL_FILLS = ["url(#dwAmethyst)", "url(#dwClear)", "url(#dwDeep)"];
+
+    // one crystal point, pointing in the direction of rotateDeg
+    // (0 = straight up), with its base at (x, y)
+    function crystal(x, y, rotateDeg, length, width, fill){
+      var hw = width / 2, shoulder = -length * 0.62;
+      return '<g transform="translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ') rotate(' + rotateDeg.toFixed(1) + ')">' +
+               '<polygon points="' + (-hw) + ',0 ' + (-hw) + ',' + shoulder.toFixed(2) + ' 0,' + (-length) + ' ' + hw + ',' + shoulder.toFixed(2) + ' ' + hw + ',0" fill="' + fill + '" stroke="url(#dwGold)" stroke-width="0.7"/>' +
+               '<polygon points="' + (-hw) + ',0 ' + (-hw) + ',' + shoulder.toFixed(2) + ' 0,' + (-length) + ' 0,0" fill="rgba(255,255,255,0.22)"/>' +
+             '</g>';
+    }
+
+    function drawDoorway(){
+      var W = doorwayEl.clientWidth;
+      var H = doorwayEl.clientHeight;
+      if(!W || !H) return;
+      var x0 = openingEl.offsetLeft;
+      var yTop = openingEl.offsetTop;
+      var w = openingEl.offsetWidth;
+      var yB = yTop + openingEl.offsetHeight;
+      var x1 = x0 + w;
+      var R = w / 2;
+      var cx = x0 + R;
+      var cy = yTop + R;
+      var cs = Math.max(1, Math.min(1.35, R / 140));   // crystals grow a little on bigger arches
+
+      var arch = function(o){
+        return "M" + (x0 - o).toFixed(2) + "," + yB.toFixed(2) +
+               " L" + (x0 - o).toFixed(2) + "," + cy.toFixed(2) +
+               " A" + (R + o).toFixed(2) + "," + (R + o).toFixed(2) + " 0 0 1 " + (x1 + o).toFixed(2) + "," + cy.toFixed(2) +
+               " L" + (x1 + o).toFixed(2) + "," + yB.toFixed(2);
+      };
+
+      var svg =
+        '<defs>' +
+          '<linearGradient id="dwGold" x1="0" y1="0" x2="1" y2="1">' +
+            '<stop offset="0%" stop-color="#F6DE9A"/><stop offset="50%" stop-color="#EAC878"/><stop offset="100%" stop-color="#B98F3E"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="dwAmethyst" x1="0" y1="0" x2="0.4" y2="1">' +
+            '<stop offset="0%" stop-color="#E9DCFF"/><stop offset="45%" stop-color="#A97FE6"/><stop offset="100%" stop-color="#4B2F82"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="dwClear" x1="0" y1="0" x2="0.4" y2="1">' +
+            '<stop offset="0%" stop-color="#FFFFFF"/><stop offset="50%" stop-color="#E6E3F6"/><stop offset="100%" stop-color="#9C97C2"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="dwDeep" x1="0" y1="0" x2="0.4" y2="1">' +
+            '<stop offset="0%" stop-color="#C9AEF5"/><stop offset="55%" stop-color="#6E4BB4"/><stop offset="100%" stop-color="#2E1A5C"/>' +
+          '</linearGradient>' +
+        '</defs>';
+
+      // the gold lines of the arch: a bright main line, a fainter
+      // outer line and a fine inner line
+      svg += '<path d="' + arch(9) + '" fill="none" stroke="url(#dwGold)" stroke-width="0.9" stroke-opacity="0.55"/>';
+      svg += '<path d="' + arch(2) + '" fill="none" stroke="url(#dwGold)" stroke-width="1.8"/>';
+      svg += '<path d="' + arch(-4) + '" fill="none" stroke="url(#dwGold)" stroke-width="0.6" stroke-opacity="0.45"/>';
+
+      var sparkleSpots = [];
+
+      // crystals all the way around the curve of the arch
+      var arcCount = 13;
+      for(var k = 1; k < arcCount; k++){
+        if(k === arcCount / 2 || k === Math.round(arcCount / 2)) continue;   // keystone goes here
+        var deg = 180 + (180 / arcCount) * k;
+        var rad = deg * Math.PI / 180;
+        var px = cx + Math.cos(rad) * (R + 6);
+        var py = cy + Math.sin(rad) * (R + 6);
+        var len = [15, 21, 12][k % 3] * cs;
+        svg += crystal(px, py, deg + 90, len, len * 0.46, CRYSTAL_FILLS[k % 3]);
+        if(k % 3 === 1) sparkleSpots.push([cx + Math.cos(rad) * (R + 6 + len), cy + Math.sin(rad) * (R + 6 + len)]);
+      }
+
+      // the keystone: one large clear crystal at the very top
+      svg += crystal(cx, yTop - 2, 0, 30 * cs, 15 * cs, "url(#dwClear)");
+      sparkleSpots.push([cx, yTop - 32 * cs]);
+      // a small golden star above it
+      var sy = yTop - 40 * cs;
+      svg += '<path d="M' + cx + ',' + (sy - 7) + ' L' + (cx + 1.6) + ',' + (sy - 1.6) + ' L' + (cx + 7) + ',' + sy + ' L' + (cx + 1.6) + ',' + (sy + 1.6) +
+             ' L' + cx + ',' + (sy + 7) + ' L' + (cx - 1.6) + ',' + (sy + 1.6) + ' L' + (cx - 7) + ',' + sy + ' L' + (cx - 1.6) + ',' + (sy - 1.6) + ' Z" fill="#FFF6E0"/>';
+
+      // a string of tiny gold beads down each side, with a small
+      // crystal drop every few beads
+      var n = 0;
+      for(var y = cy + 18; y < yB - 64; y += 22){
+        if(n % 4 === 3){
+          svg += crystal(x0 - 6, y - 6, 180, 13, 6, CRYSTAL_FILLS[n % 3]);
+          svg += crystal(x1 + 6, y - 6, 180, 13, 6, CRYSTAL_FILLS[(n + 1) % 3]);
+        } else {
+          svg += '<circle cx="' + (x0 - 6).toFixed(2) + '" cy="' + y.toFixed(2) + '" r="1.8" fill="url(#dwGold)"/>';
+          svg += '<circle cx="' + (x1 + 6).toFixed(2) + '" cy="' + y.toFixed(2) + '" r="1.8" fill="url(#dwGold)"/>';
+        }
+        n++;
+      }
+
+      // crystal clusters growing up at the foot of each side
+      var cluster = function(baseX, dir){
+        var parts = "";
+        var spec = [[-46, 26, 0], [-22, 42, 6], [2, 32, 13], [24, 22, 18]];
+        for(var i = 0; i < spec.length; i++){
+          var rot = spec[i][0] * dir;
+          parts += crystal(baseX + spec[i][2] * dir * cs, yB + 2, rot, spec[i][1] * cs, spec[i][1] * 0.4 * cs, CRYSTAL_FILLS[i % 3]);
+        }
+        return parts;
+      };
+      svg += cluster(x0 - 4, 1);
+      svg += cluster(x1 + 4, -1);
+      sparkleSpots.push([x0 + 2, yB - 42]);
+      sparkleSpots.push([x1 - 2, yB - 42]);
+
+      // the golden threshold at the foot of the doorway
+      svg += '<line x1="' + (x0 - 18) + '" y1="' + (yB + 1) + '" x2="' + (x1 + 18) + '" y2="' + (yB + 1) + '" stroke="url(#dwGold)" stroke-width="1.8"/>';
+      svg += '<line x1="' + (x0 - 8) + '" y1="' + (yB + 6) + '" x2="' + (x1 + 8) + '" y2="' + (yB + 6) + '" stroke="url(#dwGold)" stroke-width="0.8" stroke-opacity="0.55"/>';
+
+      frameEl.setAttribute("viewBox", "0 0 " + W + " " + H);
+      frameEl.innerHTML = svg;
+
+      if(sparklesEl){
+        sparklesEl.innerHTML = "";
+        sparkleSpots.forEach(function(spot, idx){
+          var sp = document.createElement("span");
+          sp.className = "door-sparkle";
+          sp.style.left = spot[0].toFixed(1) + "px";
+          sp.style.top = spot[1].toFixed(1) + "px";
+          sp.style.animationDelay = (idx * 0.55).toFixed(2) + "s";
+          sparklesEl.appendChild(sp);
+        });
+      }
+    }
+
+    var lastSize = "";
+    var doorwayTimer = null;
+    function redrawDoorwaySoon(){
+      clearTimeout(doorwayTimer);
+      doorwayTimer = setTimeout(function(){
+        var size = doorwayEl.clientWidth + "x" + doorwayEl.clientHeight;
+        if(size === lastSize) return;
+        lastSize = size;
+        drawDoorway();
+      }, 120);
+    }
+
+    drawDoorway();
+    lastSize = doorwayEl.clientWidth + "x" + doorwayEl.clientHeight;
+    window.addEventListener("resize", redrawDoorwaySoon);
+    window.addEventListener("load", redrawDoorwaySoon);
+    if(window.ResizeObserver){
+      new ResizeObserver(redrawDoorwaySoon).observe(doorwayEl);
+    }
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(redrawDoorwaySoon);
+    }
+  })();
+
+  /* ----------------------------------------------------------
      11. OFFSCREEN ANIMATION SAVER — keeps iPhones and iPads calm.
      Phones only have a small amount of graphics memory. Before this,
      every animation on the page (the starfield, the spinning compass
@@ -6381,7 +6929,8 @@
       { el: document.getElementById("checkin") },
       { el: document.getElementById("guidance") },
       { el: document.getElementById("wheelStage"), onChange: function(onScreen){ wheelOnScreen = onScreen; } },
-      { el: document.getElementById("sgDetail") }
+      { el: document.getElementById("sgDetail") },
+      { el: document.getElementById("doorway") }
     ];
     var offscreenObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
