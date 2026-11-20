@@ -1320,7 +1320,7 @@
     z-index: 2;
     /* the deep bottom padding keeps the writing clear of the crystal
        clusters at the foot of the arch */
-    padding: 21% 22px 36%;
+    padding: 21% 22px 26%;
     text-align: center;
   }
   /* a soft midnight glow behind the writing, so the line where the
@@ -1491,9 +1491,16 @@
     color: var(--gold);
   }
   .premium-panel.is-unlocked .beyond-title,
-  .premium-panel.is-unlocked #beyondList{
+  .premium-panel.is-unlocked #beyondList,
+  .premium-panel.is-unlocked .door-small-print{
     display: none;
   }
+  .nowrap-part{ white-space: nowrap; }
+  .door-small-print{
+    margin-top: 16px;
+    text-align: center;
+  }
+  .door-small-print .consent-text{ margin-top: 0; }
   .premium-panel.is-unlocked .premium-features{
     margin-top: 30px;
   }
@@ -1505,7 +1512,7 @@
       margin: -14px -17px 0;
     }
     .doorway-content{
-      padding: 20% 14px 40%;
+      padding: 20% 14px 30%;
     }
     .doorway-content h2{
       font-size: 26px;
@@ -3492,7 +3499,7 @@
           <div class="doorway-content">
             <div class="seal" aria-hidden="true">&#10022;</div>
             <h2>The Full Reading</h2>
-            <p class="section-sub door-locked-sub">Step through the doorway and go deeper, with a yearly membership built around your energy.</p>
+            <p class="section-sub door-locked-sub">Step through and go deeper, all year round.</p>
             <div class="door-welcome" id="doorWelcome">
               <p class="door-welcome-eyebrow">The door is open</p>
               <p class="section-sub">Welcome inside. Your premium features are waiting for you below.</p>
@@ -3500,11 +3507,8 @@
             </div>
             <div class="payment-cta" id="paymentCta">
               <p class="price-line">&pound;11.11<span>/year</span></p>
-              <p class="price-breakdown">(Just 93p a month / less than 22p a week!)</p>
+              <p class="price-breakdown">Just 93p a month <span class="nowrap-part">/ less than 22p a week!</span></p>
               <button class="btn-premium" id="premiumBtn">Unlock The Full Reading</button>
-              <p class="consent-text">By completing your purchase, you agree to our <button type="button" class="inline-link" data-legal-open="privacyModal">Privacy Policy</button> and <button type="button" class="inline-link" data-legal-open="termsModal">Terms of Service</button>.</p>
-              <p class="fine-print">One payment. No auto-renewal.</p>
-              <p class="secure-note">&#128274; Secure annual processing. Your card details are never stored or saved by this application.</p>
               <p class="premium-note" id="premiumNote" aria-live="polite"></p>
             </div>
           </div>
@@ -3519,6 +3523,14 @@
         </div>
         <div class="doorway-sparkles" id="doorwaySparkles" aria-hidden="true"></div>
       </div>
+      </div>
+
+      <!-- the small print sits just beneath the doorway, so the arch
+           stays a graceful height on phones -->
+      <div class="door-small-print">
+        <p class="consent-text">By completing your purchase, you agree to our <button type="button" class="inline-link" data-legal-open="privacyModal">Privacy Policy</button> and <button type="button" class="inline-link" data-legal-open="termsModal">Terms of Service</button>.</p>
+        <p class="fine-print">One payment. No auto-renewal.</p>
+        <p class="secure-note">&#128274; Secure annual processing. Your card details are never stored or saved by this application.</p>
       </div>
 
       <p class="beyond-title">Waiting beyond the door</p>
