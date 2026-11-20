@@ -2127,6 +2127,141 @@
   }
 
   /* ============================================================
+     SACRED GEOMETRY (premium)
+     Seven sacred symbols, all drawn in code as fine gold lines, so
+     they stay perfectly crisp on every screen with no images needed.
+     Tapping a symbol opens its card: the symbol draws itself in gold,
+     line by line, then turns very slowly, with its meaning, how to
+     work with it, and its crystal pairings (linked to Etsy).
+     ============================================================ */
+  .sg-grid{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .sg-tile{
+    flex: 0 0 calc((100% - 20px) / 3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px 6px 10px;
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    color: var(--ink-muted);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  }
+  @media (min-width: 768px){
+    .sg-tile{ flex-basis: calc((100% - 30px) / 4); }
+  }
+  .sg-tile:hover,
+  .sg-tile:focus-visible{
+    border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(201,162,78,0.3);
+    transform: translateY(-1px);
+  }
+  .sg-tile.active{
+    border-color: var(--gold);
+    background: var(--panel-2);
+    box-shadow: 0 0 22px rgba(201,162,78,0.4);
+  }
+  .sg-tile svg{
+    display: block;
+    width: 100%;
+    max-width: 78px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    filter: drop-shadow(0 0 4px rgba(234,200,120,0.35));
+  }
+  .sg-tile-name{
+    display: block;
+    width: 100%;
+    font-family: var(--serif);
+    font-size: 12px;
+    line-height: 1.25;
+    text-align: center;
+    color: var(--ink);
+  }
+  .sg-tile.active .sg-tile-name{ color: var(--gold-bright); }
+
+  /* the symbol's card */
+  .sg-detail{
+    margin-top: 18px;
+    padding: 24px 20px 18px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gold);
+    background: linear-gradient(165deg, #201a34, #0c0a1f);
+    box-shadow: 0 0 44px rgba(155,127,212,0.22), 0 20px 50px -20px var(--shadow);
+    animation: reveal-in 0.5s ease;
+  }
+  .sg-detail[hidden]{ display: none; }
+  /* the large drawing, in a soft violet and gold halo */
+  .sg-stage{
+    position: relative;
+    width: min(240px, 72%);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(155,127,212,0.22) 0%, rgba(201,162,78,0.08) 50%, transparent 70%);
+  }
+  .sg-stage svg{
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 6px rgba(234,200,120,0.45));
+  }
+  /* the slow turn, once the drawing has finished */
+  .sg-turn{
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: sg-turn 120s linear 3s infinite;   /* starts once the drawing has finished */
+  }
+  @keyframes sg-turn{
+    from{ transform: rotate(0deg); }
+    to{   transform: rotate(360deg); }
+  }
+  /* each line fades in, one after another, so the symbol
+     appears to draw itself in gold */
+  .sg-draw .sg-part{
+    opacity: 0;
+    animation: sg-draw-in 0.7s ease forwards;
+  }
+  @keyframes sg-draw-in{
+    from{ opacity: 0; }
+    to{   opacity: 1; }
+  }
+  .sg-detail-name{
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 21px;
+    line-height: 1.25;
+    color: var(--gold-bright);
+  }
+  .sg-detail-aka{
+    margin-top: 4px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .sg-detail-label{
+    margin: 18px 0 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .sg-detail-text{
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+  }
+
+  /* ============================================================
      MANIFESTATION RITUALS (free) — luxury scrolling guide
      ============================================================ */
   .ritual-scroll{
@@ -2992,6 +3127,10 @@
         </li>
         <li>
           <span class="tick" aria-hidden="true">&#10003;</span>
+          <span><strong>Sacred Geometry</strong>Seven sacred symbols drawn in gold, with their meanings, how to work with them, and their crystal pairings.</span>
+        </li>
+        <li>
+          <span class="tick" aria-hidden="true">&#10003;</span>
           <span><strong>Daily Horoscopes</strong>Unlock personalized celestial insight and guidance for your zodiac sign every single day.</span>
         </li>
         <li>
@@ -3273,6 +3412,13 @@
           <p class="feature-sub">Tap a chakra to explore its meaning, its affirmation and the crystals that support it.</p>
           <div class="chakra-column" id="chakraColumn" role="group" aria-label="The seven chakras"></div>
           <div class="chakra-detail" id="chakraDetail" aria-live="polite" hidden></div>
+        </div>
+
+        <div class="premium-feature-block">
+          <h3>Sacred Geometry</h3>
+          <p class="feature-sub">Tap a symbol to watch it draw itself in gold and discover its meaning.</p>
+          <div class="sg-grid" id="sgGrid" role="group" aria-label="Sacred geometry symbols"></div>
+          <div class="sg-detail" id="sgDetail" aria-live="polite" hidden></div>
         </div>
       </div>
 
@@ -5215,6 +5361,250 @@
   }
 
   /* ----------------------------------------------------------
+     7c. SACRED GEOMETRY (premium)
+     Every symbol is drawn by the code below as fine gold lines on a
+     200 x 200 drawing board, so nothing needs an image. Each symbol
+     has its meaning, a way to work with it, and three crystals from
+     the crystal database (they must match a database name exactly).
+     ---------------------------------------------------------- */
+  var SG_GOLD = "#EAC878";
+
+  function sgCircle(cx, cy, r, extra){
+    return '<circle class="sg-part" cx="' + cx.toFixed(2) + '" cy="' + cy.toFixed(2) + '" r="' + r.toFixed(2) + '"' + (extra || "") + '/>';
+  }
+  function sgLine(a, b, extra){
+    return '<line class="sg-part" x1="' + a[0].toFixed(2) + '" y1="' + a[1].toFixed(2) + '" x2="' + b[0].toFixed(2) + '" y2="' + b[1].toFixed(2) + '"' + (extra || "") + '/>';
+  }
+  function sgPoint(dist, angleDeg){
+    var a = angleDeg * Math.PI / 180;
+    return [100 + Math.cos(a) * dist, 100 + Math.sin(a) * dist];
+  }
+  function sgHexRing(dist, offsetDeg){
+    var pts = [];
+    for(var i = 0; i < 6; i++) pts.push(sgPoint(dist, offsetDeg + i * 60));
+    return pts;
+  }
+
+  // each drawing returns a list of gold shapes, in the order they appear
+  var SG_DRAW = {
+    vesica: function(){
+      var r = 52;
+      return [
+        sgCircle(100 - r / 2, 100, r),
+        sgCircle(100 + r / 2, 100, r),
+        sgLine([100, 100 - r * 0.866], [100, 100 + r * 0.866], ' stroke-opacity="0.55"'),
+        sgCircle(100, 100, 2.4, ' fill="' + SG_GOLD + '"')
+      ];
+    },
+    seed: function(){
+      var r = 30, parts = [sgCircle(100, 100, r)];
+      sgHexRing(r, -90).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      parts.push(sgCircle(100, 100, r * 2, ' stroke-opacity="0.7"'));
+      return parts;
+    },
+    flower: function(){
+      var r = 28, parts = [sgCircle(100, 100, r)];
+      sgHexRing(r, -90).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      sgHexRing(r * 2, -90).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      sgHexRing(r * Math.sqrt(3), -60).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      parts.push(sgCircle(100, 100, r * 3, ' stroke-opacity="0.75"'));
+      return parts;
+    },
+    fruit: function(){
+      var r = 16.5, parts = [sgCircle(100, 100, r)];
+      sgHexRing(r * 2, -90).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      sgHexRing(r * 4, -90).forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      return parts;
+    },
+    metatron: function(){
+      var r = 16.5;
+      var centres = [[100, 100]].concat(sgHexRing(r * 2, -90), sgHexRing(r * 4, -90));
+      var parts = [];
+      // every centre joined to every other centre: 78 lines
+      for(var i = 0; i < centres.length; i++){
+        for(var j = i + 1; j < centres.length; j++){
+          parts.push(sgLine(centres[i], centres[j], ' stroke-opacity="0.7"'));
+        }
+      }
+      centres.forEach(function(c){ parts.push(sgCircle(c[0], c[1], r)); });
+      return parts;
+    },
+    merkaba: function(){
+      var R = 84;
+      var up = [sgPoint(R, -90), sgPoint(R, 30), sgPoint(R, 150)];
+      var down = [sgPoint(R, 90), sgPoint(R, 210), sgPoint(R, 330)];
+      var all = sgHexRing(R, -90);
+      var parts = [];
+      // the two interlocking triangles
+      for(var i = 0; i < 3; i++) parts.push(sgLine(up[i], up[(i + 1) % 3]));
+      for(var k = 0; k < 3; k++) parts.push(sgLine(down[k], down[(k + 1) % 3]));
+      // lines to the centre, giving the star its 3D depth
+      all.forEach(function(p){ parts.push(sgLine(p, [100, 100], ' stroke-opacity="0.6"')); });
+      // the outer hexagon
+      for(var h = 0; h < 6; h++) parts.push(sgLine(all[h], all[(h + 1) % 6], ' stroke-opacity="0.55"'));
+      parts.push(sgCircle(100, 100, R, ' stroke-opacity="0.45"'));
+      parts.push(sgCircle(100, 100, 2.6, ' fill="' + SG_GOLD + '"'));
+      return parts;
+    },
+    spiral: function(){
+      // a golden rectangle, divided again and again into squares,
+      // with a quarter circle drawn through each square
+      var phi = (1 + Math.sqrt(5)) / 2;
+      var w = 176, h = w / phi;
+      var x = (200 - w) / 2, y = (200 - h) / 2;
+      var parts = ['<rect class="sg-part" x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '" width="' + w.toFixed(2) + '" height="' + h.toFixed(2) + '" stroke-opacity="0.6"/>'];
+      var path = "";
+      for(var i = 0; i < 10; i++){
+        var dir = i % 4, sq, from, to;
+        if(dir === 0){ sq = h; from = [x, y + sq]; to = [x + sq, y]; parts.push(sgLine([x + sq, y], [x + sq, y + h], ' stroke-opacity="0.45"')); x += sq; w -= sq; }
+        else if(dir === 1){ sq = w; from = [x, y]; to = [x + sq, y + sq]; parts.push(sgLine([x, y + sq], [x + w, y + sq], ' stroke-opacity="0.45"')); y += sq; h -= sq; }
+        else if(dir === 2){ sq = h; from = [x + w, y]; to = [x + w - sq, y + sq]; parts.push(sgLine([x + w - sq, y], [x + w - sq, y + h], ' stroke-opacity="0.45"')); w -= sq; }
+        else { sq = w; from = [x + sq, y + h]; to = [x, y + h - sq]; parts.push(sgLine([x, y + h - sq], [x + w, y + h - sq], ' stroke-opacity="0.45"')); h -= sq; }
+        if(i === 0) path += "M" + from[0].toFixed(2) + "," + from[1].toFixed(2);
+        path += " A" + sq.toFixed(2) + "," + sq.toFixed(2) + " 0 0 1 " + to[0].toFixed(2) + "," + to[1].toFixed(2);
+      }
+      parts.push('<path class="sg-part" d="' + path + '" stroke-width="1.6"/>');
+      return parts;
+    }
+  };
+
+  var SACRED_SYMBOLS = [
+    {
+      key: "vesica", name: "Vesica Piscis", aka: "The womb of creation",
+      meaning: "Two circles, each passing through the other's centre. The almond shape where they overlap has long symbolised union, birth and the meeting place of two worlds, the point where something new begins.",
+      practice: "Rest your gaze on the shared centre and hold an intention for a relationship or a creative project you wish to bring to life.",
+      crystals: ["Rose Quartz", "Moonstone", "Labradorite"]
+    },
+    {
+      key: "seed", name: "Seed of Life", aka: "New beginnings",
+      meaning: "Seven circles of the same size, flowering out from a single centre. In many traditions it represents creation unfolding, and it is the first step in drawing the Flower of Life.",
+      practice: "Draw it on paper and place a small crystal at the centre of each circle to make a simple grid for a fresh start.",
+      crystals: ["Moss Agate", "Green Aventurine", "Clear Quartz"]
+    },
+    {
+      key: "flower", name: "Flower of Life", aka: "Oneness",
+      meaning: "Nineteen interlocking circles that grow from the Seed of Life. It has been found in ancient places of worship and was studied by Leonardo da Vinci, and it is seen as a symbol of how all life is connected.",
+      practice: "Place your crystal at the very centre of the flower, breathe slowly, and feel yourself as one part of a greater whole.",
+      crystals: ["Clear Quartz", "Amethyst", "Selenite"]
+    },
+    {
+      key: "fruit", name: "Fruit of Life", aka: "Fruition",
+      meaning: "Thirteen circles drawn from the Flower of Life, never touching yet perfectly ordered. It symbolises an intention ripening into reality, and its centres hold the pattern for Metatron's Cube.",
+      practice: "Write down an intention you have been nurturing, then place a crystal on each of the thirteen circles as a promise of its harvest.",
+      crystals: ["Citrine", "Pyrite", "Jade"]
+    },
+    {
+      key: "metatron", name: "Metatron's Cube", aka: "Balance & protection",
+      meaning: "Joining every centre of the Fruit of Life with straight lines creates this intricate star. It is said to hold the shapes of all five Platonic solids, and is traditionally linked with balance, harmony and protection.",
+      practice: "Keep its image near your front door or workspace, with a grounding crystal beside it, as a gentle guardian of your energy.",
+      crystals: ["Black Tourmaline", "Clear Quartz", "Lapis Lazuli"]
+    },
+    {
+      key: "merkaba", name: "Merkaba", aka: "The chariot of light",
+      meaning: "Two interlocking tetrahedra, one reaching up and one reaching down, form a star of light. Its name comes from the Hebrew word for chariot, and it is associated with the light body and spiritual journeying.",
+      practice: "Imagine the star turning gently around you as you meditate, surrounding you in a shimmering field of protective light.",
+      crystals: ["Herkimer Diamond", "Selenite", "Danburite"]
+    },
+    {
+      key: "spiral", name: "Golden Spiral", aka: "Natural flow",
+      meaning: "Built from the golden ratio, about 1.618, this spiral grows outward in perfect proportion. Its graceful curve is echoed in shells, unfurling ferns and sunflower heads, and it symbolises growth that flows naturally.",
+      practice: "Lay crystals along a spiral path from the outside in, walking your thoughts slowly toward your centre with each stone.",
+      crystals: ["Ammolite", "Carnelian", "Emerald"]
+    }
+  ];
+
+  function sgSvg(symbol, strokeWidth, animate){
+    var parts = SG_DRAW[symbol.key]();
+    if(animate){
+      // spread the drawing over about 2.5 seconds, however many lines it has
+      var step = Math.min(0.35, 2.5 / parts.length);
+      parts = parts.map(function(p, i){
+        return p.replace('class="sg-part"', 'class="sg-part" style="animation-delay:' + (i * step).toFixed(3) + 's"');
+      });
+    }
+    return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+             '<g' + (animate ? ' class="sg-turn sg-draw"' : '') + ' fill="none" stroke="' + SG_GOLD + '" stroke-width="' + strokeWidth + '" stroke-linecap="round">' +
+               parts.join("") +
+             '</g>' +
+           '</svg>';
+  }
+
+  var sgGrid = document.getElementById("sgGrid");
+  var sgDetail = document.getElementById("sgDetail");
+
+  function showSacredSymbol(index){
+    var symbol = SACRED_SYMBOLS[index];
+    if(!symbol || !sgDetail) return;
+
+    var tiles = sgGrid.querySelectorAll(".sg-tile");
+    for(var i = 0; i < tiles.length; i++){
+      var on = (i === index);
+      tiles[i].classList.toggle("active", on);
+      tiles[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+
+    sgDetail.innerHTML = "";
+    var stage = makeAstroEl("div", "sg-stage");
+    stage.innerHTML = sgSvg(symbol, 1.1, true);
+    sgDetail.appendChild(stage);
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-name", symbol.name));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-aka", symbol.aka));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-label", "Meaning"));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-text", symbol.meaning));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-label", "How to work with it"));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-text", symbol.practice));
+    sgDetail.appendChild(makeAstroEl("p", "sg-detail-label", "Crystal pairings"));
+
+    // the same crystal buttons as the Chakra Crystal Guide
+    var grid = makeAstroEl("div", "chakra-crystals");
+    symbol.crystals.forEach(function(crystalName){
+      var crystal = findCrystalByName(crystalName);
+      if(!crystal) return;
+      var link = makeAstroEl("a", "chakra-crystal");
+      link.href = buildEtsyLink(crystal);
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", "Find " + crystal.name + " on Etsy");
+      var gem = makeAstroEl("span", "chakra-gem");
+      gem.setAttribute("aria-hidden", "true");
+      gem.style.setProperty("--gem-light", crystal.light);
+      gem.style.setProperty("--gem-dark", crystal.dark);
+      link.appendChild(gem);
+      link.appendChild(makeAstroEl("span", "chakra-crystal-name", crystal.name));
+      var arrow = makeAstroEl("span", "chakra-crystal-link", "↗");
+      arrow.setAttribute("aria-hidden", "true");
+      link.appendChild(arrow);
+      grid.appendChild(link);
+    });
+    sgDetail.appendChild(grid);
+    sgDetail.appendChild(makeAstroEl("p", "chakra-note", "Tap a crystal to find it on Etsy. Offered for reflection and relaxation."));
+
+    sgDetail.hidden = false;
+    sgDetail.style.animation = "none";
+    void sgDetail.offsetWidth; // restart the reveal animation
+    sgDetail.style.animation = "";
+
+    if(window.innerWidth <= 560){
+      setTimeout(function(){
+        sgDetail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 120);
+    }
+  }
+
+  if(sgGrid && sgDetail){
+    SACRED_SYMBOLS.forEach(function(symbol, index){
+      var tile = makeAstroEl("button", "sg-tile");
+      tile.type = "button";
+      tile.setAttribute("aria-pressed", "false");
+      tile.setAttribute("aria-label", symbol.name);
+      tile.innerHTML = sgSvg(symbol, 1.6, false);
+      tile.appendChild(makeAstroEl("span", "sg-tile-name", symbol.name));
+      tile.addEventListener("click", function(){ showSacredSymbol(index); });
+      sgGrid.appendChild(tile);
+    });
+  }
+
+  /* ----------------------------------------------------------
      8. AFFIRMATION MANIFESTATION WHEEL
      Twelve themed segments, each holding eight mantras: 96 mantras
      in all. Every tap is a true random spin: the wheel picks a random
@@ -5990,7 +6380,8 @@
       { el: document.querySelector(".hero"), onChange: function(onScreen){ heroOnScreen = onScreen; } },
       { el: document.getElementById("checkin") },
       { el: document.getElementById("guidance") },
-      { el: document.getElementById("wheelStage"), onChange: function(onScreen){ wheelOnScreen = onScreen; } }
+      { el: document.getElementById("wheelStage"), onChange: function(onScreen){ wheelOnScreen = onScreen; } },
+      { el: document.getElementById("sgDetail") }
     ];
     var offscreenObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
